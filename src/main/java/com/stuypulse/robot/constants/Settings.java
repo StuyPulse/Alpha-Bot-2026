@@ -22,10 +22,22 @@ import edu.wpi.first.math.util.Units;
 public interface Settings {
 
     boolean DEBUG_MODE = true;
+    String CANIVORE = "CANIVORE";
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean SUPERSTRUCTURE = new SmartBoolean("Enabled Subsystems/Superstructure Is Enabled", true);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", true);
+    }
+
+    public interface Intake {
+        public interface NeoIntake {
+            SmartNumber INTAKE_SPEED = new SmartNumber("Intake/Neo Intake/Rollers/Percent Output (-1 - 1)", 1);
+        }
+
+        public interface SpringLoaded {
+            SmartNumber INTAKE_SPEED = new SmartNumber("Intake/Kraken Intake/Rollers/Percent Output (-1 - 1)", 0.4);
+        }
     }
 
     public interface Swerve {

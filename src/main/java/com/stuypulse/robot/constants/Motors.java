@@ -20,6 +20,9 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -31,6 +34,18 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+
+    public interface Intakes {
+        public interface NeoIntake {
+            SparkBaseConfig motorConfig = new SparkFlexConfig().inverted(false).idleMode(IdleMode.kBrake);
+        }
+
+        public interface KrakenIntake {
+            TalonFXConfig motorConfig = new TalonFXConfig()
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.CounterClockwise_Positive);
+        }
+    }
 
     /** Classes to store all of the values a motor needs */
 
