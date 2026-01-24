@@ -36,7 +36,7 @@ public interface Settings {
         }
 
         public interface SpringLoaded {
-            SmartNumber INTAKE_SPEED = new SmartNumber("Intake/Kraken Intake/Rollers/Percent Output (-1 - 1)", 0.4);
+            SmartNumber INTAKE_SPEED = new SmartNumber("Intake/Kraken Intake/Rollers/Percent Output (-1 - 1)", -1);
         }
     }
 

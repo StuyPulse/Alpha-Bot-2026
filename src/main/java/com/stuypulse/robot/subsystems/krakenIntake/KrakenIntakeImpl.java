@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.krakenIntake;
+package com.stuypulse.robot.subsystems.krakenintake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Motors;
@@ -14,7 +14,7 @@ public class KrakenIntakeImpl extends KrakenIntake {
     public KrakenIntakeImpl(int krakenID) {
         super();
 
-        rollerMotor = new TalonFX(krakenID, Settings.CANIVORE);
+        rollerMotor = new TalonFX(krakenID);
         Motors.Intakes.KrakenIntake.motorConfig.configure(rollerMotor);
     }
 

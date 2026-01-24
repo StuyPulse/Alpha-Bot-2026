@@ -1,6 +1,6 @@
-package com.stuypulse.robot.commands.krakenIntake;
+package com.stuypulse.robot.commands.krakenintake;
 
-import com.stuypulse.robot.subsystems.krakenIntake.KrakenIntake.KrakenIntakeRollerState;
+import com.stuypulse.robot.subsystems.krakenintake.KrakenIntake.KrakenIntakeRollerState;
 
 public class KrakenIntakeOuttake extends SetKrakenIntakeState {
 

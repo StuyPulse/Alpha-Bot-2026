@@ -1,4 +1,4 @@
-package com.stuypulse.robot.subsystems.krakenIntake;
+package com.stuypulse.robot.subsystems.krakenintake;
 
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Ports.Intakes;
@@ -18,8 +18,8 @@ public abstract class KrakenIntake extends SubsystemBase{
     }
 
     public enum KrakenIntakeRollerState {
-        INTAKING(Settings.Intake.NeoIntake.INTAKE_SPEED.doubleValue()),
-        OUTTAKING(-Settings.Intake.NeoIntake.INTAKE_SPEED.doubleValue()),
+        INTAKING(-Settings.Intake.NeoIntake.INTAKE_SPEED.doubleValue()),
+        OUTTAKING(Settings.Intake.NeoIntake.INTAKE_SPEED.doubleValue()),
         STOP(0.0);
 
         private Number intake_roller_speed;

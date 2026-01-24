@@ -1,7 +1,7 @@
-package com.stuypulse.robot.commands.krakenIntake;
+package com.stuypulse.robot.commands.krakenintake;
 
-import com.stuypulse.robot.subsystems.krakenIntake.KrakenIntake;
-import com.stuypulse.robot.subsystems.krakenIntake.KrakenIntake.KrakenIntakeRollerState;
+import com.stuypulse.robot.subsystems.krakenintake.KrakenIntake;
+import com.stuypulse.robot.subsystems.krakenintake.KrakenIntake.KrakenIntakeRollerState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
