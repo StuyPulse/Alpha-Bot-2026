@@ -31,6 +31,36 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+    public interface HoodedShooter {
+        public interface Shooter {
+            TalonFXConfig SHOOTER_MASTER_CONFIG = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Coast)
+                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI, Gains.HoodedShooter.Shooter.PID.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV, Gains.HoodedShooter.Shooter.FF.kA, 0);
+            TalonFXConfig SHOOTER_FOLLOWER_CONFIG = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Coast)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI, Gains.HoodedShooter.Shooter.PID.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV, Gains.HoodedShooter.Shooter.FF.kA, 0);
+        }
+
+        public interface Hood {
+            TalonFXConfig hoodMotorConfig = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Hood.PID.kP,Gains.HoodedShooter.Hood.PID.kI, Gains.HoodedShooter.Hood.PID.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kA, 0)
+                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.HOOD_GEAR_RATIO);
+        }
+    }
+    
 
     public interface Spindexer {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
@@ -215,4 +245,5 @@ public interface Motors {
             return this;
         }
     }
+    
 }
