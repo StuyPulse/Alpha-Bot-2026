@@ -37,6 +37,9 @@ public abstract class Turret extends SubsystemBase {
     }
 
     protected TurretState state;
+
+    public abstract boolean atTargetAngle();
+    public abstract Rotation2d getTurretAngle();
     
     public abstract Rotation2d getFerryAngle();
     public abstract Rotation2d getPointAtHubAngle();

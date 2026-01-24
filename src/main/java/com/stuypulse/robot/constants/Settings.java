@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
+    double DT = .02f;
     boolean DEBUG_MODE = true;
 
     public interface Spindexer {
@@ -29,6 +30,13 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+    }
+
+    public interface Turret {
+        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
+        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
+        double TOLERANCE_DEG = 2.0;
     }
 
     public interface Swerve {

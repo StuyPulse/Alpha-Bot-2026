@@ -39,7 +39,7 @@ public class TurretImpl extends Turret {
 
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
-        targetPosition = FerryTargetPositions.LEFT_WALL;
+        targetPosition = FerryTargetPositions.LEFT_WALL; //TODO: VERIFY WE WANT TO DEFAULT TO THIS
     }
 
     private Rotation2d getEncoderPos17t() {
@@ -66,8 +66,8 @@ public class TurretImpl extends Turret {
         final double crt_Partial18 = numberOfGearTeethRotated18 * inverseMod18t * Constants.Turret.Encoder18t.teeth;
 
         double crt_pos = (crt_Partial17 + crt_Partial18)
-        % (Constants.Turret.Encoder17t.teeth * Constants.Turret.Encoder18t.teeth);
-        
+                % (Constants.Turret.Encoder17t.teeth * Constants.Turret.Encoder18t.teeth);
+
         // Java's % operator is not actually the same as the modulo operator
         crt_pos = (crt_pos < 0) ? (crt_pos + Constants.Turret.Encoder17t.teeth * Constants.Turret.Encoder18t.teeth)
                 : crt_pos;
@@ -76,7 +76,7 @@ public class TurretImpl extends Turret {
 
         return Rotation2d.fromRotations(turretAngle);
     }
-    
+
     @Override
     public Rotation2d getPointAtHubAngle() {
         Vector2D robot = new Vector2D(CommandSwerveDrivetrain.getInstance().getPose().getTranslation());
@@ -91,7 +91,7 @@ public class TurretImpl extends Turret {
 
         return targetAngle;
     }
-    
+
     @Override
     public Rotation2d getFerryAngle() {
         Vector2D robot = new Vector2D(CommandSwerveDrivetrain.getInstance().getPose().getTranslation());
@@ -104,8 +104,18 @@ public class TurretImpl extends Turret {
                 .fromDegrees(Math.acos(robotToHub.dot(zeroVector) / robotToHub.magnitude() * zeroVector.magnitude()));
         return angle;
     }
+    
+    @Override
+    public Rotation2d getTurretAngle() {
+        return Rotation2d.fromRotations(motor.getPosition().getValueAsDouble());
+    }
 
-    //SYSID STUFFS
+    @Override
+    public boolean atTargetAngle() {
+        return Math.abs(getTurretAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
+    }
+
+    // SYSID STUFFS
     @Override
     public SysIdRoutine getSysIdRoutine() {
         return SysId.getRoutine(
@@ -125,12 +135,22 @@ public class TurretImpl extends Turret {
 
     @Override
     public void periodic() {
+        if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getTurretAngle().getRotations() < 0.0) {
+            motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
+            hasUsedAbsoluteEncoder = true;
+            System.out.println("Absolute Encoder Reset triggered");
+        }
+        
+        if (Settings.EnabledSubsystems.TURRET.get()) {
+            if (voltageOverride.isPresent())
+                motor.setVoltage(voltageOverride.get());
+            else
+                motor.setControl(new MotionMagicVoltage(getTargetAngle().getRotations()));
+        } 
+        else motor.setVoltage(0f);
+
         SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
         SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
-        if(Settings.EnabledSubsystems.TURRET){
-        if(voltageOverride.isPresent()) motor.setVoltage(voltageOverride.get());
-        else motor.setControl(new MotionMagicVoltage(getTargetAngle().getRotations()));
-        }
     }
 }
