@@ -6,6 +6,5 @@ public class Constants {
             public final double HOOD_GEAR_RATIO = 0.0;
             
         }
-        
     }
 }

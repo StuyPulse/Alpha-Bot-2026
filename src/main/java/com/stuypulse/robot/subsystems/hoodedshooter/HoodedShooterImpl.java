@@ -11,40 +11,40 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
 
-public class HoodedShooterImpl extends HoodedShooter{
-    private final TalonFX ShooterMotorLead;
-    private final TalonFX ShooterMotorFollower;
+public class HoodedShooterImpl extends HoodedShooter {
+    private final TalonFX shooterMotorLead;
+    private final TalonFX shooterMotorFollower;
 
-    private final TalonFX HoodMotor;    
+    private final TalonFX hoodMotor;
 
     public HoodedShooterImpl() {
 
-        ShooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorLead);
-        Motors.HoodedShooter.Shooter.SHOOTER_MASTER_CONFIG.configure(ShooterMotorLead);
-        
-        ShooterMotorFollower = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorFollower);
-        Motors.HoodedShooter.Shooter.SHOOTER_FOLLOWER_CONFIG.configure(ShooterMotorFollower);
+        shooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorLead);
+        Motors.HoodedShooter.Shooter.SHOOTER_MASTER_CONFIG.configure(shooterMotorLead);
 
-        HoodMotor = new TalonFX(Ports.HoodedShooter.Hood.HoodMotor);
+        shooterMotorFollower = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorFollower);
+        Motors.HoodedShooter.Shooter.SHOOTER_FOLLOWER_CONFIG.configure(shooterMotorFollower);
+
+        hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.HoodMotor);
     }
 
     public double getTargetRPM() {
         return getState().getShooterRPM().get();
     }
 
-    @Override 
+    @Override
     public double getLeaderRPM() {
-        return ShooterMotorLead.getVelocity().getValueAsDouble() * 60 ;
+        return shooterMotorLead.getVelocity().getValueAsDouble() * 60;
     }
-    
+
     @Override
     public double getFollowerRPM() {
-        return ShooterMotorFollower.getVelocity().getValueAsDouble() * 60;
+        return shooterMotorFollower.getVelocity().getValueAsDouble() * 60;
     }
-    
-    @Override 
+
+    @Override
     public Rotation2d getHoodAngle() {
-        return Rotation2d.fromRotations(HoodMotor.getPosition().getValueAsDouble());
+        return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
     }
 
     @Override
@@ -54,18 +54,18 @@ public class HoodedShooterImpl extends HoodedShooter{
 
     @Override
     public double getLeaderVoltage() {
-        return ShooterMotorLead.getMotorVoltage().getValueAsDouble();
+        return shooterMotorLead.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
     public double getFollowerVoltage() {
-        return ShooterMotorFollower.getMotorVoltage().getValueAsDouble();
+        return shooterMotorFollower.getMotorVoltage().getValueAsDouble();
     }
 
     @Override
     public void periodic() {
-        ShooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
-        ShooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.ShooterMotorLead, MotorAlignmentValue.Opposed)); 
+        shooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
+        shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.ShooterMotorLead, MotorAlignmentValue.Opposed));
 
         SmartDashboard.putNumber("HoodedShooter/Shooter/Lead RPM", getFollowerRPM());
         SmartDashboard.putNumber("HooderShooter/Shooter/Follower RPM", getFollowerRPM());
@@ -74,5 +74,5 @@ public class HoodedShooterImpl extends HoodedShooter{
         SmartDashboard.putNumber("HoodedShooter/Shooter/Lead Voltage", getLeaderVoltage());
         SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", getFollowerVoltage());
     }
-    
+
 }
