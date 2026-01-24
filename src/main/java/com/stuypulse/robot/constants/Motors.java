@@ -32,6 +32,15 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  */
 public interface Motors {
 
+    public interface Spindexer {
+        TalonFXConfig spindexerMotors = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer Motors
+            .withSensorToMechanismRatio(40.0 / 12.0);
+    }
+
     /** Classes to store all of the values a motor needs */
 
     public static class TalonFXConfig {

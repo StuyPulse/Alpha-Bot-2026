@@ -23,9 +23,12 @@ public interface Settings {
 
     boolean DEBUG_MODE = true;
 
+    public interface Spindexer {
+        SmartNumber RUNNING_SPEED = new SmartNumber("Spindexer/Spindexer Speed", 1);
+    }
+
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean SUPERSTRUCTURE = new SmartBoolean("Enabled Subsystems/Superstructure Is Enabled", true);
     }
 
     public interface Swerve {
