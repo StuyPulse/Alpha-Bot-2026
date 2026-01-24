@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.turret;
 
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -26,6 +27,41 @@ public class TurretImpl extends Turret {
         encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
     }
 
+    private Rotation2d getEncoderPos17t() {
+        return Rotation2d.fromRotations(this.encoder17t.getAbsolutePosition().getValueAsDouble());
+    }
+
+    private Rotation2d getEncoderPos18t() {
+        return Rotation2d.fromRotations(this.encoder18t.getAbsolutePosition().getValueAsDouble());
+    }
+
+    public Rotation2d getAbsoluteTurretAngle() {
+        final int inverseMod17t = 1;
+        final int inverseMod18t = -1;
+
+        final Rotation2d encoder17tPosition = getEncoderPos17t();
+        final double numberOfGearTeethRotated17 = (encoder17tPosition.getRotations()
+                * (double) Constants.Turret.Encoder17t.teeth);
+
+        final Rotation2d encoder18tPosition = getEncoderPos18t();
+        final double numberOfGearTeethRotated18 = (encoder18tPosition.getRotations()
+                * (double) Constants.Turret.Encoder18t.teeth);
+
+        final double crt_Partial17 = numberOfGearTeethRotated17 * inverseMod17t * Constants.Turret.Encoder17t.teeth;
+        final double crt_Partial18 = numberOfGearTeethRotated18 * inverseMod18t * Constants.Turret.Encoder18t.teeth;
+
+        double crt_pos = (crt_Partial17 + crt_Partial18)
+        % (Constants.Turret.Encoder17t.teeth * Constants.Turret.Encoder18t.teeth);
+        
+        // Java's % operator is not actually the same as the modulo operator
+        crt_pos = (crt_pos < 0) ? (crt_pos + Constants.Turret.Encoder17t.teeth * Constants.Turret.Encoder18t.teeth)
+                : crt_pos;
+
+        final double turretAngle = (crt_pos / (double) Constants.Turret.BigGear.teeth);
+
+        return Rotation2d.fromRotations(turretAngle);
+    }
+    
     public Rotation2d getPointAtHubAngle() {
         Vector2D robot = new Vector2D(CommandSwerveDrivetrain.getInstance().getPose().getTranslation());
         Vector2D hub = new Vector2D(HubUtil.getAllianceHubPose().getTranslation());
