@@ -28,17 +28,17 @@ public class SpindexerImpl extends Spindexer {
 
     private void setMotorsBasedOnState() {
         spindexerMotors[0].setControl(new DutyCycleOut(state.getSpindexerSpeed()));
-        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Aligned));
+        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Opposed));
     }
 
-    private double getCakeRPM() {
+    private double getRPM() {
         return spindexerMotors[0].getVelocity().getValueAsDouble() * 60.0; // RPS -> RPM
     }
 
     @Override
     public void periodic() {
         setMotorsBasedOnState();
-        SmartDashboard.putNumber("Spindexer/Cake RPM", getCakeRPM());
+        SmartDashboard.putNumber("Spindexer/Cake RPM", getRPM());
     }
 
 }
