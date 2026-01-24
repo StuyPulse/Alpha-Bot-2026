@@ -2,13 +2,11 @@ package com.stuypulse.robot.commands.swerve;
 
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class SwerveResetRotation extends Command {
-    private final CommandSwerveDrivetrain swerve;
-
+public class SwerveResetRotation extends InstantCommand {
     public SwerveResetRotation() {
-        swerve = CommandSwerveDrivetrain.getInstance();
-        swerve.resetRotation(swerve.getPose().getRotation());
+        super(() -> CommandSwerveDrivetrain.getInstance().resetRotation(Rotation2d.kZero));
     }
 }

@@ -37,7 +37,7 @@ public interface Motors {
 
     public interface Intakes {
         public interface NeoIntake {
-            SparkBaseConfig motorConfig = new SparkFlexConfig().inverted(false).idleMode(IdleMode.kBrake);
+            SparkBaseConfig motorConfig = new SparkFlexConfig().inverted(true).idleMode(IdleMode.kBrake);
         }
 
         public interface KrakenIntake {
