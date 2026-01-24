@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.krakenintake;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Motors;
-import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
