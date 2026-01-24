@@ -24,7 +24,7 @@ public class KrakenIntakeImpl extends KrakenIntake {
     }
 
     private double getIntakeRPM() {
-        return rollerMotor.getVelocity().getValueAsDouble();
+        return rollerMotor.getVelocity().getValueAsDouble() * 60.0;
     }
 
     private double getSupplyVoltage() {
