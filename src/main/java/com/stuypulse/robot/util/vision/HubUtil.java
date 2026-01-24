@@ -21,21 +21,20 @@ public interface HubUtil {
         return (Robot.isBlue() ? blueHubCenter : Field.transformToOppositeAlliance(blueHubCenter));
     }
 
-        public enum FERRY_TARGET_POSITIONS {
+    public enum FerryTargetPositions {
 
         RIGHT_WALL(new Pose2d(1.0, 1.0, new Rotation2d())),
         LEFT_WALL(new Pose2d());
 
         private Pose2d targetPosition;
 
-        private FERRY_TARGET_POSITIONS(Pose2d targetPosition) {
+        private FerryTargetPositions(Pose2d targetPosition) {
             this.targetPosition = targetPosition;
         }
 
         public Pose2d getFerryTargetPose() {
             return Robot.isBlue() ? targetPosition : Field.transformToOppositeAlliance(targetPosition);
         }
-
     }
 
     public enum HubTag {

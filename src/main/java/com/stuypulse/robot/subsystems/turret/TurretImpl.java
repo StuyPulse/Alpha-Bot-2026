@@ -5,17 +5,28 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.util.SysId;
 import com.stuypulse.robot.util.vision.HubUtil;
+import com.stuypulse.robot.util.vision.HubUtil.FerryTargetPositions;
 import com.stuypulse.stuylib.math.Vector2D;
+
+import java.util.Optional;
+
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class TurretImpl extends Turret {
     private final TalonFX motor;
     private final CANcoder encoder17t;
     private final CANcoder encoder18t;
+    private boolean hasUsedAbsoluteEncoder;
+    private FerryTargetPositions targetPosition;
+    private Optional<Double> voltageOverride;
 
     public TurretImpl() {
         motor = new TalonFX(Ports.Turret.MOTOR, Ports.bus);
@@ -25,6 +36,10 @@ public class TurretImpl extends Turret {
         Motors.Turret.turretMotor.configure(motor);
         encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
         encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
+
+        hasUsedAbsoluteEncoder = false;
+        voltageOverride = Optional.empty();
+        targetPosition = FerryTargetPositions.LEFT_WALL;
     }
 
     private Rotation2d getEncoderPos17t() {
@@ -62,6 +77,7 @@ public class TurretImpl extends Turret {
         return Rotation2d.fromRotations(turretAngle);
     }
     
+    @Override
     public Rotation2d getPointAtHubAngle() {
         Vector2D robot = new Vector2D(CommandSwerveDrivetrain.getInstance().getPose().getTranslation());
         Vector2D hub = new Vector2D(HubUtil.getAllianceHubPose().getTranslation());
@@ -77,8 +93,44 @@ public class TurretImpl extends Turret {
     }
     
     @Override
+    public Rotation2d getFerryAngle() {
+        Vector2D robot = new Vector2D(CommandSwerveDrivetrain.getInstance().getPose().getTranslation());
+        Vector2D robotToHub = robot
+                .sub(new Vector2D(targetPosition.getFerryTargetPose().getTranslation())).normalize();
+        Vector2D zeroVector = new Vector2D(0.0, 1.0);
+        // define this as a constant somewhere?
+
+        Rotation2d angle = Rotation2d
+                .fromDegrees(Math.acos(robotToHub.dot(zeroVector) / robotToHub.magnitude() * zeroVector.magnitude()));
+        return angle;
+    }
+
+    //SYSID STUFFS
+    @Override
+    public SysIdRoutine getSysIdRoutine() {
+        return SysId.getRoutine(
+                2,
+                6,
+                "Turret",
+                voltage -> setVoltageOverride(Optional.of(voltage)),
+                () -> this.motor.getPosition().getValueAsDouble(),
+                () -> motor.getVelocity().getValueAsDouble(),
+                () -> motor.getMotorVoltage().getValueAsDouble(),
+                getInstance());
+    }
+
+    private void setVoltageOverride(Optional<Double> volts) {
+        this.voltageOverride = volts;
+    }
+
+    @Override
     public void periodic() {
-        SmartDashboard.putNumber("Turrent/Encoder17t Abs Postition", encoder17t.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Turrent/Encoder18t Abs Postition", encoder18t.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
+        SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
+        if(Settings.EnabledSubsystems.TURRET){
+        if(voltageOverride.isPresent()) motor.setVoltage(voltageOverride.get());
+        else motor.setControl(new MotionMagicVoltage(getTargetAngle().getRotations()));
+        }
     }
 }
