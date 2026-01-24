@@ -12,4 +12,8 @@ public interface Ports {
         int OPERATOR = 1;
         int DEBUGGER = 2;
     }
+
+    public interface Feeder {
+        int FEEDER_MOTOR = 0; // change to actual port
+    }
 }

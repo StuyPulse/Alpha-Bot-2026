@@ -32,7 +32,13 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  */
 public interface Motors {
 
-    /** Classes to store all of the values a motor needs */
+    public interface Feeder {
+        TalonFXConfig FEEDER_MOTOR_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.CounterClockwise_Positive);
+    }
 
     public static class TalonFXConfig {
         private final TalonFXConfiguration configuration = new TalonFXConfiguration();
@@ -157,7 +163,7 @@ public interface Motors {
         // CURRENT LIMIT CONFIGS
 
         public TalonFXConfig withCurrentLimitAmps(double currentLimitAmps) {
-			currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
+            currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
             currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
             configuration.withCurrentLimits(currentLimitsConfigs);
