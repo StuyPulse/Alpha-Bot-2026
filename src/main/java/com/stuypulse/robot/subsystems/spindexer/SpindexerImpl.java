@@ -13,8 +13,6 @@ public class SpindexerImpl extends Spindexer {
     
     private final TalonFX[] spindexerMotors;
 
-    private final DutyCycleOut dutyCycleReq = new DutyCycleOut(0);
-
     public SpindexerImpl() {
         super();
 
@@ -26,15 +24,15 @@ public class SpindexerImpl extends Spindexer {
         Motors.Spindexer.spindexerMotors.configure(spindexerMotors[0]);
         Motors.Spindexer.spindexerMotors.configure(spindexerMotors[1]);
 
-        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Aligned));
     }
 
     private void setMotorsBasedOnState() {
-        spindexerMotors[0].setControl(dutyCycleReq.withOutput(state.getSpindexerSpeed()));
+        spindexerMotors[0].setControl(new DutyCycleOut(state.getSpindexerSpeed()));
+        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Aligned));
     }
 
     private double getCakeRPM() {
-        return spindexerMotors[0].getVelocity().getValueAsDouble() * 60.0;
+        return spindexerMotors[0].getVelocity().getValueAsDouble() * 60.0; // RPS -> RPM
     }
 
     @Override
