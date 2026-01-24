@@ -39,8 +39,8 @@ public class KrakenIntakeImpl extends KrakenIntake {
     public void periodic() {
         setMotorBasedOnState();
         SmartDashboard.putNumber("Intake/Kraken Intake/Rollers/Current RPM", getIntakeRPM());
-        SmartDashboard.putNumber("Intake/Neo Intake/Rollers/Supply Voltage", getSupplyVoltage());
-        SmartDashboard.putNumber("Intake/Neo Intake/Rollers/Motor Voltage", getMotorVoltage());
+        SmartDashboard.putNumber("Intake/Kraken Intake/Rollers/Supply Voltage", getSupplyVoltage());
+        SmartDashboard.putNumber("Intake/Kraken Intake/Rollers/Motor Voltage", getMotorVoltage());
         SmartDashboard.putString("Intake/Kraken Intake/Rollers/Current State", getState().toString());
     }
 
