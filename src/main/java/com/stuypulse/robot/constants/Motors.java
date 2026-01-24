@@ -5,9 +5,11 @@
 
 package com.stuypulse.robot.constants;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
@@ -15,11 +17,13 @@ import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -39,6 +43,29 @@ public interface Motors {
             .withNeutralMode(NeutralModeValue.Brake)
             .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer Motors
             .withSensorToMechanismRatio(40.0 / 12.0);
+    }
+
+    public interface Turret {
+        TalonFXConfig turretMotor = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(.25)
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInvertedValue(InvertedValue.Clockwise_Positive)
+            .withSensorToMechanismRatio(0); // TODO: GET INVERTED VAL AND SENSOR TO MECH RATIO
+
+        CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                .withAbsoluteSensorDiscontinuityPoint(1)
+                .withMagnetOffset(Constants.Turret.Encoder17t.offset)
+            );
+
+        CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
+            .withMagnetSensor(new MagnetSensorConfigs()
+                .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                .withAbsoluteSensorDiscontinuityPoint(1)
+                .withMagnetOffset(Constants.Turret.Encoder18t.offset)
+            );
     }
 
     /** Classes to store all of the values a motor needs */

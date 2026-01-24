@@ -12,6 +12,10 @@ public abstract class Turret extends SubsystemBase {
         instance = Robot.isReal() ? new TurretImpl() : new TurretSim();
     }
 
+    public static Turret getInstance() {
+        return instance;
+    }
+
     public enum TurretState {
         IDLE,
         SHOOTING,
