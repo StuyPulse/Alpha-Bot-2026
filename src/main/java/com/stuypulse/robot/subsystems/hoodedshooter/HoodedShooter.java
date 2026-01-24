@@ -2,6 +2,8 @@ package com.stuypulse.robot.subsystems.hoodedshooter;
 
 import java.util.function.Supplier;
 
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -19,9 +21,10 @@ public abstract class HoodedShooter extends SubsystemBase{
     }
 
     public enum HoodedShooterState {
-        SHOOT(() -> { return 0.0; }, new Rotation2d()),
-        STOW(() -> { return 0.0; }, new Rotation2d()),
-        FERRY(() -> { return 0.0; }, new Rotation2d());
+        // TODO: implement interpolation for shoot RPMS
+        SHOOT(() -> { return 0.0; }, Settings.HoodedShooter.HoodAngles.shootAngle),
+        STOW(() -> { return 0.0; }, Settings.HoodedShooter.HoodAngles.stowAngle),
+        FERRY(() -> { return 0.0; }, Settings.HoodedShooter.HoodAngles.ferryAngle);
 
         private Supplier<Double> shooterRPM;
         private Rotation2d hoodAngle;
