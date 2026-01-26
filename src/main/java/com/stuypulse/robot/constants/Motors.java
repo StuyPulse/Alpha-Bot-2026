@@ -41,24 +41,6 @@ public interface Motors {
             .withSensorToMechanismRatio(40.0 / 12.0);
     }
 
-    public interface Intake {
-        TalonFXConfig intakeMotor1 = new TalonFXConfig()
-        .withCurrentLimitAmps(80)
-        .withRampRate(0.25)
-        .withNeutralMode(NeutralModeValue.Brake)
-        .withInvertedValue(InvertedValue.Clockwise_Positive)
-        .withSensorToMechanismRatio(0); //TODO: fill in later
-    
-        TalonFXConfig intakeMotor2 = new TalonFXConfig()
-        .withCurrentLimitAmps(80)
-        .withRampRate(0.25)
-        .withNeutralMode(NeutralModeValue.Brake)
-        .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-        .withSensorToMechanismRatio(0); //TODO: fill in later
-    }
-
-    
-
     /** Classes to store all of the values a motor needs */
 
     public static class TalonFXConfig {
