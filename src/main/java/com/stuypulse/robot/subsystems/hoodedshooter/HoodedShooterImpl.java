@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
 
 public class HoodedShooterImpl extends HoodedShooter {
     private final TalonFX shooterMotorLead;
@@ -29,7 +30,7 @@ public class HoodedShooterImpl extends HoodedShooter {
     }
 
     public double getTargetRPM() {
-        return getState().getShooterRPM().get();
+        return getState().getAngleRPMPair().get().getdouble();
     }
 
     @Override
@@ -62,10 +63,17 @@ public class HoodedShooterImpl extends HoodedShooter {
         return shooterMotorFollower.getMotorVoltage().getValueAsDouble();
     }
 
+    @Override 
+    public Rotation2d getTargetAngle() {
+        return getState().getAngleRPMPair().get().getAngle();
+    }
+
     @Override
     public void periodic() {
         shooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
         shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.ShooterMotorLead, MotorAlignmentValue.Opposed));
+
+        hoodMotor.setControl(new PositionVoltage(getTargetAngle().getDegrees()));
 
         SmartDashboard.putNumber("HoodedShooter/Shooter/Lead RPM", getFollowerRPM());
         SmartDashboard.putNumber("HooderShooter/Shooter/Follower RPM", getFollowerRPM());

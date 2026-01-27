@@ -3,6 +3,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter;
 import java.util.function.Supplier;
 
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.AngleRPMPair;
 import com.stuypulse.robot.util.InterpolationUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -22,32 +23,30 @@ public abstract class HoodedShooter extends SubsystemBase {
     }
 
     public enum HoodedShooterState {
-        SHOOT(() -> {
-            return InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub()).getdouble();
-        }, () -> {
-            return InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub()).getAngle();
-        }),
-        STOW(() -> {
-            return 0.0;
-        }, () -> new Rotation2d()),
-        FERRY(() -> {
-            return 0.0;
-        }, () -> new Rotation2d());
+        SHOOT(
+            () -> {
+                return InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub());
+            }
+        ),
+        STOW(
+            () -> {
+                return new AngleRPMPair(0.0 , new Rotation2d());
+            }
+        ),
+        FERRY    (
+            () -> {
+                return new AngleRPMPair(0.0 , new Rotation2d());
+            }
+        );
 
-        private Supplier<Double> shooterRPM;
-        private Supplier<Rotation2d> hoodAngle;
+        private Supplier<AngleRPMPair> angleRPMPair;
 
-        private HoodedShooterState(Supplier<Double> shooterRPM, Supplier<Rotation2d> hoodangle) {
-            this.shooterRPM = shooterRPM;
-            this.hoodAngle = hoodangle;
+        private HoodedShooterState(Supplier<AngleRPMPair> shooterRPM) {
+            this.angleRPMPair = shooterRPM;
         }
 
-        public Supplier<Double> getShooterRPM() {
-            return shooterRPM;
-        }
-
-        public Supplier<Rotation2d> getHoodAngle() {
-            return hoodAngle;
+        public Supplier<AngleRPMPair> getAngleRPMPair() {
+            return angleRPMPair;
         }
     }
 
@@ -78,4 +77,6 @@ public abstract class HoodedShooter extends SubsystemBase {
     public abstract double getLeaderVoltage();
 
     public abstract double getFollowerVoltage();
+
+    public abstract Rotation2d getTargetAngle();
 }
