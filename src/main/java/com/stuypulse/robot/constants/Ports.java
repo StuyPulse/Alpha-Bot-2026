@@ -9,8 +9,8 @@ package com.stuypulse.robot.constants;
 public interface Ports {
     public interface Intakes {
         public interface NeoIntake {
-            int ROLLER = 16; // OLD: 20
-            int ROLLER2 = 21; // OLD: 51
+            int ROLLER = 20;
+            int ROLLER2 = 51;
         }
 
         public interface KrakenIntake {

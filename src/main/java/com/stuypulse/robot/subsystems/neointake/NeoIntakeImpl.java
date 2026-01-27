@@ -26,21 +26,20 @@ public class NeoIntakeImpl extends NeoIntake {
             new SparkFlex(Ports.Intakes.NeoIntake.ROLLER2, MotorType.kBrushless)
         };
 
-        Motors.Intakes.NeoIntake.motorConfig.follow(rollerMotors[0]);
-        rollerMotors[1].configure(Motors.Intakes.NeoIntake.motorConfig, ResetMode.kResetSafeParameters,
+        // Motors.Intakes.NeoIntake.motorConfig.follow(rollerMotors[0]);
+        rollerMotors[0].configure(Motors.Intakes.NeoIntake.motorConfig1, ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-        Motors.Intakes.NeoIntake.motorConfig.disableFollowerMode();
-        rollerMotors[0].configure(Motors.Intakes.NeoIntake.motorConfig, ResetMode.kResetSafeParameters,
+        rollerMotors[1].configure(Motors.Intakes.NeoIntake.motorConfig2, ResetMode.kResetSafeParameters,
             PersistMode.kPersistParameters);
 
-            rollerMotor1Encoder = rollerMotors[0].getEncoder();
+        rollerMotor1Encoder = rollerMotors[0].getEncoder();
     }
 
-    private void setMotorBasedOnState() {
-        double speed = state.getIntakeRollerSpeed();
-        rollerMotors[0].set(speed);
-    }
+    // private void setMotorBasedOnState() {
+    //     double speed = state.getIntakeRollerSpeed();
+    //     rollerMotors[0].set(speed);
+    // }
 
     private double getRPM() {
         return rollerMotor1Encoder.getVelocity();
@@ -56,8 +55,14 @@ public class NeoIntakeImpl extends NeoIntake {
 
     @Override
     public void periodic() {
-        setMotorBasedOnState();
-        SmartDashboard.putNumber("Intake/Neo Intake/Rollers/Current RPM", getRPM());
+        // setMotorBasedOnState();
+        SmartDashboard.putNumber("Intake/Target Speed", getTargetSpeed());
+        SmartDashboard.putString("Intake/State", getState().name());
+        rollerMotors[0].set(getTargetSpeed());
+        rollerMotors[1].set(getTargetSpeed());
+        SmartDashboard.putNumber("Intake/Rollers/Current RPM", getRPM());
+        SmartDashboard.putNumber("Intake/Rollers/Roller 1 Current draw", rollerMotors[0].getOutputCurrent());
+        SmartDashboard.putNumber("Intake/Rollers/Roller 2 Current draw", rollerMotors[1].getOutputCurrent());
         // SmartDashboard.putNumber("Intake/Neo Intake/Rollers/Bus Voltage (Motor 1)", getBusVoltage1());
         // SmartDashboard.putNumber("Intake/Neo Intake/Rollers/Bus Voltage (Motor 2)", getBusVoltage2());
         // SmartDashboard.putString("Intake/Neo Intake/Rollers/Current State", getState().toString());

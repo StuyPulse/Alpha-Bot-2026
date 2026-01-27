@@ -42,6 +42,10 @@ public abstract class NeoIntake extends SubsystemBase{
         return state;
     }
 
+    public double getTargetSpeed() {
+        return state.getIntakeRollerSpeed();
+    }
+
     public void setState(NeoIntakeRollerState state) {
         this.state = state;
     }
