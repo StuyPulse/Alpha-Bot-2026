@@ -3,7 +3,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter;
 import java.util.function.Supplier;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.AngleRPMPair;
+import com.stuypulse.robot.util.AngleRPMPair;
 import com.stuypulse.robot.util.InterpolationUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -23,21 +23,9 @@ public abstract class HoodedShooter extends SubsystemBase {
     }
 
     public enum HoodedShooterState {
-        SHOOT(
-            () -> {
-                return InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub());
-            }
-        ),
-        STOW(
-            () -> {
-                return new AngleRPMPair(0.0 , new Rotation2d());
-            }
-        ),
-        FERRY    (
-            () -> {
-                return new AngleRPMPair(0.0 , new Rotation2d());
-            }
-        );
+        SHOOT(() -> InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub())),
+        STOW(() ->  new AngleRPMPair()),
+        FERRY(() -> new AngleRPMPair());
 
         private Supplier<AngleRPMPair> angleRPMPair;
 

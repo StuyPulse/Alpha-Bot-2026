@@ -6,6 +6,7 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.path.PathConstraints;
+import com.stuypulse.robot.util.AngleRPMPair;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -20,25 +21,6 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
-
-    public class AngleRPMPair {
-        private final double distance;
-        private final Rotation2d angle;
-
-        public AngleRPMPair(double distance, Rotation2d angle) {
-            this.distance = distance;
-            this.angle = angle;
-        } 
-
-        public Rotation2d getAngle() {
-            return this.angle;
-        }
-
-        public double getdouble() {
-            return this.distance;
-        }
-    }
-
     boolean DEBUG_MODE = true;
 
     public interface Spindexer {
@@ -61,12 +43,12 @@ public interface Settings {
         }
         
         public AngleRPMPair[] interpolator1data = {
-            new AngleRPMPair(0, new Rotation2d()), 
-            new AngleRPMPair(0, new Rotation2d()), 
-            new AngleRPMPair(0, new Rotation2d()), 
-            new AngleRPMPair(0, new Rotation2d()), 
-            new AngleRPMPair(0, new Rotation2d()), 
-            new AngleRPMPair(0, new Rotation2d())
+            new AngleRPMPair(), 
+            new AngleRPMPair(), 
+            new AngleRPMPair(), 
+            new AngleRPMPair(), 
+            new AngleRPMPair(), 
+            new AngleRPMPair()
         }; 
     }
 

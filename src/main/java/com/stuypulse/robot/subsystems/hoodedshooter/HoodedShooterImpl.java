@@ -15,11 +15,9 @@ import com.ctre.phoenix6.controls.PositionVoltage;
 public class HoodedShooterImpl extends HoodedShooter {
     private final TalonFX shooterMotorLead;
     private final TalonFX shooterMotorFollower;
-
     private final TalonFX hoodMotor;
 
     public HoodedShooterImpl() {
-
         shooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorLead);
         Motors.HoodedShooter.Shooter.SHOOTER_MASTER_CONFIG.configure(shooterMotorLead);
 
@@ -35,12 +33,12 @@ public class HoodedShooterImpl extends HoodedShooter {
 
     @Override
     public double getLeaderRPM() {
-        return shooterMotorLead.getVelocity().getValueAsDouble() * 60;
+        return shooterMotorLead.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Override
     public double getFollowerRPM() {
-        return shooterMotorFollower.getVelocity().getValueAsDouble() * 60;
+        return shooterMotorFollower.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Override
@@ -50,7 +48,7 @@ public class HoodedShooterImpl extends HoodedShooter {
 
     @Override
     public double getShooterRPM() {
-        return (getLeaderRPM() + getFollowerRPM()) / 2;
+        return (getLeaderRPM() + getFollowerRPM()) / 2.0;
     }
 
     @Override

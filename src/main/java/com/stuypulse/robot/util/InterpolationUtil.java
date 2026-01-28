@@ -1,7 +1,7 @@
 package com.stuypulse.robot.util;
 
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.AngleRPMPair;
+import com.stuypulse.robot.util.AngleRPMPair;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
