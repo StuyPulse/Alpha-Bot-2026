@@ -24,4 +24,5 @@ public class SetIntakeState extends InstantCommand{
     public void initialize() {
         new Intake().setState(state);
     }    
+
 }

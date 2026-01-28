@@ -1,5 +1,5 @@
 package com.stuypulse.robot.subsystems.intake;
-    
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -40,6 +40,10 @@ public class Intake extends SubsystemBase{
         return state;
     }
 
+
+    private double voltage;
+
+
     public void setState(IntakeState state) {
         this.state = state;
     }
@@ -48,4 +52,6 @@ public class Intake extends SubsystemBase{
     public void periodic() {
         SmartDashboard.putString("Subsystems/Intake", "INTAKE");
     }
+
 }
+

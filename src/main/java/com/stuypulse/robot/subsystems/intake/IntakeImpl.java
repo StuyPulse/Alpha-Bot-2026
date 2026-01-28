@@ -7,9 +7,11 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 
+
 // .setControl (new Follower()); //because we have two motors on the intake
 // one motor needs to be inverted
 public class IntakeImpl extends Intake {
+
     private final SparkFlex intakeLeaderMotor;
     private final SparkFlex intakeFollowerMotor;
 
@@ -21,12 +23,14 @@ public class IntakeImpl extends Intake {
         intakeFollowerMotor.configure(Motors.Intake.intakeFollowerMotor, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+
     @Override
     public void periodic() {
+
         // OLD KRAKEN CODE: intakeFollowerMotor.set(new Follower(Ports.Intake.LEADER_INTAKE_KRAKEN, MotorAlignmentValue.Opposed)); //TODO: fill in later
     
-        intakeLeaderMotor.set(1); //if this doesn't work then follower didn't work in configs. Try without Follower
+        intakeLeaderMotor.set(getState().getVoltage()); //if this doesn't work then follower didn't work in configs. Try without Follower
 
     }
-    
+
 }
