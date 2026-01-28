@@ -5,7 +5,6 @@
 
 package com.stuypulse.robot.constants;
 
-import edu.wpi.first.units.PerUnit;
 import com.ctre.phoenix6.CANBus;
 
 /** This file contains the different ports of motors, solenoids and sensors */
@@ -41,5 +40,9 @@ public interface Ports {
         int MOTOR = 0;
         int ENCODER17T = 0;
         int ENCODER18T = 0;
+    }
+
+    public interface Feeder {
+        int FEEDER_MOTOR = 0; //TODO: change to actual port
     }
 }

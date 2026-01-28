@@ -103,7 +103,14 @@ public interface Motors {
                         .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET));
     }
 
-    /** Classes to store all of the values a motor needs */
+    public interface Feeder {
+        TalonFXConfig FEEDER_MOTOR_CONFIG = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Coast)
+            .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+            .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
+    }
 
     public static class TalonFXConfig {
         private final TalonFXConfiguration configuration = new TalonFXConfiguration();

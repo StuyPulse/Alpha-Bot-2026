@@ -125,4 +125,9 @@ public interface Settings {
         }
     }  
 
+    public interface Feeder {
+        double FEEDER_STOP = 0.0;
+        double FEEDER_MAX = 1.0; 
+        double FEEDER_REVERSE = -1.0;
+    }
 }
