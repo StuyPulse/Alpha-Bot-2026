@@ -21,10 +21,53 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
+    public class AngleRPMPair {
+        private final double distance;
+        private final Rotation2d angle;
+
+        public AngleRPMPair(double distance, Rotation2d angle) {
+            this.distance = distance;
+            this.angle = angle;
+        } 
+
+        public Rotation2d getAngle() {
+            return this.angle;
+        }
+
+        public double getdouble() {
+            return this.distance;
+        }
+    }
+
     boolean DEBUG_MODE = true;
 
     public interface Spindexer {
         SmartNumber RUNNING_SPEED = new SmartNumber("Spindexer/Spindexer Speed", 1);
+    }
+
+    public interface HoodedShooter {
+
+        public interface ShooterRPMS {
+            public final double RPM1 = 0.0;
+            public final double RPM2 = 0.0;
+            public final double RPM3 = 0.0;
+            public final double stow = 0.0;
+        }
+
+        public interface ShooterRPMDistances {
+            public final double RPM1Distance = 0.0;
+            public final double RPM2Distance = 0.0;
+            public final double RPM3Distance = 0.0;
+        }
+        
+        public AngleRPMPair[] interpolator1data = {
+            new AngleRPMPair(0, new Rotation2d()), 
+            new AngleRPMPair(0, new Rotation2d()), 
+            new AngleRPMPair(0, new Rotation2d()), 
+            new AngleRPMPair(0, new Rotation2d()), 
+            new AngleRPMPair(0, new Rotation2d()), 
+            new AngleRPMPair(0, new Rotation2d())
+        }; 
     }
 
     public interface EnabledSubsystems {
