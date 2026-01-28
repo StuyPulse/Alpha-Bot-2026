@@ -16,16 +16,18 @@ public class Intake extends SubsystemBase{
 
     public enum IntakeState {
         STOW(0),
-        INTAKING(3); //TODO: add to settings and reference from settings
+        INTAKING(1),
+        OUTTAKING(-1); //don't think that we need this but we have it.
+        //TODO: add to settings and reference from settings
         
-        private double voltage;
+        private double speed;
         
-        private IntakeState(double voltage){
-            this.voltage = voltage;
+        private IntakeState(double speed){
+            this.speed = speed;
         }
 
-        public double getVoltage() {
-            return voltage;
+        public double getSpeed() {
+            return speed;
         }
 
     }
@@ -41,7 +43,7 @@ public class Intake extends SubsystemBase{
     }
 
 
-    private double voltage;
+    private double speed;
 
 
     public void setState(IntakeState state) {

@@ -29,7 +29,7 @@ public class IntakeImpl extends Intake {
 
         // OLD KRAKEN CODE: intakeFollowerMotor.set(new Follower(Ports.Intake.LEADER_INTAKE_KRAKEN, MotorAlignmentValue.Opposed)); //TODO: fill in later
     
-        intakeLeaderMotor.set(getState().getVoltage()); //if this doesn't work then follower didn't work in configs. Try without Follower
+        intakeLeaderMotor.set(getState().getSpeed()); //if this doesn't work then follower didn't work in configs. Try without Follower
 
     }
 
