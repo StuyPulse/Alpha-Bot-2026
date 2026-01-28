@@ -20,6 +20,8 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -31,7 +33,52 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+    public interface Intake {
+        SparkBaseConfig intakeLeaderMotor = new SparkFlexConfig() //TODO: apply later
+        .closedLoopRampRate(0.25) //not sure about rate TODO: comment out before running if issues caused
+        .inverted(true)
+        .idleMode(SparkBaseConfig.IdleMode.kBrake);
+        
 
+        SparkBaseConfig intakeFollowerMotor = new SparkFlexConfig()
+        .closedLoopRampRate(0.25)
+        .follow(0)
+        .inverted(false)
+        .idleMode(SparkBaseConfig.IdleMode.kBrake);
+        
+        
+    }
+
+<<<<<<< Updated upstream
+=======
+    public interface Spindexer {
+        TalonFXConfig spindexerMotors = new TalonFXConfig()
+            .withCurrentLimitAmps(80)
+            .withRampRate(0.25)
+            .withNeutralMode(NeutralModeValue.Brake)
+            .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer Motors
+            .withSensorToMechanismRatio(40.0 / 12.0);
+    }
+
+    // public interface Intake {
+    //     TalonFXConfig intakeMotor1 = new TalonFXConfig()
+    //     .withCurrentLimitAmps(80)
+    //     .withRampRate(0.25)
+    //     .withNeutralMode(NeutralModeValue.Brake)
+    //     .withInvertedValue(InvertedValue.Clockwise_Positive)
+    //     .withSensorToMechanismRatio(0); //TODO: fill in later
+    
+    //     TalonFXConfig intakeMotor2 = new TalonFXConfig()
+    //     .withCurrentLimitAmps(80)
+    //     .withRampRate(0.25)
+    //     .withNeutralMode(NeutralModeValue.Brake)
+    //     .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+    //     .withSensorToMechanismRatio(0); //TODO: fill in later
+    // } 
+
+    
+
+>>>>>>> Stashed changes
     /** Classes to store all of the values a motor needs */
 
     public static class TalonFXConfig {
