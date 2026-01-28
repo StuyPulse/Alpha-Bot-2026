@@ -6,12 +6,11 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.intake.IntakeSetState;
+import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
 
 import com.stuypulse.robot.subsystems.intake.Intake;
-import com.stuypulse.robot.subsystems.intake.Intake.IntakeState;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -59,7 +58,7 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getRightButton().onTrue(new IntakeSetState(IntakeState.INTAKING));
+        driver.getRightButton().onTrue(new IntakeIntake());
 
     }
 
