@@ -21,6 +21,7 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
+    double DT = .02;
     boolean DEBUG_MODE = true;
 
     public interface Spindexer {
@@ -28,7 +29,6 @@ public interface Settings {
     }
 
     public interface HoodedShooter {
-
         public interface ShooterRPMS {
             public final double RPM1 = 0.0;
             public final double RPM2 = 0.0;
@@ -54,6 +54,13 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+    }
+
+    public interface Turret {
+        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
+        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
+        double TOLERANCE_DEG = 2.0;
     }
 
     public interface Swerve {
@@ -63,8 +70,8 @@ public interface Settings {
         public interface Constraints {    
             double MAX_VELOCITY_M_PER_S = 4.3; // should be 4.3
             double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
-            double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400);
-            double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900);
+            double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
+            double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);
     
             PathConstraints DEFAULT_CONSTRAINTS =
                 new PathConstraints(
@@ -78,8 +85,8 @@ public interface Settings {
             public interface Constraints {
                 double DEFAULT_MAX_VELOCITY = 4.3;
                 double DEFAULT_MAX_ACCELERATION = 15.0;
-                double DEFUALT_MAX_ANGULAR_VELOCITY = Units.degreesToRadians(400);
-                double DEFAULT_MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(900);
+                double DEFUALT_MAX_ANGULAR_VELOCITY = Units.degreesToRadians(400.0);
+                double DEFAULT_MAX_ANGULAR_ACCELERATION = Units.degreesToRadians(900.0);
             }
 
             public interface Tolerances {
@@ -98,6 +105,7 @@ public interface Settings {
             }
 
             public interface Targets {
+
             }
         }
     }
@@ -107,13 +115,13 @@ public interface Settings {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2.0);
         }
         public interface Turn {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
 
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2);
+            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2.0);
         }
     }  
 
