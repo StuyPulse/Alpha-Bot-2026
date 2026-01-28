@@ -17,8 +17,8 @@ public class SpindexerImpl extends Spindexer {
         super();
 
         spindexerMotors = new TalonFX[] {
-            new TalonFX(Ports.Spindexer.LEADER_KRAKEN),
-            new TalonFX(Ports.Spindexer.FOLLOWER_KRAKEN)
+            new TalonFX(Ports.Spindexer.MOTOR_LEAD),
+            new TalonFX(Ports.Spindexer.MOTOR_FOLLOW)
         };
 
         Motors.Spindexer.spindexerMotors.configure(spindexerMotors[0]);
@@ -28,7 +28,7 @@ public class SpindexerImpl extends Spindexer {
 
     private void setMotorsBasedOnState() {
         spindexerMotors[0].setControl(new DutyCycleOut(state.getSpindexerSpeed()));
-        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Opposed));
+        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.MOTOR_LEAD, MotorAlignmentValue.Opposed));
     }
 
     private double getRPM() {

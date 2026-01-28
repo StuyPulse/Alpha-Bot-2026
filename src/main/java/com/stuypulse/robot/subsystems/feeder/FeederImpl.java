@@ -12,7 +12,7 @@ public class FeederImpl extends Feeder {
     protected FeederImpl() {
         super();
         
-        this.feederMotor = new TalonFX(Ports.Feeder.FEEDER_MOTOR);
+        this.feederMotor = new TalonFX(Ports.Feeder.MOTOR);
         Motors.Feeder.FEEDER_MOTOR_CONFIG.configure(feederMotor);
     }
 

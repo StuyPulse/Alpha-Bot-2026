@@ -6,9 +6,14 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.intake.IntakeSetState;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
+
+import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.intake.Intake.IntakeState;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
+
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -27,6 +32,8 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     private final Spindexer spindexer = Spindexer.getInstance(); // The Spindexer will run at the set speed by default.
 
+    //private final Spindexer spindexer = Spindexer.getInstance(); // The Spindexer will run at the set speed by default.
+    private final Intake intake = Intake.getInstance();
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -51,7 +58,10 @@ public class RobotContainer {
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getRightButton().onTrue(new IntakeSetState(IntakeState.INTAKING));
+
+    }
 
     /**************/
     /*** AUTONS ***/

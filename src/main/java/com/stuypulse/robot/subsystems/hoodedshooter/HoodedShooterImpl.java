@@ -18,13 +18,13 @@ public class HoodedShooterImpl extends HoodedShooter {
     private final TalonFX hoodMotor;
 
     public HoodedShooterImpl() {
-        shooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorLead);
-        Motors.HoodedShooter.Shooter.SHOOTER_MASTER_CONFIG.configure(shooterMotorLead);
+        shooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD);
+        Motors.HoodedShooter.Shooter.MOTOR_MASTER_CONFIG.configure(shooterMotorLead);
 
-        shooterMotorFollower = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorFollower);
-        Motors.HoodedShooter.Shooter.SHOOTER_FOLLOWER_CONFIG.configure(shooterMotorFollower);
+        shooterMotorFollower = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_FOLLOW);
+        Motors.HoodedShooter.Shooter.MOTOR_FOLLOW_CONFIG.configure(shooterMotorFollower);
 
-        hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.HoodMotor);
+        hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
     }
 
     public double getTargetRPM() {
@@ -69,7 +69,7 @@ public class HoodedShooterImpl extends HoodedShooter {
     @Override
     public void periodic() {
         shooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
-        shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.ShooterMotorLead, MotorAlignmentValue.Opposed));
+        shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed));
 
         hoodMotor.setControl(new PositionVoltage(getTargetAngle().getDegrees()));
 

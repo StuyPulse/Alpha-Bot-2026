@@ -20,18 +20,18 @@ public interface Ports {
 
     public interface Spindexer {
         // TODO: Get Ports
-        int LEADER_KRAKEN = 20;
-        int FOLLOWER_KRAKEN = 21;
+        int MOTOR_LEAD = 20;
+        int MOTOR_FOLLOW = 21;
     }
 
     public interface HoodedShooter {
         public interface Hood {
-            int HoodMotor = 30;
+            int MOTOR = 30;
         }
 
         public interface Shooter {
-            final int ShooterMotorLead = 40;
-            final int ShooterMotorFollower = 41;
+            int MOTOR_LEAD = 40;
+            int MOTOR_FOLLOW = 41;
         }
     }
 
@@ -43,6 +43,11 @@ public interface Ports {
     }
 
     public interface Feeder {
-        int FEEDER_MOTOR = 0; //TODO: change to actual port
+        int MOTOR = 0; //TODO: GET PORTS
+    }
+
+    public interface Intake {
+        int MOTOR_LEAD = 0; //TODO: GET PORTS
+        int MOTOR_FOLLOW = 0;
     }
 }
