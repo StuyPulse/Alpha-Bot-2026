@@ -28,7 +28,7 @@ public interface Constants {
         }
 
         public interface BigGear {
-            public final int TEETH = 84;
+            public final int TEETH = 84; //TODO: GET ACTUAL TOOTH AMOUNT
         }
 
         public final double GEAR_RATIO_MOTOR_TO_MECH = 0.0; //TODO: GET

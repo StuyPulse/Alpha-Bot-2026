@@ -56,7 +56,7 @@ public interface Motors {
                             Gains.HoodedShooter.Shooter.PID.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV,
                             Gains.HoodedShooter.Shooter.FF.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO); //TODO: Make sure both motors have the same gear ratios
         }
 
         public interface Hood {
