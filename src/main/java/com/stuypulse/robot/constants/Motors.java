@@ -42,15 +42,12 @@ public interface Motors {
 
         SparkBaseConfig intakeFollowerMotor = new SparkFlexConfig()
         .closedLoopRampRate(0.25)
-        .follow(0)
         .inverted(false)
-        .idleMode(SparkBaseConfig.IdleMode.kBrake);
-        
-        
+        .idleMode(SparkBaseConfig.IdleMode.kBrake)
+        .follow(Ports.Intake.LEADER_INTAKE_NEO);
+
     }
 
-<<<<<<< Updated upstream
-=======
     public interface Spindexer {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
             .withCurrentLimitAmps(80)
@@ -78,7 +75,6 @@ public interface Motors {
 
     
 
->>>>>>> Stashed changes
     /** Classes to store all of the values a motor needs */
 
     public static class TalonFXConfig {
