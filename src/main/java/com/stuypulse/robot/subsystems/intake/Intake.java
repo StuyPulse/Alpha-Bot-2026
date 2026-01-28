@@ -1,5 +1,7 @@
 package com.stuypulse.robot.subsystems.intake;
 
+import com.stuypulse.robot.constants.Settings;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -15,12 +17,11 @@ public class Intake extends SubsystemBase{
     }
 
     public enum IntakeState {
-        STOW(0),
-        INTAKING(1),
-        OUTTAKING(-1); //don't think that we need this but we have it.
-        //TODO: add to settings and reference from settings
+        STOP(Settings.Intake.STOP),
+        INTAKING(Settings.Intake.INTAKE_SPEED),
+        OUTTAKING(Settings.Intake.OUTTAKE_SPEED);
         
-        private double speed;
+        private final double speed;
         
         private IntakeState(double speed){
             this.speed = speed;
@@ -29,13 +30,12 @@ public class Intake extends SubsystemBase{
         public double getSpeed() {
             return speed;
         }
-
     }
 
     private IntakeState state;
 
     public Intake() {
-        state = IntakeState.STOW;
+        state = IntakeState.STOP;
     }
 
     public IntakeState getState() {
@@ -48,8 +48,7 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Subsystems/Intake", "INTAKE");
+        SmartDashboard.putString("Intake/State", state.toString());
     }
-
 }
 

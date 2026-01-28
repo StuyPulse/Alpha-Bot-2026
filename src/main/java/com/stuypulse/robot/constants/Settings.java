@@ -130,4 +130,11 @@ public interface Settings {
         double FEEDER_MAX = 1.0; 
         double FEEDER_REVERSE = -1.0;
     }
+
+    public interface Intake {
+        public final double INTAKE_SPEED = 1.0;
+        public final double OUTTAKE_SPEED = -1.0;
+        public final double STOP = 0.0;
+
+    }
 }

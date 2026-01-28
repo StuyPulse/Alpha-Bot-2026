@@ -7,9 +7,6 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 
-
-// .setControl (new Follower()); //because we have two motors on the intake
-// one motor needs to be inverted
 public class IntakeImpl extends Intake {
     private final SparkFlex intakeLeaderMotor;
     private final SparkFlex intakeFollowerMotor;
@@ -21,7 +18,6 @@ public class IntakeImpl extends Intake {
         intakeLeaderMotor.configure(Motors.Intake.MOTOR_LEADER_CONFIG, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
         intakeFollowerMotor.configure(Motors.Intake.MOTOR_FOLLOW_CONFIG, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     }
-
 
     @Override
     public void periodic() {
