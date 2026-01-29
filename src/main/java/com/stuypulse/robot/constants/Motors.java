@@ -5,9 +5,11 @@
 
 package com.stuypulse.robot.constants;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
@@ -20,6 +22,9 @@ import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -31,17 +36,98 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  *  - The Open Loop Ramp Rate
  */
 public interface Motors {
+    public interface HoodedShooter {
+        public interface Shooter {
+            TalonFXConfig MOTOR_MASTER_CONFIG = new TalonFXConfig()
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI,
+                            Gains.HoodedShooter.Shooter.PID.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV,
+                            Gains.HoodedShooter.Shooter.FF.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+
+            TalonFXConfig MOTOR_FOLLOW_CONFIG = new TalonFXConfig()
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI,
+                            Gains.HoodedShooter.Shooter.PID.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV,
+                            Gains.HoodedShooter.Shooter.FF.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO); // TODO: Make sure both motors
+                                                                                          // have the same gear ratios
+        }
+
+        public interface Hood {
+            TalonFXConfig hoodMotorConfig = new TalonFXConfig()
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Hood.PID.kP, Gains.HoodedShooter.Hood.PID.kI,
+                            Gains.HoodedShooter.Hood.PID.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kV,
+                            Gains.HoodedShooter.Hood.FF.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+        }
+    }
+
+    public interface Intake {
+        SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig() // TODO: apply later
+                .closedLoopRampRate(0.25)
+                .inverted(true) // TODO: GET INVERTED VAL
+                .idleMode(SparkBaseConfig.IdleMode.kBrake);
+
+        SparkBaseConfig MOTOR_FOLLOW_CONFIG = new SparkFlexConfig()
+                .closedLoopRampRate(0.25)
+                .inverted(false)
+                .idleMode(SparkBaseConfig.IdleMode.kBrake)
+                .follow(Ports.Intake.MOTOR_LEAD);
+    }
 
     public interface Spindexer {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
-            .withCurrentLimitAmps(80)
-            .withRampRate(0.25)
-            .withNeutralMode(NeutralModeValue.Brake)
-            .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer Motors
-            .withSensorToMechanismRatio(40.0 / 12.0);
+                .withCurrentLimitAmps(80)
+                .withRampRate(.25)
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer motors
+                .withSensorToMechanismRatio(Constants.Spindexer.GEAR_RATIO);
     }
 
-    /** Classes to store all of the values a motor needs */
+    public interface Turret {
+        TalonFXConfig turretMotor = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(.25)
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH); // TODO: GET INVERTED VAL AND
+                                                                                        // SENSOR TO MECH RATIO
+
+        CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                        .withAbsoluteSensorDiscontinuityPoint(1)
+                        .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET));
+
+        CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                        .withAbsoluteSensorDiscontinuityPoint(1)
+                        .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET));
+    }
+
+    public interface Feeder {
+        TalonFXConfig FEEDER_MOTOR_CONFIG = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Coast)
+                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
+    }
 
     public static class TalonFXConfig {
         private final TalonFXConfiguration configuration = new TalonFXConfiguration();
@@ -166,7 +252,7 @@ public interface Motors {
         // CURRENT LIMIT CONFIGS
 
         public TalonFXConfig withCurrentLimitAmps(double currentLimitAmps) {
-			currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
+            currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
             currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
             configuration.withCurrentLimits(currentLimitsConfigs);

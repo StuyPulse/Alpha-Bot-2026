@@ -12,6 +12,7 @@ public class Gains {
             double kI = 0.0;
             double kD = 0.0;
         }
+
         public interface Turn {
             double kS = 0.1;
             double kV = 2.66;
@@ -20,6 +21,7 @@ public class Gains {
             double kI = 0.0;
             double kD = 0.5;
         }
+
         public interface Alignment {
             double kP = 0.0;
             double kI = 0.0;
@@ -32,4 +34,33 @@ public class Gains {
             PIDConstants THETA = new PIDConstants(0.0, 0.0, 0.0);
         }
     }
+    public interface HoodedShooter {
+        public interface Shooter {
+            public interface PID {
+                double kP = 0.0;
+                double kI = 0.0;
+                double kD = 0.0;
+            }
+            public interface FF {
+                double kS = 0.0;
+                double kV = 0.0;
+                double kA = 0.0;
+            }
+        }
+
+        public interface Hood {
+            public interface PID {
+                double kP = 0.0;
+                double kI = 0.0;
+                double kD = 0.0;
+            }
+            public interface FF {
+                double kS = 0.0;
+                double kV = 0.0;
+                double kA = 0.0;
+            }
+        }
+        
+    }
+
 }
