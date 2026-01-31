@@ -1,4 +1,3 @@
-/************************ PROJECT KITBOT *************************/
 /* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
@@ -28,7 +27,26 @@ public interface Field {
     public static final Field2d FIELD2D = new Field2d();
 
     double WIDTH = Units.inchesToMeters(317.000); 
-    double LENGTH = Units.inchesToMeters(690.876);
+    double LENGTH = Units.inchesToMeters(651.200);
+
+    // Alliance relative hub center coordinates
+    public final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
+
+    public static Pose2d getAllianceHubPose() {
+        return hubCenter;
+    }
+
+    // 1.0 meters from driverstation wall and field wall
+    public final Pose2d leftFerryZone = new Pose2d(1.0, WIDTH - 1.0, new Rotation2d());
+    public final Pose2d rightFerryZone = new Pose2d(1.0, 1.0, new Rotation2d());
+
+    public static Pose2d getFerryZonePose(Translation2d robot) { 
+        if (robot.getDistance(leftFerryZone.getTranslation()) > robot.getDistance(rightFerryZone.getTranslation())) {
+            return rightFerryZone;
+        } else {
+            return leftFerryZone;
+        }
+    }
 
     /*** APRILTAGS ***/
 
@@ -145,12 +163,6 @@ public interface Field {
     public final int[] BLUE_TOWER_TAG_IDS = {31, 32};
     public final int[] RED_HP_TAG_IDS = {13, 14};
     public final int[] BLUE_HP_TAG_IDS = {29, 30};
-
-    public final Pose2d blueHubCenter = new Pose2d(Units.inchesToMeters(158.60), Units.inchesToMeters(WIDTH / 2.0), new Rotation2d());
-
-    public static Pose2d getAllianceHubPose() {
-        return (Robot.isBlue() ? blueHubCenter : transformToOppositeAlliance(blueHubCenter));
-    }
 
     /* TRANSFORM FUNCTIONS */
     

@@ -12,7 +12,7 @@ public class InterpolationUtil {
         interpolator1 = new InterpolatingDoubleTreeMap();
 
         for (AngleRPMPair interpolationvalue : Settings.HoodedShooter.interpolator1data) {
-            interpolator1.put(interpolationvalue.getdouble(), interpolationvalue.getAngle().getDegrees());
+            interpolator1.put(interpolationvalue.getDouble(), interpolationvalue.getAngle().getDegrees());
         }
     }
 

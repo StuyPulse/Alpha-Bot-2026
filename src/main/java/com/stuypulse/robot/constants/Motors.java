@@ -38,7 +38,7 @@ import com.revrobotics.spark.config.SparkFlexConfig;
 public interface Motors {
     public interface HoodedShooter {
         public interface Shooter {
-            TalonFXConfig MOTOR_MASTER_CONFIG = new TalonFXConfig()
+            TalonFXConfig MOTOR_LEADER_CONFIG = new TalonFXConfig()
                     .withCurrentLimitAmps(80)
                     .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Coast)
@@ -111,13 +111,13 @@ public interface Motors {
                 .withMagnetSensor(new MagnetSensorConfigs()
                         .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
                         .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET));
+                        .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
 
         CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
                         .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
                         .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET));
+                        .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
     }
 
     public interface Feeder {

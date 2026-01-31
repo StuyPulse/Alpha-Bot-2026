@@ -21,13 +21,32 @@ import edu.wpi.first.math.util.Units;
  * values that we can edit on Shuffleboard.
  */
 public interface Settings {
-    double DT = .02;
+    double DT = 0.020;
     boolean DEBUG_MODE = true;
 
-    public interface Spindexer {
-        SmartNumber RUNNING_SPEED = new SmartNumber("Spindexer/Spindexer Speed", 1);
+    public interface EnabledSubsystems {
+        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", false);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
     }
 
+    public interface Spindexer {
+        double RUNNING_SPEED = 1.0;
+    }
+
+    public interface Feeder {
+        double FEEDER_STOP = 0.0;
+        double FEEDER_MAX = 1.0; 
+        double FEEDER_REVERSE = -1.0;
+    }
+
+    public interface Intake {
+        double INTAKE_SPEED = 1.0;
+        double OUTTAKE_SPEED = -1.0;
+        double STOP = 0.0;
+    }
     public interface HoodedShooter {
         public interface ShooterRPMS {
             public final double RPM1 = 0.0;
@@ -50,11 +69,6 @@ public interface Settings {
             new AngleRPMPair(), 
             new AngleRPMPair()
         }; 
-    }
-
-    public interface EnabledSubsystems {
-        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
     }
 
     public interface Turret {
@@ -109,7 +123,6 @@ public interface Settings {
             }
         }
     }
-
     public interface Driver {
         public interface Drive {
             SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
@@ -123,18 +136,5 @@ public interface Settings {
             SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
             SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2.0);
         }
-    }  
-
-    public interface Feeder {
-        double FEEDER_STOP = 0.0;
-        double FEEDER_MAX = 1.0; 
-        double FEEDER_REVERSE = -1.0;
-    }
-
-    public interface Intake {
-        public final double INTAKE_SPEED = 1.0;
-        public final double OUTTAKE_SPEED = -1.0;
-        public final double STOP = 0.0;
-
     }
 }

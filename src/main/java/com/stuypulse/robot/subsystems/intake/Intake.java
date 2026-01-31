@@ -21,14 +21,14 @@ public class Intake extends SubsystemBase{
         INTAKING(Settings.Intake.INTAKE_SPEED),
         OUTTAKING(Settings.Intake.OUTTAKE_SPEED);
         
-        private final double speed;
+        private final double dutyCycle;
         
-        private IntakeState(double speed){
-            this.speed = speed;
+        private IntakeState(double dutyCycle){
+            this.dutyCycle = dutyCycle;
         }
 
-        public double getSpeed() {
-            return speed;
+        public double getDutyCycle() {
+            return dutyCycle;
         }
     }
 
@@ -49,6 +49,7 @@ public class Intake extends SubsystemBase{
     @Override
     public void periodic() {
         SmartDashboard.putString("Intake/State", state.toString());
+        SmartDashboard.putString("States/Intake", state.toString());
     }
 }
 

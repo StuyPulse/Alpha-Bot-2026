@@ -2,23 +2,22 @@ package com.stuypulse.robot.subsystems.hoodedshooter;
 
 import java.util.function.Supplier;
 
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.AngleRPMPair;
 import com.stuypulse.robot.util.InterpolationUtil;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class HoodedShooter extends SubsystemBase {
+    private static HoodedShooter instance;
     private HoodedShooterState state;
-
-    public static HoodedShooter instance;
 
     static {
         instance = new HoodedShooterImpl();
     }
 
-    public static HoodedShooter getinstance() {
+    public static HoodedShooter getInstance() {
         return instance;
     }
 
@@ -58,13 +57,15 @@ public abstract class HoodedShooter extends SubsystemBase {
 
     public abstract double getFollowerRPM();
 
-    public abstract Rotation2d getHoodAngle();
-
     public abstract double getShooterRPM();
 
-    public abstract double getLeaderVoltage();
-
-    public abstract double getFollowerVoltage();
-
     public abstract Rotation2d getTargetAngle();
+
+    public abstract Rotation2d getHoodAngle();
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("HoodedShooter/State", state.name());
+        SmartDashboard.putString("States/HoodedShooter", state.name());
+    }
 }

@@ -20,7 +20,7 @@ public class AngleRPMPair {
         return this.angle;
     }
 
-    public double getdouble() {
+    public double getDouble() {
         return this.distance;
     }
 }

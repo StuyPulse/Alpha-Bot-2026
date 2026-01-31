@@ -20,7 +20,7 @@ public interface Ports {
 
     public interface Spindexer {
         // TODO: Get Ports
-        int MOTOR_LEAD = 20;
+        int MOTOR_LEADER = 20;
         int MOTOR_FOLLOW = 21;
     }
 

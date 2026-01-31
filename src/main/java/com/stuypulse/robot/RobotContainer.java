@@ -6,10 +6,12 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Ports;
-
+import com.stuypulse.robot.subsystems.feeder.Feeder;
+import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 
@@ -29,10 +31,11 @@ public class RobotContainer {
     
     // Subsystems
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-    private final Spindexer spindexer = Spindexer.getInstance(); // The Spindexer will run at the set speed by default.
+    public final Spindexer spindexer = Spindexer.getInstance();
+    public final Feeder feeder = Feeder.getInstance();
+    public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
+    public final Intake intake = Intake.getInstance();
 
-    //private final Spindexer spindexer = Spindexer.getInstance(); // The Spindexer will run at the set speed by default.
-    private final Intake intake = Intake.getInstance();
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
 
@@ -59,7 +62,6 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
         driver.getRightButton().onTrue(new IntakeIntake());
-
     }
 
     /**************/

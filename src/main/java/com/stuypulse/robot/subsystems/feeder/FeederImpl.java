@@ -7,28 +7,25 @@ import com.stuypulse.robot.constants.Ports;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class FeederImpl extends Feeder {
-    private final TalonFX feederMotor;
+    private final TalonFX motor;
 
     protected FeederImpl() {
         super();
         
-        this.feederMotor = new TalonFX(Ports.Feeder.MOTOR);
-        Motors.Feeder.FEEDER_MOTOR_CONFIG.configure(feederMotor);
-    }
-
-    public double getCurrentFeederRPM() {
-        return feederMotor.getVelocity().getValueAsDouble() * 60.0;
-    }
-
-    public double getTargetRPM(){
-        return getFeederState().getFeederSpeed();
+        motor = new TalonFX(Ports.Feeder.MOTOR);
+        Motors.Feeder.FEEDER_MOTOR_CONFIG.configure(motor);
     }
 
     @Override
     public void periodic() {
         super.periodic();
-        feederMotor.set(getFeederState().getFeederSpeed());
+        motor.set(getFeederState().getTargetDutyCycle());
 
-        SmartDashboard.putNumber("Feeder/Motor Speed (RPM)", getCurrentFeederRPM());
+        SmartDashboard.putNumber("Feeder/Target Duty Cycle", getFeederState().getTargetDutyCycle());
+        SmartDashboard.putNumber("Feeder/Motor Velocity", motor.getVelocity().getValueAsDouble() * 60.0);
+
+        SmartDashboard.putNumber("Feeder/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
     }
 }
