@@ -37,7 +37,7 @@ public interface Ports {
 
     public interface Turret {
         // TODO: Get Ports
-        int MOTOR = 3; //changed so Rev Lib didn't give me errors
+        int MOTOR = 3; //Ports changed so that Rev Lib/gradle wouldn't give error
         int ENCODER17T = 4;
         int ENCODER18T = 5;
     }
