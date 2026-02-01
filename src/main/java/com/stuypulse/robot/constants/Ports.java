@@ -37,17 +37,17 @@ public interface Ports {
 
     public interface Turret {
         // TODO: Get Ports
-        int MOTOR = 0;
-        int ENCODER17T = 0;
-        int ENCODER18T = 0;
+        int MOTOR = 3; //changed so Rev Lib didn't give me errors
+        int ENCODER17T = 4;
+        int ENCODER18T = 5;
     }
 
     public interface Feeder {
-        int MOTOR = 0; //TODO: GET PORTS
+        int MOTOR = 6; //TODO: GET PORTS
     }
 
     public interface Intake {
-        int MOTOR_LEAD = 0; //TODO: GET PORTS
-        int MOTOR_FOLLOW = 0;
+        int MOTOR_LEAD = 7; //TODO: GET PORTS
+        int MOTOR_FOLLOW = 8;
     }
 }

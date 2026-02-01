@@ -24,6 +24,7 @@ public class IntakeImpl extends Intake {
     @Override
     public void periodic() {
         intakeLeaderMotor.set(getState().getDutyCycle());
+        //SmartDashboard.putString("Intake/State in Impl", state.toString()); //knew something was real bad when this wasn't changing
 
         SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
         SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());
