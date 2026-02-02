@@ -6,13 +6,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase{
-    private static Intake instance; //major access modifier/data type errors (1.)
+    private static final Intake instance;
+    private IntakeState state;
 
     static {
         instance = new IntakeImpl();
     }
 
-    public static Intake getInstance() { //(2.)
+    public static Intake getInstance() {
         return instance;
     }
 
@@ -32,8 +33,6 @@ public class Intake extends SubsystemBase{
         }
     }
 
-    protected IntakeState state;
-
     public Intake() {
         state = IntakeState.INTAKING;
     }
@@ -48,8 +47,8 @@ public class Intake extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Intake/State", state.toString()); //was changing with errors, but I noticed values didn't change
-        //SmartDashboard.putString("States/Intake", state.toString());
+        SmartDashboard.putString("Intake/State", getState().name());
+        SmartDashboard.putString("States/Intake", getState().name());
     }
 }
 

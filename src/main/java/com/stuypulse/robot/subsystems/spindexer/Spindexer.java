@@ -2,10 +2,12 @@ package com.stuypulse.robot.subsystems.spindexer;
 
 import com.stuypulse.robot.constants.Settings;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Spindexer extends SubsystemBase {
-    public static final Spindexer instance;
+    private static final Spindexer instance;
+
     private SpindexerState state;
 
     static {
@@ -41,6 +43,12 @@ public class Spindexer extends SubsystemBase {
 
     public void setState(SpindexerState state) {
         this.state = state;
+    }
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("Spindexer/State", getState().name());
+        SmartDashboard.putString("States/Spindexer", getState().name());
     }
     
 }

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase{
-    public static final Feeder instance;
+    private static final Feeder instance;
     private FeederState state;
 
     static {
@@ -46,7 +46,7 @@ public class Feeder extends SubsystemBase{
     }
 
     public void periodic() {
-        SmartDashboard.putString("Feeder/State", getFeederState().toString());
-        SmartDashboard.putString("States/Feeder", getFeederState().toString());
+        SmartDashboard.putString("Feeder/State", getFeederState().name());
+        SmartDashboard.putString("States/Feeder", getFeederState().name());
     }
 }

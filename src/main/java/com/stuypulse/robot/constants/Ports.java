@@ -19,7 +19,6 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        // TODO: Get Ports
         int MOTOR_LEADER = 20;
         int MOTOR_FOLLOW = 21;
     }
@@ -36,18 +35,17 @@ public interface Ports {
     }
 
     public interface Turret {
-        // TODO: Get Ports
-        int MOTOR = 3; //Ports changed so that Rev Lib/gradle wouldn't give error
+        int MOTOR = 3;
         int ENCODER17T = 4;
         int ENCODER18T = 5;
     }
 
     public interface Feeder {
-        int MOTOR = 6; //TODO: GET PORTS
+        int MOTOR = 6;
     }
 
     public interface Intake {
-        int MOTOR_LEAD = 7; //TODO: GET PORTS
+        int MOTOR_LEAD = 7;
         int MOTOR_FOLLOW = 8;
     }
 }
