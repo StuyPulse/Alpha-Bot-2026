@@ -10,7 +10,7 @@ public class HoodedShooterSetState extends InstantCommand {
     private final HoodedShooterState state;
 
     public HoodedShooterSetState(HoodedShooterState state) {
-        hoodedshooter = HoodedShooter.getinstance();
+        hoodedshooter = HoodedShooter.getInstance();
         this.state = state;
 
         addRequirements(hoodedshooter);

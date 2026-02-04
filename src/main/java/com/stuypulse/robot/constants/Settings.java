@@ -21,6 +21,18 @@ import edu.wpi.first.math.util.Units;
  */
 public interface Settings {
 
+    public interface EnabledSubsystems {
+        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+        SmartBoolean LIMELIGHT_TURRET = new SmartBoolean("Enabled Subsystems/Limelight-Turret Is Enabled", true);
+    }
+
+    public final double DT = 0.02; // LoopTime
+
+    public interface Shooter {
+        SmartNumber shooterRpmTolerance = new SmartNumber("HoodedShooter/Shooter/ shooterRpmTolerance", 50);
+    }
+
     public class AngleRPMPair {
         private final double distance;
         private final Rotation2d angle;
@@ -48,7 +60,7 @@ public interface Settings {
     public interface HoodedShooter {
 
         public interface ShooterRPMS {
-            public final double RPM1 = 0.0;
+            public final double RPM1 = 0.0; 
             public final double RPM2 = 0.0;
             public final double RPM3 = 0.0;
             public final double stow = 0.0;
@@ -68,10 +80,6 @@ public interface Settings {
             new AngleRPMPair(0, new Rotation2d()), 
             new AngleRPMPair(0, new Rotation2d())
         }; 
-    }
-
-    public interface EnabledSubsystems {
-        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
     }
 
     public interface Swerve {

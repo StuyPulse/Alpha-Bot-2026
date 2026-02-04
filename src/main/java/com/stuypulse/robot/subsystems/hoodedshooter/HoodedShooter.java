@@ -1,82 +1,91 @@
 package com.stuypulse.robot.subsystems.hoodedshooter;
 
-import java.util.function.Supplier;
-
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.constants.Settings.AngleRPMPair;
-import com.stuypulse.robot.util.InterpolationUtil;
+import com.stuypulse.robot.Robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class HoodedShooter extends SubsystemBase {
+public abstract class HoodedShooter extends SubsystemBase{
+    private static final HoodedShooter instance;
     private HoodedShooterState state;
 
-    public static HoodedShooter instance;
+    private Rotation2d targetAngle;
+
 
     static {
-        instance = new HoodedShooterImpl();
+        if (Robot.isReal())
+            instance = new HoodedShooterImpl();
+        else
+            instance = new HoodedShooterSim();
     }
-
-    public static HoodedShooter getinstance() {
+    
+    public static HoodedShooter getInstance(){
         return instance;
     }
-
+    
     public enum HoodedShooterState {
-        SHOOT(
-            () -> {
-                return InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub());
-            }
-        ),
-        STOW(
-            () -> {
-                return new AngleRPMPair(0.0 , new Rotation2d());
-            }
-        ),
-        FERRY    (
-            () -> {
-                return new AngleRPMPair(0.0 , new Rotation2d());
-            }
-        );
-
-        private Supplier<AngleRPMPair> angleRPMPair;
-
-        private HoodedShooterState(Supplier<AngleRPMPair> shooterRPM) {
-            this.angleRPMPair = shooterRPM;
-        }
-
-        public Supplier<AngleRPMPair> getAngleRPMPair() {
-            return angleRPMPair;
-        }
+        STOW,
+        FERRY,
+        SHOOT;
     }
 
     public HoodedShooter() {
         state = HoodedShooterState.STOW;
+        
+        targetAngle = Constants.HoodedShooter.MIN_ANGLE;
+
     }
 
-    public void setState(HoodedShooterState state) {
-        this.state = state;
-    }
+    public abstract double getCurrentRPS();
+    public abstract Rotation2d getCurrentAngle();
 
-    public HoodedShooterState getState() {
+    public HoodedShooterState getState(){
         return state;
     }
 
-    public static double getDistanceFromHub() {
-        return 0.0;
+    public void setState(HoodedShooterState state){
+        this.state = state;
     }
 
-    public abstract double getLeaderRPM();
+    public void setTargetAngle(Rotation2d angle) {
+        targetAngle = angle;
+    }
+ 
+    public Rotation2d getTargetAngle() {
+        return targetAngle;
+    }
 
-    public abstract double getFollowerRPM();
+    public double getTargetRPM() {
+        return switch(state) {
+            case STOW -> 0;
+            case FERRY -> getFerryRPM();
+            case SHOOT -> getShootRPM();
+        };
+    }
 
-    public abstract Rotation2d getHoodAngle();
 
-    public abstract double getShooterRPM();
+    public double getShootRPM() {
+        return Constants.HoodedShooter.SHOT_RPM;
+    }
 
-    public abstract double getLeaderVoltage();
+    public double getFerryRPM() {
+        return Constants.HoodedShooter.FERRY_RPM; 
+    }
 
-    public abstract double getFollowerVoltage();
+    public boolean spunUp() {
+        double diff = Math.abs(getTargetRPM() - getCurrentRPS() * 60);
+        return (diff > Settings.Shooter.shooterRpmTolerance.getAsDouble());
+    }
 
-    public abstract Rotation2d getTargetAngle();
+    @Override 
+    public void periodic() {
+        SmartDashboard.putString("hdsr/state", getState().name());
+        SmartDashboard.putNumber("hdsr/targetAngle", getTargetAngle().getDegrees());
+        SmartDashboard.putNumber("hdsr/currentAngle", getCurrentAngle().getDegrees());
+        SmartDashboard.putNumber("hdsr/currentRPM", getCurrentRPS() * 60);
+        SmartDashboard.putNumber("hdsr/targetRPM", getTargetRPM());
+    }
 }

@@ -5,10 +5,13 @@
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.TurretHoodAlignToTarget;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetStateShoot;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
-import com.stuypulse.robot.subsystems.spindexer.Spindexer;
+import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -23,9 +26,10 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
-    // Subsystems
+    // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-    private final Spindexer spindexer = Spindexer.getInstance(); // The Spindexer will run at the set speed by default.
+    public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
+    
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -33,10 +37,11 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
-        swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
+
+        SmartDashboard.putData("Field", Field.FIELD2D);
     }
 
     /****************/
@@ -45,13 +50,19 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-    }
+        hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
+    }   
 
     /***************/
     /*** BUTTONS ***/
     /***************/
 
-    private void configureButtonBindings() {}
+    private void configureButtonBindings() {
+        driver.getLeftButton().onTrue(
+            new HoodedShooterSetStateShoot()
+        //TODO: Button Bindings?
+        ); 
+    }
 
     /**************/
     /*** AUTONS ***/

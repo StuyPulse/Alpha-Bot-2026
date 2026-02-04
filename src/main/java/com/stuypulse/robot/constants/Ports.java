@@ -5,8 +5,6 @@
 
 package com.stuypulse.robot.constants;
 
-import edu.wpi.first.units.PerUnit;
-
 /** This file contains the different ports of motors, solenoids and sensors */
 public interface Ports {
     public interface Gamepad {
@@ -28,8 +26,10 @@ public interface Ports {
         }
 
         public interface Shooter {
+            // TODO: Find ports for all motors below
             final int ShooterMotorLead = 40;
-            final int ShooterMotorFollower = 41;
+            final int ShooterMotorFollower1 = 41; 
+            final int ShooterMotorFollower2 = 41;
             
         }
         

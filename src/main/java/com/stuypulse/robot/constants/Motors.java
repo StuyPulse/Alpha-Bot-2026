@@ -32,32 +32,27 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  */
 public interface Motors {
     public interface HoodedShooter {
+        //TODO: MAKE SURE OF INVERTED VALUES
         public interface Shooter {
-            TalonFXConfig SHOOTER_MASTER_CONFIG = new TalonFXConfig()
+            TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Coast)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI, Gains.HoodedShooter.Shooter.PID.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV, Gains.HoodedShooter.Shooter.FF.kA, 0);
-            TalonFXConfig SHOOTER_FOLLOWER_CONFIG = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
-                .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Coast)
-                .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI, Gains.HoodedShooter.Shooter.PID.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV, Gains.HoodedShooter.Shooter.FF.kA, 0);
+                .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI, Gains.HoodedShooter.Shooter.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV, Gains.HoodedShooter.Shooter.kA, 0)
+                .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
         }
 
         public interface Hood {
-            TalonFXConfig hoodMotorConfig = new TalonFXConfig()
+            TalonFXConfig HOOD_CONFIG = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Hood.PID.kP,Gains.HoodedShooter.Hood.PID.kI, Gains.HoodedShooter.Hood.PID.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kA, 0)
-                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.HOOD_GEAR_RATIO);
+                .withPIDConstants(Gains.HoodedShooter.Hood.kP,Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
         }
     }
     
