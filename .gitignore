@@ -164,3 +164,4 @@ bin/
 # Logs
 *.wpilog
 *.log
+*.dat

@@ -24,7 +24,7 @@ public interface Settings {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
-        SmartBoolean LIMELIGHT_TURRET = new SmartBoolean("Enabled Subsystems/Limelight-Turret Is Enabled", true);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
     }
 
     public final double DT = 0.02; // LoopTime

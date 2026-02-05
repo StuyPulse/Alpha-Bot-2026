@@ -4,6 +4,7 @@ import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.ShotCalculator.AlignAngleSolution;
+import com.stuypulse.stuylib.math.Vector2D;
 import com.stuypulse.robot.util.ShotCalculator;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
@@ -65,12 +66,12 @@ public class TurretHoodAlignToTarget extends Command{
             targetPose = Field.hubCenter3d; // placeholder
         }
 
-        targetPose = Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose); // this needs to be changed when vision implemented
-
-        Pose2d currentPose = Robot.isBlue() ? swerve.getPose() : Field.transformToOppositeAlliance(swerve.getPose());
+        Pose2d currentPose = swerve.getPose();
 
         prevfieldRelRobotSpeeds = fieldRelRobotSpeeds;
-        fieldRelRobotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getChassisSpeeds(), currentPose.getRotation());
+
+        Vector2D swerveFieldRelativeSpeeds = swerve.getFieldRelativeSpeeds(); // why is this vector2d >:(
+        fieldRelRobotSpeeds = new ChassisSpeeds(swerveFieldRelativeSpeeds.x, swerveFieldRelativeSpeeds.y, swerveFieldRelativeSpeeds.getAngle().toRadians());
         
         AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
             new Pose3d(currentPose), // TODO: add the field relative shooter offset on the robot
