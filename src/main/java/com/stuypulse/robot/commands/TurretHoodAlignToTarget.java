@@ -59,13 +59,13 @@ public class TurretHoodAlignToTarget extends Command{
 
         // update targetPose each tick
         if (hdsr.getState() == HoodedShooterState.SHOOT) {
-            targetPose = Field.hubPose3d;
+            targetPose = Field.hubCenter3d;
         }
         else {
-            targetPose = Field.hubPose3d; // placeholder
+            targetPose = Field.hubCenter3d; // placeholder
         }
 
-        targetPose = Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose);
+        targetPose = Robot.isBlue() ? targetPose : Field.transformToOppositeAlliance(targetPose); // this needs to be changed when vision implemented
 
         Pose2d currentPose = Robot.isBlue() ? swerve.getPose() : Field.transformToOppositeAlliance(swerve.getPose());
 
