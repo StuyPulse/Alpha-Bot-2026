@@ -1,6 +1,9 @@
 package com.stuypulse.robot.constants;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.util.Units;
 
@@ -12,6 +15,7 @@ public class Constants {
 
         double SHOT_RPM = 4000;
         double FERRY_RPM = 4000;
+        Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);  // TODO: add the field relative shooter offset on the robot
 
 
         public interface Hood {

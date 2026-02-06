@@ -9,10 +9,12 @@ import com.stuypulse.robot.util.ShotCalculator;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -70,11 +72,10 @@ public class TurretHoodAlignToTarget extends Command{
 
         prevfieldRelRobotSpeeds = fieldRelRobotSpeeds;
 
-        Vector2D swerveFieldRelativeSpeeds = swerve.getFieldRelativeSpeeds(); // why is this vector2d >:(
-        fieldRelRobotSpeeds = new ChassisSpeeds(swerveFieldRelativeSpeeds.x, swerveFieldRelativeSpeeds.y, swerveFieldRelativeSpeeds.getAngle().toRadians());
+        fieldRelRobotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getChassisSpeeds(), currentPose.getRotation());
         
         AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
-            new Pose3d(currentPose), // TODO: add the field relative shooter offset on the robot
+            new Pose3d(currentPose.plus(Constants.HoodedShooter.TURRET_OFFSET)),
             targetPose,
             prevfieldRelRobotSpeeds,
             fieldRelRobotSpeeds,
@@ -88,8 +89,9 @@ public class TurretHoodAlignToTarget extends Command{
         // this is the required yaw for shooting into the effective hub
         Rotation2d targetTurretAngle = sol.requiredYaw().minus(currentPose.getRotation()) ;
 
-        targetPose2d.setPose(targetPose.toPose2d());
-        virtualHubPose2d.setPose(sol.estimateTargetPose().toPose2d());
+        // transform for sim since blue is always origin
+        targetPose2d.setPose(Robot.isBlue() ? targetPose.toPose2d() : Field.transformToOppositeAlliance(targetPose).toPose2d());
+        virtualHubPose2d.setPose((Robot.isBlue() ? sol.estimateTargetPose() : Field.transformToOppositeAlliance(sol.estimateTargetPose())).toPose2d());
   
         SmartDashboard.putNumber("hdsr/calculated yaw", targetTurretAngle.getDegrees());
         // TODO: set turret angle here    
