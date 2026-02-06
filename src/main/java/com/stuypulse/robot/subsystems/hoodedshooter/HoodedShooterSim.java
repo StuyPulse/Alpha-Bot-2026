@@ -30,11 +30,11 @@ public class HoodedShooterSim extends HoodedShooter{
 
         shooter = new FlywheelSim(
             LinearSystemId.createFlywheelSystem(
-                DCMotor.getKrakenX44(3),
+                DCMotor.getKrakenX44(2),
                 1.0,
                 3.0
             ),
-            DCMotor.getKrakenX44(3)
+            DCMotor.getKrakenX44(2)
         );
         
         hoodController = new AnglePIDController(
