@@ -6,7 +6,6 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.path.PathConstraints;
-import com.stuypulse.robot.util.AngleRPMPair;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -28,8 +27,9 @@ public interface Settings {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
         SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
     }
 
     public interface Spindexer {
@@ -48,6 +48,7 @@ public interface Settings {
         double STOP = 0.0;
     }
     public interface HoodedShooter {
+        double RPM_TOLERANCE = 150.0;
         public interface ShooterRPMS {
             public final double RPM1 = 0.0; 
             public final double RPM2 = 0.0;
@@ -60,15 +61,6 @@ public interface Settings {
             public final double RPM2Distance = 0.0;
             public final double RPM3Distance = 0.0;
         }
-        
-        public AngleRPMPair[] interpolator1data = {
-            new AngleRPMPair(), 
-            new AngleRPMPair(), 
-            new AngleRPMPair(), 
-            new AngleRPMPair(), 
-            new AngleRPMPair(), 
-            new AngleRPMPair()
-        }; 
     }
 
     public interface Turret {

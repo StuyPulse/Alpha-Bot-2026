@@ -58,8 +58,6 @@ public class TurretHoodAlignToTarget extends Command{
 
     @Override
     public void execute() {
-        
-
         // update targetPose each tick
         if (hdsr.getState() == HoodedShooterState.SHOOT) {
             targetPose = Field.hubCenter3d;
@@ -79,7 +77,7 @@ public class TurretHoodAlignToTarget extends Command{
             targetPose,
             prevfieldRelRobotSpeeds,
             fieldRelRobotSpeeds,
-            hdsr.getCurrentRPS(), 
+            hdsr.getShooterRPM() / 60.0, 
             Constants.Align.MAX_ITERATIONS,
             Constants.Align.TIME_TOLERANCE
         );

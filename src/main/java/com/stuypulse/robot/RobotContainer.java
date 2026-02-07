@@ -66,10 +66,11 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        driver.getLeftButton().onTrue(
-            new HoodedShooterSetStateShoot()
-        //TODO: Button Bindings?
-        ); 
+        // driver.getLeftButton().onTrue(
+        //     new HoodedShooterSetStateShoot()
+        // //TODO: Button Bindings?
+        // ); 
+        
         driver.getRightButton().onTrue(new IntakeIntake());
         driver.getLeftButton().onTrue(new IntakeStop());
     }

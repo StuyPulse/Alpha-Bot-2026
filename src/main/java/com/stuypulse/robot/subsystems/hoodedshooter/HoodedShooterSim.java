@@ -50,16 +50,22 @@ public class HoodedShooterSim extends HoodedShooter{
         );
     }
 
-    public Rotation2d getCurrentAngle() {
+    @Override
+    public Rotation2d getHoodAngle() {
         return Rotation2d.fromRotations(hood.getOutput(0));
+    }
+
+    @Override
+    public double getShooterRPM() {
+        return shooter.getAngularVelocityRPM();
     }
 
     @Override
     public void periodic() {
         super.periodic();
 
-        hoodController.update(Angle.fromRotation2d(getTargetAngle()), Angle.fromRotation2d(getCurrentAngle()));
-        shooterController.update(getTargetRPM(), getCurrentRPS() * 60);
+        hoodController.update(Angle.fromRotation2d(getTargetAngle()), Angle.fromRotation2d(getHoodAngle()));
+        shooterController.update(getTargetRPM(), getShooterRPM());
         // SmartDashboard.putNumber("hdsr/Output Voltage", controller);
 
         hood.setInput(hoodController.getOutput());
@@ -74,8 +80,4 @@ public class HoodedShooterSim extends HoodedShooter{
         shooter.update(Settings.DT);      
     }
 
-	@Override
-	public double getCurrentRPS() {
-        return shooter.getOutput(0);
-	}
 }

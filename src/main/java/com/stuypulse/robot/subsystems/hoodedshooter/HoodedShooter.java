@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public abstract class HoodedShooter extends SubsystemBase{
     private static final HoodedShooter instance;
+    
     private HoodedShooterState state;
 
     private Rotation2d targetAngle;
-
 
     static {
         if (Robot.isReal())
@@ -34,13 +34,7 @@ public abstract class HoodedShooter extends SubsystemBase{
 
     public HoodedShooter() {
         state = HoodedShooterState.STOW;
-        
-        targetAngle = Constants.HoodedShooter.MIN_ANGLE;
-
     }
-
-    public abstract double getCurrentRPS();
-    public abstract Rotation2d getCurrentAngle();
 
     public HoodedShooterState getState(){
         return state;
@@ -48,14 +42,6 @@ public abstract class HoodedShooter extends SubsystemBase{
 
     public void setState(HoodedShooterState state){
         this.state = state;
-    }
-
-    public void setTargetAngle(Rotation2d angle) {
-        targetAngle = angle;
-    }
- 
-    public Rotation2d getTargetAngle() {
-        return targetAngle;
     }
 
     public double getTargetRPM() {
@@ -66,15 +52,39 @@ public abstract class HoodedShooter extends SubsystemBase{
         };
     }
 
-    public abstract double getShooterRPM();
+    public double getShootRPM() {
+        return Constants.HoodedShooter.SHOT_RPM;
+    }
 
-    public abstract Rotation2d getTargetAngle();
+    public double getFerryRPM() {
+        return Constants.HoodedShooter.FERRY_RPM; 
+    }
+
+    public boolean shooterAtTolerance() {
+        double diff = Math.abs(getTargetRPM() - getShooterRPM());
+        return diff > Settings.HoodedShooter.RPM_TOLERANCE;
+    }
+
+    public void setTargetAngle(Rotation2d target) {
+        targetAngle = target;
+    }
+
+    public Rotation2d getTargetAngle() {
+        return targetAngle;
+    };
 
     public abstract Rotation2d getHoodAngle();
+    public abstract double getShooterRPM();
 
     @Override
     public void periodic() {
         SmartDashboard.putString("HoodedShooter/State", state.name());
         SmartDashboard.putString("States/HoodedShooter", state.name());
+
+        SmartDashboard.putNumber("HoodedShooter/Target RPM", getTargetRPM());
+        SmartDashboard.putNumber("HoodedShooter/Target Angle", getTargetAngle().getDegrees());
+
+        SmartDashboard.putNumber("HoodedShooter/Current RPM", getShooterRPM());
+        SmartDashboard.putNumber("HoodedShooter/Current Angle", getHoodAngle().getDegrees());
     }
 }
