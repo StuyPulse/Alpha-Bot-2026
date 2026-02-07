@@ -66,26 +66,15 @@ public abstract class HoodedShooter extends SubsystemBase{
         };
     }
 
+    public abstract double getShooterRPM();
 
-    public double getShootRPM() {
-        return Constants.HoodedShooter.SHOT_RPM;
-    }
+    public abstract Rotation2d getTargetAngle();
 
-    public double getFerryRPM() {
-        return Constants.HoodedShooter.FERRY_RPM; 
-    }
+    public abstract Rotation2d getHoodAngle();
 
-    public boolean spunUp() {
-        double diff = Math.abs(getTargetRPM() - getCurrentRPS() * 60);
-        return (diff > Settings.Shooter.shooterRpmTolerance.getAsDouble());
-    }
-
-    @Override 
+    @Override
     public void periodic() {
-        SmartDashboard.putString("hdsr/state", getState().name());
-        SmartDashboard.putNumber("hdsr/targetAngle", getTargetAngle().getDegrees());
-        SmartDashboard.putNumber("hdsr/currentAngle", getCurrentAngle().getDegrees());
-        SmartDashboard.putNumber("hdsr/currentRPM", getCurrentRPS() * 60);
-        SmartDashboard.putNumber("hdsr/targetRPM", getTargetRPM());
+        SmartDashboard.putString("HoodedShooter/State", state.name());
+        SmartDashboard.putString("States/HoodedShooter", state.name());
     }
 }

@@ -165,3 +165,4 @@ bin/
 *.wpilog
 *.log
 *.dat
+*.hoot

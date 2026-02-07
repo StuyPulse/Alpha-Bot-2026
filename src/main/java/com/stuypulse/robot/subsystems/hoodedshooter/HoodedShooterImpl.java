@@ -8,46 +8,77 @@ import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class HoodedShooterImpl extends HoodedShooter{
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+
+public class HoodedShooterImpl extends HoodedShooter {
+    private final TalonFX shooterMotorLead;
+    private final TalonFX shooterMotorFollower;
     private final TalonFX hoodMotor;
 
-    private final TalonFX shooterLeader;
-    private final TalonFX shooterFollower1;
-    // private final TalonFX shooterFollower2;
-
     public HoodedShooterImpl() {
-        super();
-        
-        hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.HoodMotor);
-        shooterLeader = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorLead);
-        shooterFollower1 = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorFollower1);
-        // shooterFollower2 = new TalonFX(Ports.HoodedShooter.Shooter.ShooterMotorFollower2);
+        shooterMotorLead = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD);
+        Motors.HoodedShooter.Shooter.MOTOR_LEADER_CONFIG.configure(shooterMotorLead);
 
-        Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
-        Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterLeader);
-        Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower1);
-        // Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower2);
+        shooterMotorFollower = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_FOLLOW);
+        Motors.HoodedShooter.Shooter.MOTOR_FOLLOW_CONFIG.configure(shooterMotorFollower);
+
+        hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
+    }
+
+    public double getTargetRPM() {
+        return getState().getAngleRPMPair().get().getDouble();
     }
 
     @Override
-    public double getCurrentRPS(){
-        return shooterLeader.getVelocity().getValueAsDouble();
+    public double getLeaderRPM() {
+        return shooterMotorLead.getVelocity().getValueAsDouble() * 60.0;
     }
 
     @Override
-    public Rotation2d getCurrentAngle() {
-        return Rotation2d.fromDegrees(hoodMotor.getPosition().getValueAsDouble());
+    public double getFollowerRPM() {
+        return shooterMotorFollower.getVelocity().getValueAsDouble() * 60.0;
+    }
+
+    @Override
+    public Rotation2d getHoodAngle() {
+        return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
+    }
+
+    @Override
+    public double getShooterRPM() {
+        // return (getLeaderRPM() + getFollowerRPM()) / 2.0;
+        return getLeaderRPM(); // Technically, the RPM we care about is just the leader motor's
     }
 
     @Override 
     public void periodic() {
-        super.periodic();
+        shooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
+        shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed));
 
         hoodMotor.setControl(new PositionVoltage(getTargetAngle().getRotations()));
-
         shooterLeader.setControl(new VelocityVoltage(getTargetRPM() / 60));
         shooterFollower1.setControl(new Follower(shooterLeader.getDeviceID(), MotorAlignmentValue.Aligned)); //TODO: MAKE SURE ITS ALIGNED (NONE ARE ROTATING OPPOSITE)
         // shooterFollower2.setControl(new Follower(shooterLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+        
+        // SHOOTER
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Lead RPM", getLeaderRPM());
+        SmartDashboard.putNumber("HooderShooter/Shooter/Follower RPM", getFollowerRPM());
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Shooter Average RPM", getShooterRPM());
+
+        SmartDashboard.putNumber("HooderShooter/Shooter/Lead Voltage", shooterMotorLead.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("HooderShooter/Shooter/Lead Voltage", shooterMotorLead.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterMotorFollower.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterMotorFollower.getStatorCurrent().getValueAsDouble());
+
+        // HOOD
+        SmartDashboard.putNumber("HoodedShooter/Hood/Hood Target Angle (deg)", getTargetAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Hood/Hood Current Angle (deg)", getHoodAngle().getDegrees());
+
+        SmartDashboard.putNumber("HoodedShooter/Hood/Hood Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("HoodedShooter/Hood/Hood Current", hoodMotor.getStatorCurrent().getValueAsDouble());
     }
 }

@@ -11,34 +11,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SpindexerImpl extends Spindexer {
     
-    private final TalonFX[] spindexerMotors;
+    private final TalonFX leader;
+    private final TalonFX follower;
 
     public SpindexerImpl() {
-        super();
+        leader = new TalonFX(Ports.Spindexer.MOTOR_LEADER);
+        follower = new TalonFX(Ports.Spindexer.MOTOR_FOLLOW);
 
-        spindexerMotors = new TalonFX[] {
-            new TalonFX(Ports.Spindexer.LEADER_KRAKEN),
-            new TalonFX(Ports.Spindexer.FOLLOWER_KRAKEN)
-        };
+        Motors.Spindexer.spindexerMotors.configure(leader);
+        Motors.Spindexer.spindexerMotors.configure(follower);
 
-        Motors.Spindexer.spindexerMotors.configure(spindexerMotors[0]);
-        Motors.Spindexer.spindexerMotors.configure(spindexerMotors[1]);
-
-    }
-
-    private void setMotorsBasedOnState() {
-        spindexerMotors[0].setControl(new DutyCycleOut(state.getSpindexerSpeed()));
-        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Opposed));
     }
 
     private double getRPM() {
-        return spindexerMotors[0].getVelocity().getValueAsDouble() * 60.0; // RPS -> RPM
+        return leader.getVelocity().getValueAsDouble() * 60.0; // RPS -> RPM
     }
 
     @Override
     public void periodic() {
-        setMotorsBasedOnState();
-        SmartDashboard.putNumber("Spindexer/Cake RPM", getRPM());
+        leader.setControl(new DutyCycleOut(getState().getTargetSpeed()));
+        follower.setControl(new Follower(Ports.Spindexer.MOTOR_LEADER, MotorAlignmentValue.Opposed));
+
+        SmartDashboard.putNumber("Spindexer/Target RPM", getState().getTargetSpeed());
+        SmartDashboard.putNumber("Spindexer/RPM", getRPM());
+
+        SmartDashboard.putNumber("Spindexer/Leader Current (amps)", leader.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Leader Voltage", leader.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Leader Supply Current", leader.getSupplyCurrent().getValueAsDouble());
+
+        SmartDashboard.putNumber("Spindexer/Follower Current (amps)", follower.getStatorCurrent().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Follower Voltage", follower.getMotorVoltage().getValueAsDouble());
+        SmartDashboard.putNumber("Spindexer/Follower Supply Current", follower.getSupplyCurrent().getValueAsDouble());
     }
 
 }

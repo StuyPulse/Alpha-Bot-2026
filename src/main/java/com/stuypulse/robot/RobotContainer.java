@@ -7,11 +7,15 @@ package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.TurretHoodAlignToTarget;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetStateShoot;
+import com.stuypulse.robot.commands.intake.IntakeIntake;
+import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.subsystems.feeder.Feeder;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
+import com.stuypulse.robot.subsystems.intake.Intake;
+import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
@@ -30,6 +34,10 @@ public class RobotContainer {
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     
+    public final Spindexer spindexer = Spindexer.getInstance();
+    public final Feeder feeder = Feeder.getInstance();
+    public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
+    public final Intake intake = Intake.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -62,6 +70,8 @@ public class RobotContainer {
             new HoodedShooterSetStateShoot()
         //TODO: Button Bindings?
         ); 
+        driver.getRightButton().onTrue(new IntakeIntake());
+        driver.getLeftButton().onTrue(new IntakeStop());
     }
 
     /**************/
