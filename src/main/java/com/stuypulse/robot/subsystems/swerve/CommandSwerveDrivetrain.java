@@ -284,6 +284,28 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    /**
+     * Runs the SysId Quasistatic test in the given rotation direction for the routine
+     * specifed by {@link #m_sysIdRoutineSteer}.
+     * 
+     * @param dir Direction of the SysID Quasistatic test
+     * @return Command to run
+     */
+    public Command sysIdRotQuasi(SysIdRoutine.Direction dir) {
+        return m_sysIdRoutineSteer.quasistatic(dir);
+    }
+
+    /**
+     * Runs the SysId Dynamic test in the given rotation direction for the routine
+     * specifed by {@link #m_sysIdRoutineSteer}.
+     * 
+     * @param dir Direction of the SysID Dynamic test
+     * @return Command to run
+     */
+    public Command sysIdRotDynamic(SysIdRoutine.Direction dir) {
+        return m_sysIdRoutineSteer.dynamic(dir);
+    }
+
     private void startSimThread() {
         m_lastSimTime = Utils.getCurrentTimeSeconds();
 
