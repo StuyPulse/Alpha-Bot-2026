@@ -5,7 +5,6 @@
 
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.TurretHoodAlignToTarget;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
@@ -23,6 +22,7 @@ import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
@@ -58,7 +58,7 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
+        //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }   
 
     /***************/
@@ -81,6 +81,10 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
+        autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
+        autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
+        autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

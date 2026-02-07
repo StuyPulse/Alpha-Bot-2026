@@ -31,7 +31,7 @@ public class HoodedShooterImpl extends HoodedShooter {
         hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
         Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
 
-        hoodEncoder = new CANcoder(Ports.HoodedShooter.Hood.ENCODER);
+        hoodEncoder = new CANcoder(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER);
     }
 
     @Override

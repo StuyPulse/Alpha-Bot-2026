@@ -15,15 +15,15 @@ public interface Constants {
 
         double SHOT_RPM = 4000;
         double FERRY_RPM = 4000;
-        Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);  // TODO: add the field relative shooter offset on the robot
+        Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);
 
 
         public interface Hood {
-            public final double GEAR_RATIO = 1.0; // TODO: find gear ratio
+            public final double GEAR_RATIO = 1290300.0 / 5967.0; 
         }
 
         public interface Shooter {
-            public final double GEAR_RATIO = 1.0; // TODO: find gear ratio
+            public final double GEAR_RATIO = 1.0;
         }
     }
   
@@ -50,6 +50,11 @@ public interface Constants {
         public interface BigGear {
             public final int TEETH = 95;
         }
+
+        public interface SoftwareLimit {
+            public final double FORWARD_MAX_ROTATIONS = 1.5;
+            public final double BACKWARDS_MAX_ROTATIONS = 1.5;
+        } 
 
         public final double GEAR_RATIO_MOTOR_TO_MECH = 1425.0 / 36.0;
     }

@@ -16,6 +16,7 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
+import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
@@ -89,8 +90,12 @@ public interface Motors {
                 .withRampRate(.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH); // TODO: GET INVERTED VAL AND
-                                                                                        // SENSOR TO MECH RATIO
+                .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
+        SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+        .withForwardSoftLimitEnable(true)
+        .withReverseSoftLimitEnable(true)
+        .withForwardSoftLimitThreshold(1.5)
+        .withReverseSoftLimitThreshold(1.5);
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
