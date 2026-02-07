@@ -49,7 +49,7 @@ public interface Settings {
     }
     public interface HoodedShooter {
         public interface ShooterRPMS {
-            public final double RPM1 = 0.0;
+            public final double RPM1 = 0.0; 
             public final double RPM2 = 0.0;
             public final double RPM3 = 0.0;
             public final double stow = 0.0;

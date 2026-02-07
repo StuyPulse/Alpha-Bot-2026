@@ -36,29 +36,24 @@ public class Gains {
     }
     public interface HoodedShooter {
         public interface Shooter {
-            public interface PID {
-                double kP = 0.0;
-                double kI = 0.0;
-                double kD = 0.0;
-            }
-            public interface FF {
-                double kS = 0.0;
-                double kV = 0.0;
-                double kA = 0.0;
-            }
+            
+            double kP = 1.0;
+            double kI = 0.0;
+            double kD = 0.1;
+
+            double kS = 0.1;
+            double kV = 0.5;
+            double kA = 0.01;
         }
 
         public interface Hood {
-            public interface PID {
-                double kP = 0.0;
-                double kI = 0.0;
-                double kD = 0.0;
-            }
-            public interface FF {
-                double kS = 0.0;
-                double kV = 0.0;
-                double kA = 0.0;
-            }
+            double kP = 1.0;
+            double kI = 0.0;
+            double kD = 0.1;
+
+            double kS = 0.1;
+            double kV = 0.5;
+            double kA = 0.01;
         }
         
     }

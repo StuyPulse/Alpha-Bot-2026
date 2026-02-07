@@ -1,10 +1,12 @@
 package com.stuypulse.robot.subsystems.hoodedshooter;
 
+import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
-
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -53,17 +55,15 @@ public class HoodedShooterImpl extends HoodedShooter {
     }
 
     @Override 
-    public Rotation2d getTargetAngle() {
-        return getState().getAngleRPMPair().get().getAngle();
-    }
-
-    @Override
     public void periodic() {
         shooterMotorLead.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
         shooterMotorFollower.setControl(new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed));
 
-        hoodMotor.setControl(new PositionVoltage(getTargetAngle().getDegrees()));
-
+        hoodMotor.setControl(new PositionVoltage(getTargetAngle().getRotations()));
+        shooterLeader.setControl(new VelocityVoltage(getTargetRPM() / 60));
+        shooterFollower1.setControl(new Follower(shooterLeader.getDeviceID(), MotorAlignmentValue.Aligned)); //TODO: MAKE SURE ITS ALIGNED (NONE ARE ROTATING OPPOSITE)
+        // shooterFollower2.setControl(new Follower(shooterLeader.getDeviceID(), MotorAlignmentValue.Aligned));
+        
         // SHOOTER
         SmartDashboard.putNumber("HoodedShooter/Shooter/Lead RPM", getLeaderRPM());
         SmartDashboard.putNumber("HooderShooter/Shooter/Follower RPM", getFollowerRPM());
@@ -80,7 +80,5 @@ public class HoodedShooterImpl extends HoodedShooter {
 
         SmartDashboard.putNumber("HoodedShooter/Hood/Hood Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
         SmartDashboard.putNumber("HoodedShooter/Hood/Hood Current", hoodMotor.getStatorCurrent().getValueAsDouble());
-
     }
-
 }

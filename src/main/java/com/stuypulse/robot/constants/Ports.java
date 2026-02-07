@@ -29,8 +29,10 @@ public interface Ports {
         }
 
         public interface Shooter {
-            int MOTOR_LEAD = 40;
-            int MOTOR_FOLLOW = 41;
+            // TODO: Find ports for all motors below
+            final int ShooterMotorLead = 40;
+            final int ShooterMotorFollower1 = 41; 
+            final int ShooterMotorFollower2 = 41;
         }
     }
 

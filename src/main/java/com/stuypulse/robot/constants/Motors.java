@@ -37,42 +37,27 @@ import com.revrobotics.spark.config.SparkFlexConfig;
  */
 public interface Motors {
     public interface HoodedShooter {
+        //TODO: MAKE SURE OF INVERTED VALUES
         public interface Shooter {
-            TalonFXConfig MOTOR_LEADER_CONFIG = new TalonFXConfig()
-                    .withCurrentLimitAmps(80)
-                    .withRampRate(0.25)
-                    .withNeutralMode(NeutralModeValue.Coast)
-                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI,
-                            Gains.HoodedShooter.Shooter.PID.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV,
-                            Gains.HoodedShooter.Shooter.FF.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
-
-            TalonFXConfig MOTOR_FOLLOW_CONFIG = new TalonFXConfig()
-                    .withCurrentLimitAmps(80)
-                    .withRampRate(0.25)
-                    .withNeutralMode(NeutralModeValue.Coast)
-                    .withInvertedValue(InvertedValue.Clockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Shooter.PID.kP, Gains.HoodedShooter.Shooter.PID.kI,
-                            Gains.HoodedShooter.Shooter.PID.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Shooter.FF.kS, Gains.HoodedShooter.Shooter.FF.kV,
-                            Gains.HoodedShooter.Shooter.FF.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO); // TODO: Make sure both motors
-                                                                                          // have the same gear ratios
+            TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Coast)
+                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI, Gains.HoodedShooter.Shooter.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV, Gains.HoodedShooter.Shooter.kA, 0)
+                .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
         }
 
         public interface Hood {
-            TalonFXConfig hoodMotorConfig = new TalonFXConfig()
-                    .withCurrentLimitAmps(80)
-                    .withRampRate(0.25)
-                    .withNeutralMode(NeutralModeValue.Brake)
-                    .withInvertedValue(InvertedValue.Clockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Hood.PID.kP, Gains.HoodedShooter.Hood.PID.kI,
-                            Gains.HoodedShooter.Hood.PID.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Hood.FF.kV, Gains.HoodedShooter.Hood.FF.kV,
-                            Gains.HoodedShooter.Hood.FF.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+            TalonFXConfig HOOD_CONFIG = new TalonFXConfig()
+                .withCurrentLimitAmps(80)
+                .withRampRate(0.25)
+                .withNeutralMode(NeutralModeValue.Brake)
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withPIDConstants(Gains.HoodedShooter.Hood.kP,Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
+                .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
         }
     }
 

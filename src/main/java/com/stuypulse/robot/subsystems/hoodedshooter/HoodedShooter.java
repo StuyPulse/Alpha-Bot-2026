@@ -1,61 +1,70 @@
 package com.stuypulse.robot.subsystems.hoodedshooter;
 
-import java.util.function.Supplier;
-
-import com.stuypulse.robot.util.AngleRPMPair;
-import com.stuypulse.robot.util.InterpolationUtil;
+import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.Robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class HoodedShooter extends SubsystemBase {
-    private static HoodedShooter instance;
+public abstract class HoodedShooter extends SubsystemBase{
+    private static final HoodedShooter instance;
     private HoodedShooterState state;
 
-    static {
-        instance = new HoodedShooterImpl();
-    }
+    private Rotation2d targetAngle;
 
-    public static HoodedShooter getInstance() {
+
+    static {
+        if (Robot.isReal())
+            instance = new HoodedShooterImpl();
+        else
+            instance = new HoodedShooterSim();
+    }
+    
+    public static HoodedShooter getInstance(){
         return instance;
     }
-
+    
     public enum HoodedShooterState {
-        SHOOT(() -> InterpolationUtil.getHoodAngleInterpolation(getDistanceFromHub())),
-        STOW(() ->  new AngleRPMPair()),
-        FERRY(() -> new AngleRPMPair());
-
-        private Supplier<AngleRPMPair> angleRPMPair;
-
-        private HoodedShooterState(Supplier<AngleRPMPair> shooterRPM) {
-            this.angleRPMPair = shooterRPM;
-        }
-
-        public Supplier<AngleRPMPair> getAngleRPMPair() {
-            return angleRPMPair;
-        }
+        STOW,
+        FERRY,
+        SHOOT;
     }
 
     public HoodedShooter() {
         state = HoodedShooterState.STOW;
+        
+        targetAngle = Constants.HoodedShooter.MIN_ANGLE;
+
     }
 
-    public void setState(HoodedShooterState state) {
-        this.state = state;
-    }
+    public abstract double getCurrentRPS();
+    public abstract Rotation2d getCurrentAngle();
 
-    public HoodedShooterState getState() {
+    public HoodedShooterState getState(){
         return state;
     }
 
-    public static double getDistanceFromHub() {
-        return 0.0;
+    public void setState(HoodedShooterState state){
+        this.state = state;
     }
 
-    public abstract double getLeaderRPM();
+    public void setTargetAngle(Rotation2d angle) {
+        targetAngle = angle;
+    }
+ 
+    public Rotation2d getTargetAngle() {
+        return targetAngle;
+    }
 
-    public abstract double getFollowerRPM();
+    public double getTargetRPM() {
+        return switch(state) {
+            case STOW -> 0;
+            case FERRY -> getFerryRPM();
+            case SHOOT -> getShootRPM();
+        };
+    }
 
     public abstract double getShooterRPM();
 

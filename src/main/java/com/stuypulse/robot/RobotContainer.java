@@ -1,14 +1,16 @@
-/************************ PROJECT PHIL ************************/
-/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved.*/
+/************************ PROJECT ALPHABOT ************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved.*/
 /* This work is licensed under the terms of the MIT license.  */
 /**************************************************************/
 
 package com.stuypulse.robot;
 
+import com.stuypulse.robot.commands.TurretHoodAlignToTarget;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
@@ -28,8 +30,10 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     public final Gamepad operator = new AutoGamepad(Ports.Gamepad.OPERATOR);
     
-    // Subsystems
+    // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+    public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
+    
     public final Spindexer spindexer = Spindexer.getInstance();
     public final Feeder feeder = Feeder.getInstance();
     public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
@@ -41,10 +45,11 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
-        swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
         configureAutons();
+
+        SmartDashboard.putData("Field", Field.FIELD2D);
     }
 
     /****************/
@@ -53,13 +58,18 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-    }
+        hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
+    }   
 
     /***************/
     /*** BUTTONS ***/
     /***************/
 
     private void configureButtonBindings() {
+        driver.getLeftButton().onTrue(
+            new HoodedShooterSetStateShoot()
+        //TODO: Button Bindings?
+        ); 
         driver.getRightButton().onTrue(new IntakeIntake());
         driver.getLeftButton().onTrue(new IntakeStop());
     }
