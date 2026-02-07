@@ -6,12 +6,17 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class SpindexerImpl extends Spindexer {
     
     private final TalonFX[] spindexerMotors;
+
+    private final DutyCycleOut spindexerDutyCycleController;
+
+    private final Follower spindexerFollow;
 
     public SpindexerImpl() {
         super();
@@ -24,11 +29,14 @@ public class SpindexerImpl extends Spindexer {
         Motors.Spindexer.spindexerMotors.configure(spindexerMotors[0]);
         Motors.Spindexer.spindexerMotors.configure(spindexerMotors[1]);
 
+        spindexerDutyCycleController = new DutyCycleOut(0.0);
+        spindexerFollow = new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Aligned);
+
     }
 
     private void setMotorsBasedOnState() {
-        spindexerMotors[0].setControl(new DutyCycleOut(state.getSpindexerSpeed()));
-        spindexerMotors[1].setControl(new Follower(Ports.Spindexer.LEADER_KRAKEN, MotorAlignmentValue.Opposed));
+        spindexerMotors[0].setControl(spindexerDutyCycleController.withOutput(state.getSpindexerSpeed()));
+        spindexerMotors[1].setControl(spindexerFollow);
     }
 
     private double getRPM() {
@@ -37,7 +45,9 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public void periodic() {
-        setMotorsBasedOnState();
+        if (Settings.EnabledSubsystems.SPINDEXER.getAsBoolean()) {
+            setMotorsBasedOnState();
+        }
         SmartDashboard.putNumber("Spindexer/Cake RPM", getRPM());
     }
 

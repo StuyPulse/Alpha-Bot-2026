@@ -29,6 +29,7 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer", true);
     }
 
     public interface Swerve {
