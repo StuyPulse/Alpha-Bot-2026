@@ -21,8 +21,16 @@ public class Gains {
             double kI = 0.0;
             double kD = 0.5;
         }
-
         public interface Alignment {
+            public interface Rotation {  
+                double kp = 112.3;
+                double ki = 0.0;
+                double kd = 2.3758;
+                double ks = 0.31395;
+                double kv = 0.10969;
+                double ka = 0.026589;
+            }
+
             double kP = 0.0;
             double kI = 0.0;
             double kD = 0.0;
