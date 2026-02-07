@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase{
     }
 
     public Intake() {
-        state = IntakeState.INTAKING;
+        state = IntakeState.STOP;
     }
 
     public IntakeState getState() {

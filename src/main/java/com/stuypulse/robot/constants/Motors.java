@@ -65,7 +65,7 @@ public interface Motors {
     public interface Intake {
         SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig() // TODO: apply later
                 .closedLoopRampRate(0.25)
-                .inverted(true) // TODO: GET INVERTED VAL
+                .inverted(false) // TODO: GET INVERTED VAL
                 .idleMode(SparkBaseConfig.IdleMode.kBrake);
 
         SparkBaseConfig MOTOR_FOLLOW_CONFIG = new SparkFlexConfig()

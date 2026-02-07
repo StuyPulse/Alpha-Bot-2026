@@ -1,6 +1,9 @@
 package com.stuypulse.robot.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
@@ -10,11 +13,11 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
     public interface HoodedShooter {
-        Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(5);
+        Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(15);
         Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(40);
 
-        double SHOT_RPM = 4000;
-        double FERRY_RPM = 4000;
+        SmartNumber SHOT_RPM = new SmartNumber("HoodedShooter/Target Shooter RPM SmartNumber", 2000.0);
+        double FERRY_RPM = 4000.0;
         Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);
 
 

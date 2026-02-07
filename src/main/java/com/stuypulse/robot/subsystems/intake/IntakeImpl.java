@@ -1,11 +1,13 @@
 package com.stuypulse.robot.subsystems.intake;
 
+import com.ctre.phoenix6.signals.Enable5VRailValue;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -23,7 +25,13 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void periodic() {
-        intakeLeaderMotor.set(getState().getDutyCycle());
+        super.periodic();
+        
+        if (EnabledSubsystems.INTAKE.get()) {
+            intakeLeaderMotor.set(getState().getDutyCycle());
+        } else {
+            intakeLeaderMotor.stopMotor();
+        }
         
         SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
         SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());

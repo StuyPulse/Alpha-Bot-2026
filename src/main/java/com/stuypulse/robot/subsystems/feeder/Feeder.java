@@ -17,8 +17,8 @@ public class Feeder extends SubsystemBase{
         return instance;
     }
 
-    protected Feeder() {
-        state = FeederState.MAX;
+    public Feeder() {
+        state = FeederState.STOP;
     }
 
     public enum FeederState {
@@ -46,7 +46,7 @@ public class Feeder extends SubsystemBase{
     }
 
     public void periodic() {
-        SmartDashboard.putString("Feeder/State", getFeederState().name());
-        SmartDashboard.putString("States/Feeder", getFeederState().name());
+        // SmartDashboard.putString("Feeder/State", getFeederState().name());
+        // SmartDashboard.putString("States/Feeder", getFeederState().name());
     }
 }

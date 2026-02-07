@@ -6,6 +6,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +22,7 @@ public class SpindexerImpl extends Spindexer {
         Motors.Spindexer.spindexerMotors.configure(leader);
         Motors.Spindexer.spindexerMotors.configure(follower);
 
+        follower.setControl(new Follower(Ports.Spindexer.MOTOR_LEADER, MotorAlignmentValue.Aligned));
     }
 
     private double getRPM() {
@@ -29,8 +31,14 @@ public class SpindexerImpl extends Spindexer {
 
     @Override
     public void periodic() {
-        leader.setControl(new DutyCycleOut(getState().getTargetSpeed()));
-        follower.setControl(new Follower(Ports.Spindexer.MOTOR_LEADER, MotorAlignmentValue.Opposed));
+        super.periodic();
+
+        if (EnabledSubsystems.SPINDEXER.get()) {
+            leader.setControl(new DutyCycleOut(getState().getTargetSpeed()));
+        } else {
+            leader.stopMotor();
+            follower.stopMotor();
+        }
 
         SmartDashboard.putNumber("Spindexer/Target RPM", getState().getTargetSpeed());
         SmartDashboard.putNumber("Spindexer/RPM", getRPM());

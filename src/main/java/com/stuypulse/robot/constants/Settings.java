@@ -26,20 +26,21 @@ public interface Settings {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", true);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", true);
     }
 
     public interface Spindexer {
-        double RUNNING_SPEED = 1.0;
+        double RUNNING_SPEED = 0.5;
     }
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
         double FEEDER_MAX = 1.0; 
-        double FEEDER_REVERSE = -1.0;
+        double FEEDER_REVERSE = -0.5;
     }
 
     public interface Intake {

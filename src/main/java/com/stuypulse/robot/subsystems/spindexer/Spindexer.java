@@ -34,7 +34,7 @@ public class Spindexer extends SubsystemBase {
     }
 
     public Spindexer() {
-        this.state = SpindexerState.RUNNING;
+        this.state = SpindexerState.STOP;
     }
 
     public SpindexerState getState() {

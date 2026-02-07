@@ -8,6 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -54,12 +55,19 @@ public class HoodedShooterImpl extends HoodedShooter {
 
     @Override 
     public void periodic() {
+        super.periodic();
+
         if (!hasSeededHood) {
             hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble());
         }
 
-        shooterLeader.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
-        hoodMotor.setControl(new PositionVoltage(getTargetAngle().getRotations()));
+        if (EnabledSubsystems.HOODED_SHOOTER.get()) {
+            shooterLeader.setControl(new VelocityVoltage(getTargetRPM() / 60.0));
+            // hoodMotor.setControl(new PositionVoltage(getTargetAngle().getRotations()));
+        } else {
+            shooterLeader.stopMotor();
+            hoodMotor.stopMotor();
+        }
         
         // SHOOTER
         SmartDashboard.putNumber("HoodedShooter/Shooter/Leader RPM", getLeaderRPM());

@@ -11,7 +11,7 @@ public class FeederSetState extends InstantCommand {
     
     public FeederSetState(FeederState feederState) {
         feeder = Feeder.getInstance();
-        feeder.setFeederState(feederState);
+        this.feederState = feederState;
 
         addRequirements(feeder);
     }

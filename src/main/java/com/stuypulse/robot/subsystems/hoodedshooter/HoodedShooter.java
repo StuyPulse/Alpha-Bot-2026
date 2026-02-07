@@ -34,6 +34,7 @@ public abstract class HoodedShooter extends SubsystemBase{
 
     public HoodedShooter() {
         state = HoodedShooterState.STOW;
+        targetAngle = Constants.HoodedShooter.MIN_ANGLE;
     }
 
     public HoodedShooterState getState(){
@@ -53,7 +54,7 @@ public abstract class HoodedShooter extends SubsystemBase{
     }
 
     public double getShootRPM() {
-        return Constants.HoodedShooter.SHOT_RPM;
+        return Constants.HoodedShooter.SHOT_RPM.get();
     }
 
     public double getFerryRPM() {
