@@ -26,6 +26,7 @@ public interface Ports {
     public interface HoodedShooter {
         public interface Hood {
             int MOTOR = 25;
+            int THROUGHBORE_ENCODER = 37;
         }
 
         public interface Shooter {
@@ -36,8 +37,8 @@ public interface Ports {
 
     public interface Turret {
         int MOTOR = 50;
-        int ENCODER17T = 37;
-        int ENCODER18T = 38;
+        int ENCODER17T = 38;
+        int ENCODER18T = 21;
     }
 
     public interface Feeder {
