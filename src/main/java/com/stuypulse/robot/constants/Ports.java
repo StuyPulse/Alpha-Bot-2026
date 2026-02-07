@@ -10,7 +10,7 @@ import com.ctre.phoenix6.CANBus;
 /** This file contains the different ports of motors, solenoids and sensors */
 public interface Ports {
     // TODO: Get bus name
-    public CANBus bus = new CANBus("bus");
+    public CANBus bus = new CANBus("rio");
 
     public interface Gamepad {
         int DRIVER = 0;
@@ -19,33 +19,33 @@ public interface Ports {
     }
 
     public interface Spindexer {
-        int MOTOR_LEADER = 20;
-        int MOTOR_FOLLOW = 21;
+        int MOTOR_LEADER = 16;
+        int MOTOR_FOLLOW = 30;
     }
 
     public interface HoodedShooter {
         public interface Hood {
-            int MOTOR = 30;
+            int MOTOR = 25;
         }
 
         public interface Shooter {
-            int MOTOR_LEAD = 40;
-            int MOTOR_FOLLOW = 41;
+            int MOTOR_LEAD = 17;
+            int MOTOR_FOLLOW = 14;
         }
     }
 
     public interface Turret {
-        int MOTOR = 3;
-        int ENCODER17T = 4;
-        int ENCODER18T = 5;
+        int MOTOR = 50;
+        int ENCODER17T = 37;
+        int ENCODER18T = 38;
     }
 
     public interface Feeder {
-        int MOTOR = 6;
+        int MOTOR = 15;
     }
 
     public interface Intake {
-        int MOTOR_LEAD = 7;
-        int MOTOR_FOLLOW = 8;
+        int MOTOR_LEAD = 20;
+        int MOTOR_FOLLOW = 51;
     }
 }
