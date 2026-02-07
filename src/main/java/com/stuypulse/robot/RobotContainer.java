@@ -32,12 +32,12 @@ public class RobotContainer {
     
     // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-    public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
+    // public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     
-    public final Spindexer spindexer = Spindexer.getInstance();
-    public final Feeder feeder = Feeder.getInstance();
-    public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
-    public final Intake intake = Intake.getInstance();
+    // public final Spindexer spindexer = Spindexer.getInstance();
+    // public final Feeder feeder = Feeder.getInstance();
+    // public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
+    // public final Intake intake = Intake.getInstance();
 
     // Autons
     private static SendableChooser<Command> autonChooser = new SendableChooser<>();
@@ -46,8 +46,8 @@ public class RobotContainer {
 
     public RobotContainer() {
         configureDefaultCommands();
-        configureButtonBindings();
-        configureAutons();
+        // configureButtonBindings();
+        // configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
     }
