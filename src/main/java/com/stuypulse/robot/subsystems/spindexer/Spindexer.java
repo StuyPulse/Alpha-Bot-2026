@@ -4,11 +4,12 @@ import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class Spindexer extends SubsystemBase {
+public abstract class Spindexer extends SubsystemBase {
     private static final Spindexer instance;
 
-    private SpindexerState state;
+    protected SpindexerState state;
 
     static {
         instance = new SpindexerImpl();
@@ -24,12 +25,16 @@ public class Spindexer extends SubsystemBase {
 
     public enum SpindexerState {
         RUNNING(Settings.Spindexer.RUNNING_SPEED),
-        STOP(0.0);
+        STOP(Settings.Spindexer.STOP_SPEED);
 
         private double targetRPM;
 
         private SpindexerState(double targetRPM) {
             this.targetRPM = targetRPM;
+        }
+
+        public double getTargetRPM() {
+            return this.targetRPM;
         }
     }
 
@@ -37,18 +42,15 @@ public class Spindexer extends SubsystemBase {
         return state;
     }
 
-    public double getTargetRPM() {
-        return getState().targetRPM;
-    }
-
     public void setState(SpindexerState state) {
         this.state = state;
     }
+
+    public abstract SysIdRoutine getSysIdRoutine();
 
     @Override
     public void periodic() {
         SmartDashboard.putString("Spindexer/State", getState().name());
         SmartDashboard.putString("States/Spindexer", getState().name());
     }
-    
 }

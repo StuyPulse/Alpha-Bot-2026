@@ -1,99 +1,99 @@
-package com.stuypulse.robot.commands;
+// package com.stuypulse.robot.commands;
 
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
-import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.util.ShotCalculator.AlignAngleSolution;
-import com.stuypulse.stuylib.math.Vector2D;
-import com.stuypulse.robot.util.ShotCalculator;
-import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.constants.Constants;
-import com.stuypulse.robot.constants.Field;
-import com.stuypulse.robot.constants.Settings;
+// import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
+// import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
+// import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+// import com.stuypulse.robot.util.ShotCalculator.AlignAngleSolution;
+// import com.stuypulse.stuylib.math.Vector2D;
+// import com.stuypulse.robot.util.ShotCalculator;
+// import com.stuypulse.robot.Robot;
+// import com.stuypulse.robot.constants.Constants;
+// import com.stuypulse.robot.constants.Field;
+// import com.stuypulse.robot.constants.Settings;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command; 
+// import edu.wpi.first.math.geometry.Pose2d;
+// import edu.wpi.first.math.geometry.Pose3d;
+// import edu.wpi.first.math.geometry.Rotation2d;
+// import edu.wpi.first.math.geometry.Transform2d;
+// import edu.wpi.first.math.kinematics.ChassisSpeeds;
+// import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+// import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
+// import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+// import edu.wpi.first.wpilibj2.command.Command; 
 
-public class TurretHoodAlignToTarget extends Command{
-    private final HoodedShooter hdsr;
-    private final CommandSwerveDrivetrain swerve;
-    // private final Turret turret;
+// public class TurretHoodAlignToTarget extends Command{
+//     private final HoodedShooter hdsr;
+//     private final CommandSwerveDrivetrain swerve;
+//     // private final Turret turret;
 
-    private final Field2d field;
+//     private final Field2d field;
 
-    private Pose3d targetPose;
+//     private Pose3d targetPose;
 
-    private FieldObject2d targetPose2d;
-    private FieldObject2d virtualHubPose2d;
+//     private FieldObject2d targetPose2d;
+//     private FieldObject2d virtualHubPose2d;
 
-    private ChassisSpeeds prevfieldRelRobotSpeeds;
-    private ChassisSpeeds fieldRelRobotSpeeds;
+//     private ChassisSpeeds prevfieldRelRobotSpeeds;
+//     private ChassisSpeeds fieldRelRobotSpeeds;
 
     
-    public TurretHoodAlignToTarget() {
-        hdsr = HoodedShooter.getInstance();
-        swerve = CommandSwerveDrivetrain.getInstance();
+//     public TurretHoodAlignToTarget() {
+//         hdsr = HoodedShooter.getInstance();
+//         swerve = CommandSwerveDrivetrain.getInstance();
 
-        field = Field.FIELD2D;
-        virtualHubPose2d = field.getObject("virtualHubPose");
-        targetPose2d = field.getObject("targetPose");
+//         field = Field.FIELD2D;
+//         virtualHubPose2d = field.getObject("virtualHubPose");
+//         targetPose2d = field.getObject("targetPose");
 
-        prevfieldRelRobotSpeeds = new ChassisSpeeds();
-        fieldRelRobotSpeeds = new ChassisSpeeds();
+//         prevfieldRelRobotSpeeds = new ChassisSpeeds();
+//         fieldRelRobotSpeeds = new ChassisSpeeds();
 
-        addRequirements(hdsr);
-    }
+//         addRequirements(hdsr);
+//     }
      
-    @Override
-    public void initialize() {
+//     @Override
+//     public void initialize() {
    
-    }
+//     }
 
-    @Override
-    public void execute() {
-        // update targetPose each tick
-        if (hdsr.getState() == HoodedShooterState.SHOOT) {
-            targetPose = Field.hubCenter3d;
-        }
-        else {
-            targetPose = Field.hubCenter3d; // placeholder
-        }
+//     @Override
+//     public void execute() {
+//         // update targetPose each tick
+//         if (hdsr.getState() == HoodedShooterState.SHOOT) {
+//             targetPose = Field.hubCenter3d;
+//         }
+//         else {
+//             targetPose = Field.hubCenter3d; // placeholder
+//         }
 
-        Pose2d currentPose = swerve.getPose();
+//         Pose2d currentPose = swerve.getPose();
 
-        prevfieldRelRobotSpeeds = fieldRelRobotSpeeds;
+//         prevfieldRelRobotSpeeds = fieldRelRobotSpeeds;
 
-        fieldRelRobotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getChassisSpeeds(), currentPose.getRotation());
+//         fieldRelRobotSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(swerve.getChassisSpeeds(), currentPose.getRotation());
         
-        AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
-            new Pose3d(currentPose.plus(Constants.HoodedShooter.TURRET_OFFSET)),
-            targetPose,
-            prevfieldRelRobotSpeeds,
-            fieldRelRobotSpeeds,
-            hdsr.getShooterRPM() / 60.0, 
-            Constants.Align.MAX_ITERATIONS,
-            Constants.Align.TIME_TOLERANCE
-        );
+//         AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
+//             new Pose3d(currentPose.plus(Constants.HoodedShooter.TURRET_OFFSET)),
+//             targetPose,
+//             prevfieldRelRobotSpeeds,
+//             fieldRelRobotSpeeds,
+//             hdsr.getShooterRPM() / 60.0, 
+//             Constants.Align.MAX_ITERATIONS,
+//             Constants.Align.TIME_TOLERANCE
+//         );
 
-        // hdsr.setTargetAngle(sol.launchPitchAngle()); // this doesn't work with the HoodedShooter structure we want
+//         // hdsr.setTargetAngle(sol.launchPitchAngle()); // this doesn't work with the HoodedShooter structure we want
         
-        // this is the required yaw for shooting into the effective hub
-        Rotation2d targetTurretAngle = sol.requiredYaw().minus(currentPose.getRotation()) ;
+//         // this is the required yaw for shooting into the effective hub
+//         Rotation2d targetTurretAngle = sol.requiredYaw().minus(currentPose.getRotation()) ;
 
-        // transform for sim since blue is always origin
-        targetPose2d.setPose(Robot.isBlue() ? targetPose.toPose2d() : Field.transformToOppositeAlliance(targetPose).toPose2d());
-        virtualHubPose2d.setPose((Robot.isBlue() ? sol.estimateTargetPose() : Field.transformToOppositeAlliance(sol.estimateTargetPose())).toPose2d());
+//         // transform for sim since blue is always origin
+//         targetPose2d.setPose(Robot.isBlue() ? targetPose.toPose2d() : Field.transformToOppositeAlliance(targetPose).toPose2d());
+//         virtualHubPose2d.setPose((Robot.isBlue() ? sol.estimateTargetPose() : Field.transformToOppositeAlliance(sol.estimateTargetPose())).toPose2d());
   
 
-        SmartDashboard.putNumber("HoodedShooter/calculated yaw", targetTurretAngle.getDegrees());
-        SmartDashboard.putNumber("HoodedShooter/launch pitch angle", sol.launchPitchAngle().getDegrees());
-        // TODO: set turret angle here    
-    }
-}
+//         SmartDashboard.putNumber("HoodedShooter/calculated yaw", targetTurretAngle.getDegrees());
+//         SmartDashboard.putNumber("HoodedShooter/launch pitch angle", sol.launchPitchAngle().getDegrees());
+//         // TODO: set turret angle here    
+//     }
+// }

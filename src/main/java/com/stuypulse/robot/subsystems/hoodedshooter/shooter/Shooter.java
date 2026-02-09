@@ -5,6 +5,7 @@ import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public abstract class Shooter extends SubsystemBase {
     private static final Shooter instance;
@@ -59,6 +60,8 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public abstract double getShooterRPM();
+
+    public abstract SysIdRoutine getShooterSysIdRoutine();
 
     @Override
     public void periodic() {

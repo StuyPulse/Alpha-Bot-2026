@@ -1,7 +1,5 @@
 package com.stuypulse.robot.subsystems.hoodedshooter;
 
-import com.stuypulse.robot.constants.Constants;
-import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood.HoodState;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;

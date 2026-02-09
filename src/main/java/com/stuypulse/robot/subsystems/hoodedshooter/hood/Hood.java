@@ -7,6 +7,7 @@ import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public abstract class Hood extends SubsystemBase{
     private static final Hood instance;
@@ -54,6 +55,8 @@ public abstract class Hood extends SubsystemBase{
     }
 
     public abstract Rotation2d getHoodAngle();
+
+    public abstract SysIdRoutine getHoodSysIdRoutine();
 
     @Override
     public void periodic() {

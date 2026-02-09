@@ -1,16 +1,18 @@
 package com.stuypulse.robot.subsystems.spindexer;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
+import java.util.Optional;
+
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
+import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class SpindexerImpl extends Spindexer {
     
@@ -20,9 +22,10 @@ public class SpindexerImpl extends Spindexer {
     private final VelocityVoltage controller;
     private final Follower follower;
 
+    private Optional<Double> voltageOverride;
+
     public SpindexerImpl() {
-                
-        controller = new VelocityVoltage(getTargetRPM() / 60.0);
+        controller = new VelocityVoltage(state.getTargetRPM() / 60.0);
         follower = new Follower(Ports.Spindexer.MOTOR_LEADER, MotorAlignmentValue.Aligned);
 
         leaderMotor = new TalonFX(Ports.Spindexer.MOTOR_LEADER);
@@ -32,10 +35,30 @@ public class SpindexerImpl extends Spindexer {
         Motors.Spindexer.spindexerMotors.configure(followerMotor);
         
         followerMotor.setControl(follower);
-    }
 
+        voltageOverride = Optional.empty();
+    }
+    
     private double getRPM() {
         return leaderMotor.getVelocity().getValueAsDouble() * 60.0; // RPS -> RPM
+    }
+    
+    @Override
+    public SysIdRoutine getSysIdRoutine() {
+        return SysId.getRoutine(
+            1, 
+            5, 
+            "Spindexer", 
+            voltage -> setVoltageOverride(Optional.of(voltage)), 
+            () -> leaderMotor.getPosition().getValueAsDouble(), 
+            () -> leaderMotor.getVelocity().getValueAsDouble(), 
+            () -> leaderMotor.getMotorVoltage().getValueAsDouble(), 
+            getInstance()
+        );
+    }
+
+    private void setVoltageOverride(Optional<Double> volts) {
+        this.voltageOverride = volts;
     }
 
     @Override
@@ -43,14 +66,18 @@ public class SpindexerImpl extends Spindexer {
         super.periodic();
 
         if (EnabledSubsystems.SPINDEXER.get()) {
-            leaderMotor.setControl(controller.withVelocity(getTargetRPM() / 60.0));
+            if(!voltageOverride.isEmpty()) {
+                leaderMotor.setVoltage(this.voltageOverride.get());
+                followerMotor.setControl(follower);
+            }
+            leaderMotor.setControl(controller.withVelocity(state.getTargetRPM() / 60.0));
             followerMotor.setControl(follower);
         } else {
             leaderMotor.stopMotor();
             followerMotor.stopMotor();
         }
 
-        SmartDashboard.putNumber("Spindexer/Target RPM", getTargetRPM());
+        SmartDashboard.putNumber("Spindexer/Target RPM", state.getTargetRPM());
         SmartDashboard.putNumber("Spindexer/RPM", getRPM());
 
         SmartDashboard.putNumber("Spindexer/Leader Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());

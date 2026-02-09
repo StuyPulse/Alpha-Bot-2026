@@ -21,6 +21,7 @@ public class Gains {
             double kI = 0.0;
             double kD = 0.5;
         }
+
         public interface Alignment {
             public interface Rotation {  
                 double kp = 112.3;
@@ -44,14 +45,13 @@ public class Gains {
     }
     public interface HoodedShooter {
         public interface Shooter {
-            
-            double kP = 1.0;
+            double kP = 2.562;
             double kI = 0.0;
-            double kD = 0.25;
+            double kD = 0.0;
 
-            double kS = 0.1;
-            double kV = 0.5;
-            double kA = 0.01;
+            double kS = 0.0; //not accurate -3.7335 actual What the banana vro?
+            double kV = 0.18976;
+            double kA = 0.52537;
         }
 
         public interface Hood {
