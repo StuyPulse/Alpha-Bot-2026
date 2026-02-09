@@ -8,12 +8,18 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetState;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
+import com.stuypulse.robot.commands.swerve.SwerveDriveHeading;
+import com.stuypulse.robot.commands.swerve.SwerveDriveXMode;
+import com.stuypulse.robot.commands.turret.TurretFerry;
+import com.stuypulse.robot.commands.turret.TurretShoot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
@@ -22,6 +28,7 @@ import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterS
 import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.subsystems.turret.Turret;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -40,7 +47,7 @@ public class RobotContainer {
     // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
-    
+    public final Turret turret = Turret.getInstance();
     public final Spindexer spindexer = Spindexer.getInstance();
     public final Feeder feeder = Feeder.getInstance();
     public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
@@ -73,6 +80,30 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+
+        // driver.getLeftTrigger()
+        //     .onTrue(new IntakeStop());
+
+        // driver.getRightTrigger()
+        //     .onTrue(new IntakeIntake());
+
+        // driver.getRightMenuButton()
+        //     .whileTrue(new SwerveDriveXMode());
+
+        // driver.getDPadUp()
+        //     .onTrue(new SwerveDriveHeading());
+
+        // driver.getDPadLeft()
+        //     .whileTrue(new TurretFerry().alongWith(new WaitUntilCommand(() -> turret.atTargetAngle()))
+        //         .alongWith(new HoodedShooterFerry().alongWith(new WaitUntilCommand(() -> hoodedShooter.shooterAtTolerance())))
+        //         .andThen(new SpindexerRun().alongWith(new FeederFeed())));
+
+        // driver.getDPadRight()
+        //     .whileTrue(new TurretShoot().alongWith(new WaitUntilCommand(() -> turret.atTargetAngle()))
+        //         .alongWith(new HoodedShooterShoot().alongWith(new WaitUntilCommand(() -> hoodedShooter.shooterAtTolerance())))
+        //         .andThen(new SpindexerRun().alongWith(new FeederFeed())));
+
+            
         
         driver.getBottomButton()
             .whileTrue(new IntakeIntake())
