@@ -34,7 +34,7 @@ public interface Settings {
     }
 
     public interface Spindexer {
-        double RUNNING_SPEED = 0.5;
+        double RUNNING_SPEED = 1000.0;
     }
 
     public interface Feeder {

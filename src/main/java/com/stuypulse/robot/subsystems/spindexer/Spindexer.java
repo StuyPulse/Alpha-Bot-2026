@@ -18,27 +18,27 @@ public class Spindexer extends SubsystemBase {
         return instance;
     }
 
-    public enum SpindexerState {
-        RUNNING(Settings.Spindexer.RUNNING_SPEED),
-        STOP(0.0);
-
-        private double targetSpeed;
-
-        private SpindexerState(double targetSpeed) {
-            this.targetSpeed = targetSpeed;
-        }
-
-        public double getTargetSpeed() {
-            return this.targetSpeed;
-        }
-    }
-
     public Spindexer() {
         this.state = SpindexerState.STOP;
     }
 
+    public enum SpindexerState {
+        RUNNING(Settings.Spindexer.RUNNING_SPEED),
+        STOP(0.0);
+
+        private double targetRPM;
+
+        private SpindexerState(double targetRPM) {
+            this.targetRPM = targetRPM;
+        }
+    }
+
     public SpindexerState getState() {
         return state;
+    }
+
+    public double getTargetRPM() {
+        return getState().targetRPM;
     }
 
     public void setState(SpindexerState state) {

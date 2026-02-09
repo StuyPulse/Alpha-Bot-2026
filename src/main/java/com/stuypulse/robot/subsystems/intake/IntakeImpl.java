@@ -1,12 +1,12 @@
 package com.stuypulse.robot.subsystems.intake;
 
-import com.ctre.phoenix6.signals.Enable5VRailValue;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -32,17 +32,19 @@ public class IntakeImpl extends Intake {
         } else {
             intakeLeaderMotor.stopMotor();
         }
-        
-        SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
-        SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());
 
-        SmartDashboard.putNumber("Intake/Leader Current (amps)", intakeLeaderMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Leader Voltage", intakeLeaderMotor.getAppliedOutput() * intakeLeaderMotor.getBusVoltage());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
+            SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());
+
+            SmartDashboard.putNumber("Intake/Leader Current (amps)", intakeLeaderMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Intake/Leader Voltage", intakeLeaderMotor.getAppliedOutput() * intakeLeaderMotor.getBusVoltage());
 
 
-        SmartDashboard.putNumber("Intake/Follower Current Duty Cycle", intakeFollowerMotor.get());
+            SmartDashboard.putNumber("Intake/Follower Current Duty Cycle", intakeFollowerMotor.get());
 
-        SmartDashboard.putNumber("Intake/Follower Current (amps)", intakeFollowerMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Follower Voltage", intakeFollowerMotor.getAppliedOutput() * intakeFollowerMotor.getBusVoltage());
+            SmartDashboard.putNumber("Intake/Follower Current (amps)", intakeFollowerMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Intake/Follower Voltage", intakeFollowerMotor.getAppliedOutput() * intakeFollowerMotor.getBusVoltage());
+        }
     }
 }

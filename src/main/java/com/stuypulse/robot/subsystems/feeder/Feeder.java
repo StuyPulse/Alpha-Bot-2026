@@ -28,8 +28,8 @@ public class Feeder extends SubsystemBase{
 
         private double dutyCycle;
         
-        private FeederState(double speed) {
-            this.dutyCycle = speed;
+        private FeederState(double dutyCycle) {
+            this.dutyCycle = dutyCycle;
         }
 
         public double getTargetDutyCycle() {
@@ -46,7 +46,7 @@ public class Feeder extends SubsystemBase{
     }
 
     public void periodic() {
-        // SmartDashboard.putString("Feeder/State", getFeederState().name());
-        // SmartDashboard.putString("States/Feeder", getFeederState().name());
+        SmartDashboard.putString("Feeder/State", getFeederState().name());
+        SmartDashboard.putString("States/Feeder", getFeederState().name());
     }
 }
