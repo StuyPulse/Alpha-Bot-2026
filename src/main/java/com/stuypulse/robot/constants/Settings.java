@@ -42,8 +42,8 @@ public interface Settings {
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
-        double FEEDER_MAX = 1.0; 
-        double FEEDER_REVERSE = -0.5;
+        double FEEDER_MAX = 1000.0; 
+        double FEEDER_REVERSE = -500.0;
     }
 
     public interface Intake {

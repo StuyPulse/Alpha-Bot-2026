@@ -43,8 +43,8 @@ public abstract class Hood extends SubsystemBase{
 
     public Rotation2d getTargetAngle() {
         return switch(state) {
-            case STOW -> Constants.HoodedShooter.MIN_ANGLE;
-            case FERRY -> Rotation2d.fromDegrees(25);
+            case STOW -> Constants.HoodedShooter.Hood.MIN_ANGLE;
+            case FERRY -> Rotation2d.fromDegrees(25); //TODO: TS WAY TOO LOW - MADDON MA
             case SHOOT -> HoodAngleCalculator.calculateShootAngle().get();
             case IDLE -> getHoodAngle();
         };

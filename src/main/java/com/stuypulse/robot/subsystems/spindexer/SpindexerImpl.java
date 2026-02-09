@@ -70,8 +70,10 @@ public class SpindexerImpl extends Spindexer {
                 leaderMotor.setVoltage(this.voltageOverride.get());
                 followerMotor.setControl(follower);
             }
-            leaderMotor.setControl(controller.withVelocity(state.getTargetRPM() / 60.0));
-            followerMotor.setControl(follower);
+            else {
+                leaderMotor.setControl(controller.withVelocity(state.getTargetRPM() / 60.0));
+                followerMotor.setControl(follower);
+            }
         } else {
             leaderMotor.stopMotor();
             followerMotor.stopMotor();

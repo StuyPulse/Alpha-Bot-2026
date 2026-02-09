@@ -86,16 +86,17 @@ public class RobotContainer {
         //     .onFalse(new IntakeStop());
         // // driver.getLeftButton().onTrue(new IntakeStop());
 
-        // driver.getLeftButton().onTrue(new SpindexerRun());
-        // driver.getRightButton().onTrue(new SpindexerStop());
+        driver.getLeftButton().onTrue(new SpindexerRun());
+        driver.getRightButton().onTrue(new SpindexerStop());
+
+        driver.getBottomButton().onTrue(new FeederFeed());
+        driver.getTopButton().onTrue(new FeederStop());
 
         // driver.getTopButton().whileTrue(new HoodedShooterShoot()
         //     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
         //     .andThen(new FeederFeed())))
         // .onFalse(new HoodedShooterStow()
         //     .alongWith(new FeederStop()));
-
-
     }
 
     /**************/
@@ -120,17 +121,23 @@ public class RobotContainer {
         // autonChooser.addOption("SysID Shooter Quasi Forwards", shooterSysId.quasistatic(Direction.kForward));
         // autonChooser.addOption("SysID Shooter Quasi Backwards", shooterSysId.quasistatic(Direction.kReverse));
 
-        SysIdRoutine hoodSysId = hood.getHoodSysIdRoutine();
-        autonChooser.addOption("SysID Hood Dynamic Forward", hoodSysId.dynamic(Direction.kForward));
-        autonChooser.addOption("SysID Hood Dynamic Backwards", hoodSysId.dynamic(Direction.kReverse));
-        autonChooser.addOption("SysID Hood Quasi Forwards", hoodSysId.quasistatic(Direction.kForward));
-        autonChooser.addOption("SysID Hood Quasi Backwards", hoodSysId.quasistatic(Direction.kReverse));
+        // SysIdRoutine hoodSysId = hood.getHoodSysIdRoutine();
+        // autonChooser.addOption("SysID Hood Dynamic Forward", hoodSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Dynamic Backwards", hoodSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Hood Quasi Forwards", hoodSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Quasi Backwards", hoodSysId.quasistatic(Direction.kReverse));
 
-        SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
-        autonChooser.addOption("SysID Spinny Boi Dynamic Forward", spindexerSysId.dynamic(Direction.kForward));
-        autonChooser.addOption("SysID Spinny Boi Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
-        autonChooser.addOption("SysID Spinny Boi Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
-        autonChooser.addOption("SysID Spinny Boi Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
+        // SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
+        // autonChooser.addOption("SysID Spinny Boi Dynamic Forward", spindexerSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Spinny Boi Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Spinny Boi Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Spinny Boi Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
+   
+        // SysIdRoutine feederSysId = feeder.getSysIdRoutine();
+        // autonChooser.addOption("SysID Feed Dynamic Forward", feederSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Feed Dynamic Backwards", feederSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Feed Quasi Forwards", feederSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Feed Quasi Backwards", feederSysId.quasistatic(Direction.kReverse));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

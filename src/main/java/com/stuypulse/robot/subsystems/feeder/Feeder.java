@@ -4,8 +4,9 @@ import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class Feeder extends SubsystemBase{
+public abstract class Feeder extends SubsystemBase{
     private static final Feeder instance;
     private FeederState state;
 
@@ -26,14 +27,14 @@ public class Feeder extends SubsystemBase{
         REVERSE(Settings.Feeder.FEEDER_REVERSE), // to unjam the feeder; speed is max, but in reverse
         MAX(Settings.Feeder.FEEDER_MAX);
 
-        private double dutyCycle;
+        private double targetRPM;
         
-        private FeederState(double dutyCycle) {
-            this.dutyCycle = dutyCycle;
+        private FeederState(double targetRPM) {
+            this.targetRPM = targetRPM;
         }
 
-        public double getTargetDutyCycle() {
-            return this.dutyCycle;
+        public double getTargetRPM() {
+            return this.targetRPM;
         }
     }
 
@@ -44,6 +45,8 @@ public class Feeder extends SubsystemBase{
     public FeederState getFeederState() {
         return state;
     }
+
+    public abstract SysIdRoutine getSysIdRoutine();
 
     public void periodic() {
         SmartDashboard.putString("Feeder/State", getFeederState().name());

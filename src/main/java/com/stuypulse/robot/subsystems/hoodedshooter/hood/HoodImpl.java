@@ -11,6 +11,7 @@ import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class HoodImpl extends Hood {
@@ -33,6 +34,8 @@ public class HoodImpl extends Hood {
 
         Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
 
+        hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
+
         hoodVoltageOverride = Optional.empty();
     }
 
@@ -44,8 +47,8 @@ public class HoodImpl extends Hood {
     @Override
     public SysIdRoutine getHoodSysIdRoutine() {
         return SysId.getRoutine(
-            1, 
-            5, 
+            .45, 
+            2, 
             "Hood", 
             voltage -> setVoltageOverride(Optional.of(voltage)), 
             () -> hoodMotor.getPosition().getValueAsDouble(), 
@@ -63,8 +66,11 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
+        SmartDashboard.putNumber("HoodShooter/Hood absolute angle (deg)", getHoodAngle().getDegrees());
+
         if (!hasSeededHood) {
             hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble());
+            hasSeededHood = true;
         }
 
         if (!EnabledSubsystems.HOOD.get() || getState() == HoodState.STOW) {

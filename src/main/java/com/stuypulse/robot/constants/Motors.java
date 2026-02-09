@@ -38,27 +38,37 @@ import com.revrobotics.spark.config.SparkFlexConfig;
  */
 public interface Motors {
     public interface HoodedShooter {
-        //TODO: MAKE SURE OF INVERTED VALUES
+        // TODO: MAKE SURE OF INVERTED VALUES
         public interface Shooter {
             TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
-                .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Coast)
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI, Gains.HoodedShooter.Shooter.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV, Gains.HoodedShooter.Shooter.kA, 0)
-                .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
+                            Gains.HoodedShooter.Shooter.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
+                            Gains.HoodedShooter.Shooter.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
         }
 
         public interface Hood {
             TalonFXConfig HOOD_CONFIG = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
-                .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Brake)
-                .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Hood.kP,Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
-                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
+                            Gains.HoodedShooter.Hood.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV,
+                            Gains.HoodedShooter.Hood.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+
+            SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
+                .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
         }
     }
 
@@ -80,7 +90,10 @@ public interface Motors {
                 .withCurrentLimitAmps(80)
                 .withRampRate(.25)
                 .withNeutralMode(NeutralModeValue.Brake)
-                .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer motors
+                .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer
+                                                                     // motors
+                .withFFConstants(Gains.Spindexer.kS, Gains.Spindexer.kV, Gains.Spindexer.kA, 0)
+                .withPIDConstants(Gains.Spindexer.kP, Gains.Spindexer.kI, Gains.Spindexer.kD, 0)
                 .withSensorToMechanismRatio(Constants.Spindexer.GEAR_RATIO);
     }
 
@@ -91,11 +104,12 @@ public interface Motors {
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
+
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
-        .withForwardSoftLimitEnable(true)
-        .withReverseSoftLimitEnable(true)
-        .withForwardSoftLimitThreshold(1.5)
-        .withReverseSoftLimitThreshold(1.5);
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(1.5)
+                .withReverseSoftLimitThreshold(1.5);
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
@@ -116,6 +130,8 @@ public interface Motors {
                 .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Coast)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
+                .withPIDConstants(Gains.Feeder.kP, Gains.Feeder.kI, Gains.Feeder.kD, 0)
                 .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
     }
 

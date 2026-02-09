@@ -66,4 +66,23 @@ public class Gains {
         
     }
 
+    public interface Spindexer {
+        double kP = 0.14201; //from sysid
+        double kI = 0.0;
+        double kD = 0.0;
+        
+        double kS = 0.019444;
+        double kA = 0.010876;
+        double kV = 0.38546;
+    }
+
+    public interface Feeder {
+        double kP = 0.00015508;
+        double kI = 0.0;
+        double kD = 0.0;
+        
+        double kS = 0.1728;
+        double kA = 0.0028428;
+        double kV = 0.11725;
+    }
 }

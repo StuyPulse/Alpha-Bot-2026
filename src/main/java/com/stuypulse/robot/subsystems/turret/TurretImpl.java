@@ -32,6 +32,8 @@ public class TurretImpl extends Turret {
         encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
         encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
 
+        motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
+
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
     }
