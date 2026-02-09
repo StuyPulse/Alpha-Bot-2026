@@ -1,5 +1,8 @@
 package com.stuypulse.robot.subsystems.turret;
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Constants;
@@ -7,10 +10,7 @@ import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.SysId;
-
-import java.util.Optional;
-
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.stuypulse.robot.util.TurretVisualizer;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -23,7 +23,11 @@ public class TurretImpl extends Turret {
     private boolean hasUsedAbsoluteEncoder;
     private Optional<Double> voltageOverride;
 
+    private final TurretVisualizer turretVisualizer;
+
     public TurretImpl() {
+        turretVisualizer = TurretVisualizer.getInstance();
+
         motor = new TalonFX(Ports.Turret.MOTOR, Ports.bus);
         encoder17t = new CANcoder(Ports.Turret.ENCODER17T, Ports.bus);
         encoder18t = new CANcoder(Ports.Turret.ENCODER18T, Ports.bus);
@@ -83,6 +87,8 @@ public class TurretImpl extends Turret {
 
     @Override
     public void periodic() {
+        turretVisualizer.updateTurretAngle(getAngle(), atTargetAngle());
+
         if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
             motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
             hasUsedAbsoluteEncoder = true;

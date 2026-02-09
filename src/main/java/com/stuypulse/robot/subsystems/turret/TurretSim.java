@@ -23,6 +23,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.simulation.DCMotorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import com.stuypulse.robot.util.TurretVisualizer;
 
 public class TurretSim extends Turret {
 
@@ -36,9 +37,12 @@ public class TurretSim extends Turret {
     private double maxAngularVelRadiansPerSecond;
     private double maxAngularAccelRadiansPerSecondSquared;
 
+    private final TurretVisualizer turretVisualizer;
+
     private Optional<Double> voltageOverride;
 
     public TurretSim() {
+        turretVisualizer = TurretVisualizer.getInstance();
         LinearSystem<N2, N1, N2> linearSystem = LinearSystemId.createDCMotorSystem(DCMotor.getKrakenX60(1), 1.0, 2.80);
 
         sim = new DCMotorSim(
@@ -84,6 +88,7 @@ public class TurretSim extends Turret {
 
     @Override
     public void periodic() {
+        turretVisualizer.updateTurretAngle(getAngle(), atTargetAngle());
         super.periodic();
         
         goal = new TrapezoidProfile.State(getTargetAngle().getRadians(), 0.0);
