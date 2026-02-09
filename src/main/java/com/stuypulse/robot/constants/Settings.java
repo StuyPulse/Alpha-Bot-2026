@@ -49,7 +49,8 @@ public interface Settings {
         double STOP = 0.0;
     }
     public interface HoodedShooter {
-        double RPM_TOLERANCE = 150.0;
+        double SHOOTER_TOLERANCE_RPM = 150.0;
+        double HOOD_TOLERANCE_DEG = 5.0;
         public interface ShooterRPMS {
             public final double RPM1 = 0.0; 
             public final double RPM2 = 0.0;

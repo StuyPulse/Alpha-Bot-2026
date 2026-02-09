@@ -50,12 +50,10 @@ public class HoodedShooterSim extends HoodedShooter{
         );
     }
 
-    @Override
     public Rotation2d getHoodAngle() {
         return Rotation2d.fromRotations(hood.getOutput(0));
     }
 
-    @Override
     public double getShooterRPM() {
         return shooter.getAngularVelocityRPM();
     }

@@ -82,7 +82,7 @@ public class TurretHoodAlignToTarget extends Command{
             Constants.Align.TIME_TOLERANCE
         );
 
-        hdsr.setTargetAngle(sol.launchPitchAngle());
+        hdsr.setTargetAngle(sol.launchPitchAngle()); // this doesn't work with the HoodedShooter structure we want
         
         // this is the required yaw for shooting into the effective hub
         Rotation2d targetTurretAngle = sol.requiredYaw().minus(currentPose.getRotation()) ;
@@ -93,7 +93,6 @@ public class TurretHoodAlignToTarget extends Command{
   
         SmartDashboard.putNumber("hdsr/calculated yaw", targetTurretAngle.getDegrees());
         // TODO: set turret angle here    
-                         
     }
 
     

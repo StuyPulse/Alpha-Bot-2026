@@ -9,6 +9,8 @@ import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetState;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.commands.intake.IntakeIntake;
 import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
@@ -82,20 +84,11 @@ public class RobotContainer {
         driver.getLeftButton().onTrue(new SpindexerRun());
         driver.getRightButton().onTrue(new SpindexerStop());
 
-        driver.getTopButton().whileTrue(new HoodedShooterSetState(HoodedShooterState.SHOOT)
-            .alongWith(new WaitUntilCommand(() -> hoodedShooter.shooterAtTolerance())
+        driver.getTopButton().whileTrue(new HoodedShooterShoot()
+            .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
             .andThen(new FeederFeed())))
-        .onFalse(new HoodedShooterSetState(HoodedShooterState.STOW)
+        .onFalse(new HoodedShooterStow()
             .alongWith(new FeederStop()));
-
-        // driver.getTopButton().whileTrue(
-        //     new SpindexerRun().alongWith(
-        //         new FeederFeed(),
-        //         new HoodedShooterSetState(HoodedShooterState.SHOOT)))
-        // .onFalse(
-        //     new SpindexerStop().alongWith(
-        //         new FeederStop(),
-        //         new HoodedShooterSetState(HoodedShooterState.STOW)));
     }
 
     /**************/
