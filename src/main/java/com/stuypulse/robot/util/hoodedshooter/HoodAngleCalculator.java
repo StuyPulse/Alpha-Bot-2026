@@ -34,13 +34,16 @@ public class HoodAngleCalculator {
             );
             
             Pose3d targetPose = Field.hubCenter3d;
+            double axMetersPerSecondSquared = swerve.getPigeon2().getAccelerationX().getValueAsDouble();
+            double ayMetersPerSecondSquared = swerve.getPigeon2().getAccelerationY().getValueAsDouble();
             
             double shooterRPS = hdsr.getTargetRPM() / 60.0;
             
             AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
                 new Pose3d(currentPose.plus(Constants.HoodedShooter.TURRET_OFFSET)),
                 targetPose,
-                fieldRelSpeeds, // previous speeds (using current as approximation)
+                axMetersPerSecondSquared,
+                ayMetersPerSecondSquared,
                 fieldRelSpeeds, // current speeds
                 shooterRPS,
                 Constants.Align.MAX_ITERATIONS,

@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public final class ShotCalculator {
     public static final double g = 9.81; // gravity is not a number
@@ -62,7 +63,8 @@ public final class ShotCalculator {
     public static AlignAngleSolution solveShootOnTheFly(
         Pose3d shooterPose,
         Pose3d targetPose,
-        ChassisSpeeds prevFieldRelRobotVelocity,
+        double axMetersPerSecondSquared,
+        double ayMetersPerSecondSquared,
         ChassisSpeeds fieldRelRobotVelocity,
         double targetSpeedRps,
         int maxIterations,
@@ -81,9 +83,6 @@ public final class ShotCalculator {
             
         for (int i = 0; i < maxIterations; i++) {
 
-            double axMetersPerSecondSquared = (fieldRelRobotVelocity.vxMetersPerSecond - prevFieldRelRobotVelocity.vxMetersPerSecond) / Settings.DT;
-            double ayMetersPerSecondSquared = (fieldRelRobotVelocity.vyMetersPerSecond - prevFieldRelRobotVelocity.vyMetersPerSecond) / Settings.DT;
-
             double dx = fieldRelRobotVelocity.vxMetersPerSecond * t
             + 0.5 * axMetersPerSecondSquared * t * t;
 
@@ -97,11 +96,11 @@ public final class ShotCalculator {
                 targetPose.getRotation());
 
             
-            // SmartDashboard.putNumber("hdsr/targetPose x", targetPose.getX());
-            // SmartDashboard.putNumber("hdsr/targetPose y", targetPose.getY());
+            SmartDashboard.putNumber("HoodedShooter/Target Pose X", targetPose.getX());
+            SmartDashboard.putNumber("HoodedShooter/Target Pose Y", targetPose.getY());
 
-            // SmartDashboard.putNumber("hdsr/effectiveTargetPose x", effectiveTarget.getX());
-            // SmartDashboard.putNumber("hdsr/effectiveTargetPose y", effectiveTarget.getY());
+            SmartDashboard.putNumber("HoodedShooter/Virtual Pose X", effectiveTarget.getX());
+            SmartDashboard.putNumber("HoodedShooter/Virtual Pose Y", effectiveTarget.getY());
 
             ShotSolution newSol = solveBallisticWithSpeed(
                 shooterPose,
