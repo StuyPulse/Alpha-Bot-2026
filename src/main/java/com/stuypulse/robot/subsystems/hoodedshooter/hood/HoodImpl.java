@@ -2,6 +2,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -21,7 +22,6 @@ public class HoodImpl extends Hood {
 
     private final PositionVoltage controller;
     private Optional<Double> voltageOverride;
-    private boolean hasUsedAbsoluteEncoder;
 
     public HoodImpl() {
 
@@ -64,15 +64,8 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
-        if (!hasUsedAbsoluteEncoder) {
-            hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble());
-            hasUsedAbsoluteEncoder = true;
-        }
-
-        if (EnabledSubsystems.HOOD.get()) {
-            if (getState() == HoodState.STOW) {
-                hoodMotor.stopMotor();
-            } else if (voltageOverride.isPresent()) {
+        if (EnabledSubsystems.HOOD.get() && getState() != HoodState.STOW) {
+            if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
             } else {
                 hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()));
