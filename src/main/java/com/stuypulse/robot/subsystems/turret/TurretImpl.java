@@ -87,6 +87,17 @@ public class TurretImpl extends Turret {
         return Math.abs(getAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
     }
 
+    private double getDelta(double target, double current) {
+        double delta = (target - current) % 360;
+
+        if(delta > 180.0) delta -= 360;
+        else if(delta < -180) delta += 360;
+
+        if(Math.abs(current + delta) < Constants.Turret.RANGE) return delta;
+        
+        return delta < 0 ? delta + 360 : delta - 360;
+    }
+
     @Override
     public void periodic() {
         super.periodic();
@@ -103,7 +114,8 @@ public class TurretImpl extends Turret {
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                motor.setControl(controller.withPosition(getTargetAngle().getRotations()));
+                double actualTargetDeg = getAngle().getDegrees() + getDelta(getTargetAngle().getDegrees(), motor.getPosition().getValueAsDouble() * 360.0);
+                motor.setControl(controller.withPosition(actualTargetDeg / 360.0));
             }
         } else {
             motor.stopMotor();

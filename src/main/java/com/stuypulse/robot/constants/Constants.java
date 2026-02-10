@@ -32,6 +32,7 @@ public interface Constants {
     }
 
     public interface Turret {
+        double RANGE = 420.0;
         public interface Encoder18t {
             public final int TEETH = 18;
             public final Rotation2d OFFSET = new Rotation2d();

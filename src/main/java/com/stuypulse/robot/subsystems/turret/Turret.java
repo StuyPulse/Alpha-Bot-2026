@@ -4,6 +4,7 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.util.turret.TurretVisualizer;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -71,6 +72,19 @@ public abstract class Turret extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
+
+        if (Settings.DEBUG_MODE) {
+            if (Settings.EnabledSubsystems.TURRET.get()) {
+                if (Robot.isReal()) {
+                    TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
+                } else {
+                    TurretVisualizer.getInstance().updateTurretAngle(getTargetAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
+                }
+            }
+            else {
+                TurretVisualizer.getInstance().updateTurretAngle(new Rotation2d(), false);
+            }
+        }
     }
 
     // Should match implementation on mini turret
@@ -94,7 +108,9 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret/Zero Vector X", zeroVector.x);
         SmartDashboard.putNumber("Turret/Zero Vector Y", zeroVector.y);
 
-        Rotation2d targetAngle = Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct));
+        Rotation2d targetAngle = (Robot.isReal() ?
+            Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct)) :
+            Rotation2d.fromRadians(Math.atan2(crossProduct, dotProduct)));
 
         return targetAngle;
     }

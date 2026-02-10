@@ -2,8 +2,6 @@
 
 package com.stuypulse.robot.util.hoodedshooter;
 
-import com.stuypulse.robot.constants.Settings;
-
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation3d;
