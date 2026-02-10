@@ -1,6 +1,6 @@
 // BORROWED CODE FROM 868!!! some stuffs added/edited like yaw calcumulations. gracias
 
-package com.stuypulse.robot.util;
+package com.stuypulse.robot.util.hoodedshooter;
 
 import com.stuypulse.robot.constants.Settings;
 

@@ -14,8 +14,6 @@ public interface Ports {
 
     public interface Gamepad {
         int DRIVER = 0;
-        int OPERATOR = 1;
-        int DEBUGGER = 2;
     }
 
     public interface Spindexer {

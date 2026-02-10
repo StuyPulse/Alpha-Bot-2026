@@ -5,8 +5,7 @@ import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.util.ShotCalculator;
-import com.stuypulse.robot.util.ShotCalculator.AlignAngleSolution;
+import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.AlignAngleSolution;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;

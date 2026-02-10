@@ -1,6 +1,5 @@
 package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
-import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
