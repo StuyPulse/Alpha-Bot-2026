@@ -10,7 +10,7 @@ import com.stuypulse.robot.util.SysId;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,8 +20,11 @@ public class TurretImpl extends Turret {
     private final TalonFX motor;
     private final CANcoder encoder17t;
     private final CANcoder encoder18t;
+
     private boolean hasUsedAbsoluteEncoder;
     private Optional<Double> voltageOverride;
+    private final PositionVoltage controller;
+    
 
     public TurretImpl() {
         motor = new TalonFX(Ports.Turret.MOTOR, Ports.bus);
@@ -36,6 +39,7 @@ public class TurretImpl extends Turret {
 
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
+        controller = new PositionVoltage(getTargetAngle().getRotations());
     }
 
     private Rotation2d getEncoderPos17t() {
@@ -85,6 +89,8 @@ public class TurretImpl extends Turret {
 
     @Override
     public void periodic() {
+        super.periodic();
+
         if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
             motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
             hasUsedAbsoluteEncoder = true;
@@ -92,18 +98,22 @@ public class TurretImpl extends Turret {
         }
         
         if (Settings.EnabledSubsystems.TURRET.get()) {
-            if (voltageOverride.isPresent()) {
+            if (getState() == TurretState.IDLE) {
+                motor.stopMotor();
+            } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                motor.setControl(new MotionMagicVoltage(getTargetAngle().getRotations()));
+                motor.setControl(controller.withPosition(getTargetAngle().getRotations()));
             }
         } else {
-            motor.setVoltage(0.0);
+            motor.stopMotor();
         }
 
-        SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-        SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
+            SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
+            SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
+        }
     }
 
     @Override

@@ -2,14 +2,12 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
@@ -21,16 +19,11 @@ public class HoodImpl extends Hood {
     private final TalonFX hoodMotor;
     private final CANcoder hoodEncoder;
 
-    // Controllers
-    private final PositionVoltage hoodController;
-
-    private Optional<Double> hoodVoltageOverride;
-    
-    private boolean hasSeededHood;
+    private final PositionVoltage controller;
+    private Optional<Double> voltageOverride;
+    private boolean hasUsedAbsoluteEncoder;
 
     public HoodImpl() {
-
-        hoodController = new PositionVoltage(getTargetAngle().getRotations());
 
         hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
         hoodEncoder = new CANcoder(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER);
@@ -39,7 +32,9 @@ public class HoodImpl extends Hood {
 
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
 
-        hoodVoltageOverride = Optional.empty();
+        controller = new PositionVoltage(getTargetAngle().getRotations());
+
+        voltageOverride = Optional.empty();
     }
 
     @Override
@@ -61,31 +56,34 @@ public class HoodImpl extends Hood {
         );
     }
 
-    public void setVoltageOverride(Optional<Double> hoodVoltageOverride) {
-        this.hoodVoltageOverride = hoodVoltageOverride;
+    public void setVoltageOverride(Optional<Double> voltageOverride) {
+        this.voltageOverride = voltageOverride;
     }
 
     @Override 
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("HoodShooter/Hood angle (deg)", getHoodAngle().getDegrees());
-        SmartDashboard.putNumber("HoodShooter/Hood absolute angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0);
-
-        if (!hasSeededHood) {
+        if (!hasUsedAbsoluteEncoder) {
             hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble());
-            hasSeededHood = true;
+            hasUsedAbsoluteEncoder = true;
         }
 
-        // if(getState() == HoodState.FERRY) hoodMotor.setControl(new VoltageOut(1));
-        // else if(getState() == HoodState.SHOOT) hoodMotor.setControl(new VoltageOut(-1));
-        // else hoodMotor.setControl(new VoltageOut(0));
-
-
-        if (!EnabledSubsystems.HOOD.get() || getState() == HoodState.STOW) {
-            hoodMotor.stopMotor();
+        if (EnabledSubsystems.HOOD.get()) {
+            if (getState() == HoodState.STOW) {
+                hoodMotor.stopMotor();
+            } else if (voltageOverride.isPresent()) {
+                hoodMotor.setVoltage(voltageOverride.get());
+            } else {
+                hoodMotor.setControl(controller.withPosition(getTargetAngle().getRotations()));
+            }
         } else {
-            hoodMotor.setControl(hoodController.withPosition(getTargetAngle().getRotations()));
+            hoodMotor.stopMotor();
+        }
+
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Angle (deg)", getHoodAngle().getDegrees());
+            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0);
         }
     }
 }

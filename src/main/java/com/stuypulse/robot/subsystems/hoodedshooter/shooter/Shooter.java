@@ -41,8 +41,8 @@ public abstract class Shooter extends SubsystemBase {
     public double getTargetRPM() {
         return switch(state) {
             case STOP -> 0;
-            case FERRY -> getFerryRPM();
             case SHOOT -> getShootRPM();
+            case FERRY -> getFerryRPM();
         };
     }
 
@@ -65,7 +65,7 @@ public abstract class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("HoodedShooter/State", state.name());
-        SmartDashboard.putString("States/HoodedShooter", state.name());
+        SmartDashboard.putString("Shooter/State", state.name());
+        SmartDashboard.putString("States/Shooter", state.name());
     }
 }

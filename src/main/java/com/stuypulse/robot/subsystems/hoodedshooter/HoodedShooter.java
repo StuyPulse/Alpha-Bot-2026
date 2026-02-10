@@ -38,8 +38,8 @@ public class HoodedShooter extends SubsystemBase {
     
     public enum HoodedShooterState {
         STOW(HoodState.STOW, ShooterState.STOP),
-        FERRY(HoodState.FERRY, ShooterState.FERRY),
-        SHOOT(HoodState.SHOOT, ShooterState.SHOOT);
+        SHOOT(HoodState.SHOOT, ShooterState.SHOOT),
+        FERRY(HoodState.FERRY, ShooterState.FERRY);
 
         private HoodState hoodState;
         private ShooterState shooterState;

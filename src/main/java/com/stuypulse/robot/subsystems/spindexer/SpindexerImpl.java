@@ -70,11 +70,13 @@ public class SpindexerImpl extends Spindexer {
         super.periodic();
 
         if (EnabledSubsystems.SPINDEXER.get()) {
-            if(!voltageOverride.isEmpty()) {
-                leaderMotor.setVoltage(this.voltageOverride.get());
+            if (getState() == SpindexerState.STOP) {
+                leaderMotor.stopMotor();
+                followerMotor.stopMotor();
+            } else if (voltageOverride.isPresent()) {
+                leaderMotor.setVoltage(voltageOverride.get());
                 followerMotor.setControl(follower);
-            }
-            else {
+            } else {
                 leaderMotor.setControl(controller.withVelocity(state.getTargetRPM() / 60.0));
                 followerMotor.setControl(follower);
             }
@@ -83,16 +85,18 @@ public class SpindexerImpl extends Spindexer {
             followerMotor.stopMotor();
         }
 
-        SmartDashboard.putNumber("Spindexer/Target RPM", state.getTargetRPM());
-        SmartDashboard.putNumber("Spindexer/RPM", getRPM());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Spindexer/Target RPM", state.getTargetRPM());
+            SmartDashboard.putNumber("Spindexer/RPM", getRPM());
 
-        SmartDashboard.putNumber("Spindexer/Leader Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Leader Voltage", leaderMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Leader Supply Current", leaderMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Leader Current (amps)", leaderMotor.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Leader Voltage", leaderMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Leader Supply Current", leaderMotor.getSupplyCurrent().getValueAsDouble());
 
-        SmartDashboard.putNumber("Spindexer/Follower Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Follower Voltage", followerMotor.getMotorVoltage().getValueAsDouble());
-        SmartDashboard.putNumber("Spindexer/Follower Supply Current", followerMotor.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Current (amps)", followerMotor.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Voltage", followerMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("Spindexer/Follower Supply Current", followerMotor.getSupplyCurrent().getValueAsDouble());
+        }
     }
 
 }

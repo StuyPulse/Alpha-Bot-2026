@@ -39,18 +39,22 @@ public abstract class Feeder extends SubsystemBase{
         }
     }
 
-    public void setFeederState(FeederState state) {
+    public void setState(FeederState state) {
         this.state = state;
     }
 
-    public FeederState getFeederState() {
+    public FeederState getState() {
         return state;
+    }
+
+    public double getTargetRPM() {
+        return getState().getTargetRPM();
     }
 
     public abstract SysIdRoutine getSysIdRoutine();
 
     public void periodic() {
-        SmartDashboard.putString("Feeder/State", getFeederState().name());
-        SmartDashboard.putString("States/Feeder", getFeederState().name());
+        SmartDashboard.putString("Feeder/State", getState().name());
+        SmartDashboard.putString("States/Feeder", getState().name());
     }
 }

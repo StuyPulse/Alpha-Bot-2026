@@ -18,9 +18,10 @@ import java.util.function.Supplier;
 public class HoodAngleCalculator {
     
     private HoodAngleCalculator() {
+
     }
-    
-    public static Supplier<Rotation2d> calculateShootAngle() {
+
+    public static Supplier<Rotation2d> calculateHoodAngleSOTM() {
         return () -> {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
             HoodedShooter hdsr = HoodedShooter.getInstance();

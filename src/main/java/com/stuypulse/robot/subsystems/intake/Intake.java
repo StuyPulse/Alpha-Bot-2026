@@ -37,12 +37,12 @@ public class Intake extends SubsystemBase{
         state = IntakeState.STOP;
     }
 
-    public IntakeState getState() {
-        return state;
-    }
-
     public void setState(IntakeState state) {
         this.state = state;
+    }
+
+    public IntakeState getState() {
+        return state;
     }
 
     @Override

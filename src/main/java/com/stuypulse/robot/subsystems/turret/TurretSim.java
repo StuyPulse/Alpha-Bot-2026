@@ -89,8 +89,8 @@ public class TurretSim extends Turret {
         goal = new TrapezoidProfile.State(getTargetAngle().getRadians(), 0.0);
         setpoint = profile.calculate(Settings.DT, setpoint, goal);
 
-        SmartDashboard.putNumber("Turret/Constraints/Max vel (deg per s)", Units.radiansToDegrees(maxAngularVelRadiansPerSecond));
-        SmartDashboard.putNumber("Turret/Constraints/Max accel (deg per s per s)", Units.radiansToDegrees(maxAngularAccelRadiansPerSecondSquared));
+        SmartDashboard.putNumber("Turret/Constraints/Max Vel (deg per s)", Units.radiansToDegrees(maxAngularVelRadiansPerSecond));
+        SmartDashboard.putNumber("Turret/Constraints/Max Accel (deg per s per s)", Units.radiansToDegrees(maxAngularAccelRadiansPerSecondSquared));
 
         SmartDashboard.putNumber("Turret/Setpoint (deg)", Units.radiansToDegrees(setpoint.position));
         SmartDashboard.putNumber("Turret/Target (deg)", Units.radiansToDegrees(getTargetAngle().getRadians()));

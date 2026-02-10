@@ -12,6 +12,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
 public class ShooterImpl extends Shooter {
@@ -22,7 +23,7 @@ public class ShooterImpl extends Shooter {
     private final VelocityVoltage shooterController;
     private final Follower follower;
 
-    private Optional<Double> shooterVoltageOverride;
+    private Optional<Double> voltageOverride;
 
     public ShooterImpl() {
 
@@ -36,7 +37,7 @@ public class ShooterImpl extends Shooter {
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterLeader);
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower);
 
-        shooterVoltageOverride = Optional.empty();
+        voltageOverride = Optional.empty();
     }
 
     @Override
@@ -52,8 +53,8 @@ public class ShooterImpl extends Shooter {
         return shooterFollower.getVelocity().getValueAsDouble() * 60.0;
     }
 
-    public void setVoltageOverride(Optional<Double> shooterVoltageOverride) {
-        this.shooterVoltageOverride = shooterVoltageOverride;
+    public void setVoltageOverride(Optional<Double> voltageOverride) {
+        this.voltageOverride = voltageOverride;
     }
 
     @Override
@@ -74,18 +75,28 @@ public class ShooterImpl extends Shooter {
     public void periodic() {
         super.periodic();
 
-        if (shooterVoltageOverride.isPresent()) {
-            shooterLeader.setVoltage(shooterVoltageOverride.get());
-            shooterFollower.setControl(follower);
-        }
-        else if (!EnabledSubsystems.SHOOTER.get() || getState() == ShooterState.STOP) {
-            shooterLeader.stopMotor();
+        if (EnabledSubsystems.SHOOTER.get()) {
+            if (getState() == ShooterState.STOP) {
+                shooterLeader.stopMotor();
+                shooterFollower.stopMotor();
+            } else if (voltageOverride.isPresent()) {
+                shooterLeader.setVoltage(voltageOverride.get());
+                shooterFollower.setControl(follower);
+            } else {
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
+                shooterFollower.setControl(follower);
+            }
         } else {
-            shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
-            shooterFollower.setControl(follower);
+            shooterLeader.stopMotor();
+            shooterFollower.stopMotor();
         }
         
         if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Current (amps)", shooterLeader.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Current (amps)", shooterFollower.getStatorCurrent().getValueAsDouble());
+
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());
         }
     }
 }

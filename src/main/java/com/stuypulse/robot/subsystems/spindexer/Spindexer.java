@@ -38,13 +38,14 @@ public abstract class Spindexer extends SubsystemBase {
         }
     }
 
+    public void setState(SpindexerState state) {
+        this.state = state;
+    }
+
     public SpindexerState getState() {
         return state;
     }
 
-    public void setState(SpindexerState state) {
-        this.state = state;
-    }
 
     public abstract SysIdRoutine getSysIdRoutine();
 

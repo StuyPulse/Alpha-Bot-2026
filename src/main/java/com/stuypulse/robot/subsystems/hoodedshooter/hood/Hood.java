@@ -44,8 +44,8 @@ public abstract class Hood extends SubsystemBase{
     public Rotation2d getTargetAngle() {
         return switch(state) {
             case STOW -> Constants.HoodedShooter.Hood.MIN_ANGLE;
-            case FERRY -> Rotation2d.fromDegrees(25); //TODO: TS WAY TOO LOW - MADDON MA
-            case SHOOT -> HoodAngleCalculator.calculateShootAngle().get();
+            case FERRY -> Rotation2d.fromDegrees(100);
+            case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
             case IDLE -> getHoodAngle();
         };
     }
@@ -60,7 +60,7 @@ public abstract class Hood extends SubsystemBase{
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("HoodedShooter/State", state.name());
-        SmartDashboard.putString("States/HoodedShooter", state.name());
+        SmartDashboard.putString("Hood/State", state.name());
+        SmartDashboard.putString("States/Hood", state.name());
     }
 }

@@ -18,6 +18,6 @@ public class FeederSetState extends InstantCommand {
 
     @Override
     public void initialize() {
-        feeder.setFeederState(feederState);
+        feeder.setState(feederState);
     }
 }

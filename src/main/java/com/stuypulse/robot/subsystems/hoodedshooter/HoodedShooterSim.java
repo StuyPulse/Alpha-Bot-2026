@@ -64,7 +64,7 @@ public class HoodedShooterSim extends HoodedShooter{
 
         hoodController.update(Angle.fromRotation2d(getTargetAngle()), Angle.fromRotation2d(getHoodAngle()));
         shooterController.update(getTargetRPM(), getShooterRPM());
-        // SmartDashboard.putNumber("hdsr/Output Voltage", controller);
+        // SmartDashboard.putNumber("HoodedShooter/Output Voltage", controller);
 
         hood.setInput(hoodController.getOutput());
         shooter.setInputVoltage(shooterController.getOutput());
