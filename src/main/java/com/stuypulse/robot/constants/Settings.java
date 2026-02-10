@@ -24,11 +24,11 @@ public interface Settings {
     boolean DEBUG_MODE = true;
 
     public interface EnabledSubsystems {
-        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", false);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
         SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
@@ -44,7 +44,7 @@ public interface Settings {
         double FEEDER_STOP = 0.0;
         double FEEDER_MAX = 5000.0; 
         double FEEDER_REVERSE = -500.0;
-        public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM overide", 6000);
+        public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", 6000);
 
     }
 
@@ -54,7 +54,8 @@ public interface Settings {
         double STOP = 0.0;
     }
     public interface HoodedShooter {
-        SmartNumber SHOT_RPM = new SmartNumber("HoodedShooter/Target Shooter RPM SmartNumber", 3000.0);
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3000.0);
+        SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
         double SHOOTER_TOLERANCE_RPM = 150.0;
         double HOOD_TOLERANCE_DEG = 5.0;
@@ -83,7 +84,7 @@ public interface Settings {
         double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
         
         public interface Constraints {    
-            double MAX_VELOCITY_M_PER_S = 4.3; // should be 4.3
+            double MAX_VELOCITY_M_PER_S = 4.3;
             double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
             double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
             double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);
@@ -126,16 +127,16 @@ public interface Settings {
     }
     public interface Driver {
         public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
+            double DEADBAND = 0.05;
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2.0);
+            double RC = 0.05;
+            double POWER = 2.0;
         }
         public interface Turn {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+            double DEADBAND = 0.05;
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2.0);
+            double RC = 0.05;
+            double POWER = 2.0;
         }
     }
 }

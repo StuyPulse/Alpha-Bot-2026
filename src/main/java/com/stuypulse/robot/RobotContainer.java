@@ -8,12 +8,8 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetState;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
-import com.stuypulse.robot.commands.intake.IntakeIntake;
-import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
@@ -21,7 +17,6 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
-import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter.HoodedShooterState;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;
 import com.stuypulse.robot.subsystems.intake.Intake;
@@ -33,9 +28,6 @@ import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 

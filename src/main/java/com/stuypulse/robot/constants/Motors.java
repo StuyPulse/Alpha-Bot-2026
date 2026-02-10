@@ -71,6 +71,11 @@ public interface Motors {
                 .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
                 .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
 
+            CANcoderConfiguration hoodEncoder = new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                        .withAbsoluteSensorDiscontinuityPoint(1)
+                        .withMagnetOffset(Constants.HoodedShooter.Hood.ENCODER_OFFSET.getRotations()));
         }
     }
 
@@ -90,7 +95,7 @@ public interface Motors {
     public interface Spindexer {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
-                .withRampRate(.25)
+                .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer
                                                                      // motors
