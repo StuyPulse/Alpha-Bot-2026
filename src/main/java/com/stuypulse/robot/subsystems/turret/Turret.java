@@ -75,11 +75,7 @@ public abstract class Turret extends SubsystemBase {
 
         if (Settings.DEBUG_MODE) {
             if (Settings.EnabledSubsystems.TURRET.get()) {
-                if (Robot.isReal()) {
-                    TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
-                } else {
-                    TurretVisualizer.getInstance().updateTurretAngle(getTargetAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
-                }
+                TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
             }
             else {
                 TurretVisualizer.getInstance().updateTurretAngle(new Rotation2d(), false);
