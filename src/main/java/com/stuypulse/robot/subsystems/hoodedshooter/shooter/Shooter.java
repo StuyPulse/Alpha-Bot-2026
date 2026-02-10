@@ -47,7 +47,7 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public double getShootRPM() {
-        return Constants.HoodedShooter.SHOT_RPM.get(); // will return different speeds in future based on distance to hub
+        return Settings.HoodedShooter.SHOT_RPM.get(); // will return different speeds in future based on distance to hub
     }
 
     public double getFerryRPM() {

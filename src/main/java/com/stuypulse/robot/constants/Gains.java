@@ -67,7 +67,7 @@ public class Gains {
     }
 
     public interface Spindexer {
-        double kP = 0.14201; //from sysid
+        double kP = 1.20;
         double kI = 0.0;
         double kD = 0.0;
         

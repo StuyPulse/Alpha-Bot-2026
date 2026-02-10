@@ -2,9 +2,12 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
@@ -66,12 +69,18 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
-        SmartDashboard.putNumber("HoodShooter/Hood absolute angle (deg)", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodShooter/Hood angle (deg)", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodShooter/Hood absolute angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0);
 
         if (!hasSeededHood) {
             hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble());
             hasSeededHood = true;
         }
+
+        // if(getState() == HoodState.FERRY) hoodMotor.setControl(new VoltageOut(1));
+        // else if(getState() == HoodState.SHOOT) hoodMotor.setControl(new VoltageOut(-1));
+        // else hoodMotor.setControl(new VoltageOut(0));
+
 
         if (!EnabledSubsystems.HOOD.get() || getState() == HoodState.STOW) {
             hoodMotor.stopMotor();

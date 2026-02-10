@@ -57,18 +57,20 @@ public interface Motors {
                     .withCurrentLimitAmps(80)
                     .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Brake)
-                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
                     .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
                             Gains.HoodedShooter.Hood.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV,
                             Gains.HoodedShooter.Hood.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO)
+                    .withRemoteSensor(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, Constants.HoodedShooter.Hood.GEAR_RATIO);
 
             SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitEnable(true)
                 .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
                 .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
+
         }
     }
 

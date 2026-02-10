@@ -8,6 +8,7 @@ package com.stuypulse.robot;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSetState;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
@@ -92,11 +93,23 @@ public class RobotContainer {
         driver.getBottomButton().onTrue(new FeederFeed());
         driver.getTopButton().onTrue(new FeederStop());
 
-        // driver.getTopButton().whileTrue(new HoodedShooterShoot()
+        driver.getDPadUp().onTrue(new HoodedShooterShoot());
+        driver.getDPadDown().onTrue(new HoodedShooterStow());
+
+        // driver.getDPadDown()
+        //     .onTrue(new HoodedShooterShoot())
+        //     .onFalse(new HoodedShooterStow());
+
+        // driver.getDPadUp()
+        //     .onTrue(new HoodedShooterFerry())
+        //     .onFalse(new HoodedShooterStow());
+
+        // driver.getDPadUp().whileTrue(new HoodedShooterShoot()
         //     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
         //     .andThen(new FeederFeed())))
         // .onFalse(new HoodedShooterStow()
         //     .alongWith(new FeederStop()));
+
     }
 
     /**************/

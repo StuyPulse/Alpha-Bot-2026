@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.feeder;
 
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -25,7 +26,7 @@ public abstract class Feeder extends SubsystemBase{
     public enum FeederState {
         STOP(Settings.Feeder.FEEDER_STOP), 
         REVERSE(Settings.Feeder.FEEDER_REVERSE), // to unjam the feeder; speed is max, but in reverse
-        MAX(Settings.Feeder.FEEDER_MAX);
+        MAX(Settings.Feeder.FEED_RPM.get());
 
         private double targetRPM;
         

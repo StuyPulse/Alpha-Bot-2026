@@ -8,7 +8,6 @@ import edu.wpi.first.math.geometry.Transform2d;
 
 public interface Constants {
     public interface HoodedShooter {
-        SmartNumber SHOT_RPM = new SmartNumber("HoodedShooter/Target Shooter RPM SmartNumber", 2000.0);
         double FERRY_RPM = 4000.0;
         Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);
 
