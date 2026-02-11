@@ -54,16 +54,18 @@ public interface Settings {
         double STOP = 0.0;
     }
     public interface HoodedShooter {
+
         SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3000.0);
         SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
         double SHOOTER_TOLERANCE_RPM = 150.0;
         double HOOD_TOLERANCE_DEG = 5.0;
         public interface ShooterRPMS {
-            public final double RPM1 = 0.0; 
-            public final double RPM2 = 0.0;
-            public final double RPM3 = 0.0;
-            public final double stow = 0.0;
+            public final double REVERSE = -0.0;
+            public final double HUB_RPM = 0.0; 
+            public final double LEFT_CORNER_RPM = 0.0; // TBD
+            public final double RIGHT_CORNER_RPM = 0.0; // TBD
+            public final double STOW = 0.0; // TBD
         }
 
         public interface ShooterRPMDistances {
@@ -75,8 +77,13 @@ public interface Settings {
 
     public interface Turret {
         Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
-        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
+        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));        
         double TOLERANCE_DEG = 2.0;
+
+        Rotation2d HUB = Rotation2d.fromDegrees(0.0);
+        Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
+        Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
+
     }
 
     public interface Swerve {
@@ -126,6 +133,10 @@ public interface Settings {
         }
     }
     public interface Driver {
+
+        double BUZZ_TIME = 1.0;
+        double BUZZ_INTENSITY = 1.0;
+
         public interface Drive {
             double DEADBAND = 0.05;
 

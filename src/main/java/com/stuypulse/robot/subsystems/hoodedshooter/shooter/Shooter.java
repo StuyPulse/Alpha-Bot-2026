@@ -22,7 +22,11 @@ public abstract class Shooter extends SubsystemBase {
     public enum ShooterState {
         STOP,
         SHOOT,
-        FERRY;
+        FERRY,
+        REVERSE,
+        HUB,
+        LEFT_CORNER,
+        RIGHT_CORNER;
     }
 
     public Shooter() {
@@ -42,6 +46,10 @@ public abstract class Shooter extends SubsystemBase {
             case STOP -> 0;
             case SHOOT -> getShootRPM();
             case FERRY -> getFerryRPM();
+            case REVERSE -> Settings.HoodedShooter.ShooterRPMS.REVERSE;
+            case HUB -> Settings.HoodedShooter.ShooterRPMS.HUB_RPM;
+            case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
+            case RIGHT_CORNER -> Settings.HoodedShooter.ShooterRPMS.RIGHT_CORNER_RPM;
         };
     }
 

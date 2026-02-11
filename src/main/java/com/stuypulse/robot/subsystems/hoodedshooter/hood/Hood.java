@@ -26,6 +26,9 @@ public abstract class Hood extends SubsystemBase{
         STOW,
         FERRY,
         SHOOT,
+        HUB,
+        LEFT_CORNER,
+        RIGHT_CORNER,
         IDLE;
     }
 
@@ -46,6 +49,9 @@ public abstract class Hood extends SubsystemBase{
             case STOW -> Constants.HoodedShooter.Hood.MIN_ANGLE;
             case FERRY -> Rotation2d.fromDegrees(100);
             case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
+            case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;
+            case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
+            case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
             case IDLE -> getHoodAngle();
         };
     }

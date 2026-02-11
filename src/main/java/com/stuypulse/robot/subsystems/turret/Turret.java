@@ -32,7 +32,10 @@ public abstract class Turret extends SubsystemBase {
     public enum TurretState {
         IDLE,
         SHOOTING,
-        FERRYING;
+        FERRYING,
+        HUB,
+        LEFT_CORNER,
+        RIGHT_CORNER;
     }
 
     public Rotation2d getTargetAngle() {
@@ -40,6 +43,9 @@ public abstract class Turret extends SubsystemBase {
             case IDLE -> getAngle(); 
             case FERRYING -> getFerryAngle();
             case SHOOTING -> getScoringAngle();
+            case HUB -> Settings.Turret.HUB;
+            case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
+            case RIGHT_CORNER -> Settings.Turret.RIGHT_CORNER;
         };
     }
 
