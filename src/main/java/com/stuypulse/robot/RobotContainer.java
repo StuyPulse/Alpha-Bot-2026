@@ -6,7 +6,9 @@
 package com.stuypulse.robot;
 
 import com.stuypulse.robot.commands.BuzzController;
+import com.stuypulse.robot.commands.auton.Box;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
+import com.stuypulse.robot.commands.auton.StraightLine;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederReverse;
 import com.stuypulse.robot.commands.feeder.FeederStop;
@@ -41,6 +43,7 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.turret.Turret;
+import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -296,6 +299,15 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
+        
+        AutonConfig STRAIGHT_LINE = new AutonConfig("Straight Line", StraightLine::new, 
+            "Straight Line");
+        STRAIGHT_LINE.register(autonChooser);
+
+        AutonConfig BOX = new AutonConfig("Box", Box::new, 
+            "Box 1", "Box 2", "Box 3", "Box 4");
+        BOX.register(autonChooser);
+
         // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
         // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
