@@ -44,16 +44,18 @@ public class HoodedShooterSim extends HoodedShooter{
         );
 
         shooterController = new PIDController(
-            Gains.HoodedShooter.Shooter.kD,
-            Gains.HoodedShooter.Shooter.kD,
+            Gains.HoodedShooter.Shooter.kP,
+            Gains.HoodedShooter.Shooter.kI,
             Gains.HoodedShooter.Shooter.kD
         );
     }
 
+    @Override
     public Rotation2d getHoodAngle() {
         return Rotation2d.fromRotations(hood.getOutput(0));
     }
 
+    @Override
     public double getShooterRPM() {
         return shooter.getAngularVelocityRPM();
     }

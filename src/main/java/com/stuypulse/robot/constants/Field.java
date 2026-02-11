@@ -31,7 +31,7 @@ public interface Field {
 
     // Alliance relative hub center coordinates
     public final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
-    public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), 1.8288, Rotation3d.kZero);
+    public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), Units.inchesToMeters(72), Rotation3d.kZero);
 
     public static Pose2d getAllianceHubPose() {
         return hubCenter;

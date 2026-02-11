@@ -62,6 +62,25 @@ public interface Settings {
 
         double SHOOTER_TOLERANCE_RPM = 150.0;
         double HOOD_TOLERANCE_DEG = 5.0;
+
+        public interface AngleInterpolation {
+            double[][] distanceAngleInterpolationValues = {
+                // values calculated with kinematics and RPM = 3000. TODO: tuning
+                {1.0, Units.degreesToRadians(61.329899416056854)}, // meters, radians
+                {1.5, Units.degreesToRadians(50.64110128774519)},
+                {2.0, Units.degreesToRadians(42.43985862934761)}, 
+                {2.5, Units.degreesToRadians(36.18629462556821)},
+                {3.0, Units.degreesToRadians(31.36657857810849)},
+                {3.5, Units.degreesToRadians(27.587819826188184)},
+                {4.0, Units.degreesToRadians(24.570004144436282)},
+                {4.5, Units.degreesToRadians(22.116965225162573)},
+                {5.0, Units.degreesToRadians(20.090654257188444)}
+            };
+        }
+      
+
+        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
+
         public interface ShooterRPMS {
             public final double RPM1 = 0.0; 
             public final double RPM2 = 0.0;

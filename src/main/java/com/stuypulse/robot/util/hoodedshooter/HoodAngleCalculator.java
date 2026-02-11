@@ -1,23 +1,45 @@
 package com.stuypulse.robot.util.hoodedshooter;
 
-import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.AlignAngleSolution;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.Supplier;
 
 public class HoodAngleCalculator {
-    
-    private HoodAngleCalculator() {
+    public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
 
+    static {
+        distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
+        for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
+            distanceAngleInterpolator.put(pair[0], pair[1]);
+        }
+    }
+
+    public static Supplier<Rotation2d> interpolateHoodAngle() {
+        return () -> {
+            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+            Translation2d hubPose = Field.getAllianceHubPose().getTranslation();
+            Translation2d currentPose = swerve.getPose().getTranslation();
+
+            double distanceMeters = hubPose.getDistance(currentPose);
+
+            SmartDashboard.putNumber("HoodedShooter/distanceToHub", distanceMeters);
+
+            return Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
+        };
     }
 
     public static Supplier<Rotation2d> calculateHoodAngleSOTM() {
