@@ -5,11 +5,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import com.stuypulse.stuylib.network.SmartNumber;
 
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.util.Units;
 
 public interface Constants {
     public interface HoodedShooter {
         Transform2d TURRET_OFFSET = new Transform2d(0, 0, Rotation2d.kZero);
-
+        double TURRET_HEIGHT = Units.inchesToMeters(0.0); // TODO: get value
         public interface Hood {
             public final double GEAR_RATIO = 1290300.0 / 5967.0; 
             public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(60);

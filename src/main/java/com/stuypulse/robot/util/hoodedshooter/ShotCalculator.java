@@ -63,7 +63,7 @@ public final class ShotCalculator {
         Pose3d targetPose,
         double axMetersPerSecondSquared,
         double ayMetersPerSecondSquared,
-        ChassisSpeeds fieldRelRobotVelocity,
+        ChassisSpeeds fieldRelSpeeds,
         double targetSpeedRps,
         int maxIterations,
         double timeTolerance) {
@@ -71,20 +71,22 @@ public final class ShotCalculator {
         ShotSolution sol = solveBallisticWithSpeed(
             shooterPose,
             targetPose,
-            targetSpeedRps);
+            targetSpeedRps
+        );
 
         
         double t = sol.flightTimeSeconds();
         
         Pose3d effectiveTarget = targetPose;
+
         Translation3d s = shooterPose.getTranslation();
             
         for (int i = 0; i < maxIterations; i++) {
 
-            double dx = fieldRelRobotVelocity.vxMetersPerSecond * t
+            double dx = fieldRelSpeeds.vxMetersPerSecond * t
             + 0.5 * axMetersPerSecondSquared * t * t;
 
-            double dy = fieldRelRobotVelocity.vyMetersPerSecond * t
+            double dy = fieldRelSpeeds.vyMetersPerSecond * t
             + 0.5 * ayMetersPerSecondSquared * t * t;
 
             effectiveTarget = new Pose3d(
@@ -94,11 +96,11 @@ public final class ShotCalculator {
                 targetPose.getRotation());
 
             
-            SmartDashboard.putNumber("HoodedShooter/Target Pose X", targetPose.getX());
-            SmartDashboard.putNumber("HoodedShooter/Target Pose Y", targetPose.getY());
+            // SmartDashboard.putNumber("HoodedShooter/Target Pose X", targetPose.getX());
+            // SmartDashboard.putNumber("HoodedShooter/Target Pose Y", targetPose.getY());
 
-            SmartDashboard.putNumber("HoodedShooter/Virtual Pose X", effectiveTarget.getX());
-            SmartDashboard.putNumber("HoodedShooter/Virtual Pose Y", effectiveTarget.getY());
+            // SmartDashboard.putNumber("HoodedShooter/Virtual Pose X", effectiveTarget.getX());
+            // SmartDashboard.putNumber("HoodedShooter/Virtual Pose Y", effectiveTarget.getY());
 
             ShotSolution newSol = solveBallisticWithSpeed(
                 shooterPose,
