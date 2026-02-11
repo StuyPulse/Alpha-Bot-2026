@@ -11,7 +11,17 @@ import edu.wpi.first.math.util.Units;
 public interface Cameras {
 
     public Camera[] LimelightCameras = new Camera[] {
-        new Camera("limelight", new Pose3d(Units.inchesToMeters(9.895492), Units.inchesToMeters(- 10.330558), Units.inchesToMeters(-8.074834), new Rotation3d(Units.degreesToRadians(0), Units.degreesToRadians(0), Units.degreesToRadians(0))), Settings.EnabledSubsystems.LIMELIGHT)
+        new Camera("limelight", 
+            new Pose3d(
+                Units.inchesToMeters(10.467130), 
+                Units.inchesToMeters(-8.007531), 
+                Units.inchesToMeters(-8.545), 
+            new Rotation3d(
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(0), 
+                Units.degreesToRadians(0))), 
+            Settings.EnabledSubsystems.LIMELIGHT
+        ),
     };
 
     public static class Camera {
