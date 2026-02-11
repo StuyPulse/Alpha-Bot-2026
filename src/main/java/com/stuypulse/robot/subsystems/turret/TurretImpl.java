@@ -105,7 +105,7 @@ public class TurretImpl extends Turret {
         if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
             motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
             hasUsedAbsoluteEncoder = true;
-            System.out.println("Absolute Encoder Reset triggered");
+            //System.out.println("Absolute Encoder Reset triggered");
         }
         
         if (Settings.EnabledSubsystems.TURRET.get()) {

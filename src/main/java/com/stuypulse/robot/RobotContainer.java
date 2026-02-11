@@ -25,6 +25,7 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.turret.Turret;
+import com.stuypulse.robot.subsystems.vision.LimelightVision;
 import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
 
@@ -42,6 +43,7 @@ public class RobotContainer {
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     public final Hood hood = Hood.getInstance();
     public final Shooter shooter = Shooter.getInstance();
+    public final LimelightVision limelight = LimelightVision.getInstance();
     
     public final Spindexer spindexer = Spindexer.getInstance();
     public final Feeder feeder = Feeder.getInstance();

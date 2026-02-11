@@ -9,8 +9,11 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -138,5 +141,10 @@ public interface Settings {
             double RC = 0.05;
             double POWER = 2.0;
         }
+    }
+    
+    public interface Vision {
+            Vector<N3> MT1_STDEV = VecBuilder.fill(0.5, 0.5, 1.0); 
+            Vector<N3> MT2_STDEV = VecBuilder.fill(0.7, 0.7, 694694); 
     }
 }

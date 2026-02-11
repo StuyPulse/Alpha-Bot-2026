@@ -13,13 +13,13 @@ public interface Cameras {
     public Camera[] LimelightCameras = new Camera[] {
         new Camera("limelight", 
             new Pose3d(
-                Units.inchesToMeters(10.467130), 
-                Units.inchesToMeters(-8.007531), 
-                Units.inchesToMeters(-8.545), 
+                Units.inchesToMeters(-8.007531),  //-10.467130
+                Units.inchesToMeters(-10.467130),  //-8.007531
+                Units.inchesToMeters(8.545), 
             new Rotation3d(
-                Units.degreesToRadians(0), 
-                Units.degreesToRadians(0), 
-                Units.degreesToRadians(0))), 
+                Units.degreesToRadians(180), 
+                Units.degreesToRadians(30), 
+                Units.degreesToRadians(-70))), 
             Settings.EnabledSubsystems.LIMELIGHT
         ),
     };
