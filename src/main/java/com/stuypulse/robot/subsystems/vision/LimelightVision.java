@@ -29,6 +29,12 @@ public class LimelightVision extends SubsystemBase{
     private String[] names;
     private SmartBoolean enabled;
     private SmartBoolean[] camerasEnabled;
+    private MegaTagMode megaTagMode;
+
+    public enum MegaTagMode {
+        MEGATAG1,
+        MEGATAG2 
+    }
 
     public LimelightVision() {
         names = new String[Cameras.LimelightCameras.length];
@@ -54,6 +60,8 @@ public class LimelightVision extends SubsystemBase{
         }
 
         enabled = new SmartBoolean("Vision/Is Enabled", true);
+        megaTagMode = MegaTagMode.MEGATAG1;
+        // on init
     }
 
     public void setTagWhitelist(int... ids) {
@@ -76,6 +84,10 @@ public class LimelightVision extends SubsystemBase{
                 camerasEnabled[i].set(enabled);
             }
         }
+    }
+
+    public void setMegaTagMode(MegaTagMode mode) {
+        this.megaTagMode = mode;
     }
 
     public void setIMUMode(int mode) {
@@ -101,13 +113,19 @@ public class LimelightVision extends SubsystemBase{
                         0
                     );
 
-                    // PoseEstimate poseEstimate = Robot.isBlue() 
-                    //     ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
-                    //     : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
 
-                    PoseEstimate poseEstimate = Robot.isBlue() 
-                        ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
-                        : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+                    PoseEstimate poseEstimate;
+
+                    if (megaTagMode == MegaTagMode.MEGATAG1) {
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed(limelightName);
+                    }
+                    else {
+                        poseEstimate = Robot.isBlue() 
+                            ? LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(limelightName)
+                            : LimelightHelpers.getBotPoseEstimate_wpiRed_MegaTag2(limelightName);
+                    }
                     
                     if (poseEstimate != null && poseEstimate.tagCount > 0) {
                         Pose2d robotPose = poseEstimate.pose;
