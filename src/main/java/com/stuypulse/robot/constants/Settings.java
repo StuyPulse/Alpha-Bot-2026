@@ -9,8 +9,11 @@ import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -60,6 +63,25 @@ public interface Settings {
 
         double SHOOTER_TOLERANCE_RPM = 150.0;
         double HOOD_TOLERANCE_DEG = 5.0;
+
+        public interface AngleInterpolation {
+            double[][] distanceAngleInterpolationValues = {
+                // values calculated with kinematics and RPM = 3000. TODO: tuning
+                {1.0, Units.degreesToRadians(61.329899416056854)}, // meters, radians
+                {1.5, Units.degreesToRadians(50.64110128774519)},
+                {2.0, Units.degreesToRadians(42.43985862934761)}, 
+                {2.5, Units.degreesToRadians(36.18629462556821)},
+                {3.0, Units.degreesToRadians(31.36657857810849)},
+                {3.5, Units.degreesToRadians(27.587819826188184)},
+                {4.0, Units.degreesToRadians(24.570004144436282)},
+                {4.5, Units.degreesToRadians(22.116965225162573)},
+                {5.0, Units.degreesToRadians(20.090654257188444)}
+            };
+        }
+      
+
+        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
+
         public interface ShooterRPMS {
             public final double REVERSE = -0.0;
             public final double HUB_RPM = 0.0; 
@@ -149,5 +171,10 @@ public interface Settings {
             double RC = 0.05;
             double POWER = 2.0;
         }
+    }
+    
+    public interface Vision {
+            Vector<N3> MT1_STDEV = VecBuilder.fill(0.5, 0.5, 1.0); 
+            Vector<N3> MT2_STDEV = VecBuilder.fill(0.7, 0.7, 694694); 
     }
 }

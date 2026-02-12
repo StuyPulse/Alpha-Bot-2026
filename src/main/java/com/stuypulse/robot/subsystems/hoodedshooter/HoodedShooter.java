@@ -104,7 +104,7 @@ public class HoodedShooter extends SubsystemBase {
         SmartDashboard.putNumber("HoodedShooter/Target RPM", shooter.getTargetRPM());
         SmartDashboard.putNumber("HoodedShooter/Target Angle", hood.getTargetAngle().getDegrees());
 
-        SmartDashboard.putNumber("HoodedShooter/Current RPM", shooter.getShooterRPM());
-        SmartDashboard.putNumber("HoodedShooter/Current Angle", hood.getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Current RPM", getShooterRPM());
+        SmartDashboard.putNumber("HoodedShooter/Current Angle", getHoodAngle().getDegrees());
     }
 }
