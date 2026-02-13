@@ -6,6 +6,8 @@
 package com.stuypulse.robot;
 
 import com.ctre.phoenix6.SignalLogger;
+import com.stuypulse.robot.commands.vision.SetMegaTagMode;
+import com.stuypulse.robot.subsystems.vision.LimelightVision.MegaTagMode;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -50,7 +52,9 @@ public class Robot extends TimedRobot {
     /*********************/
 
     @Override
-    public void disabledInit() {}
+    public void disabledInit() {
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(MegaTagMode.MEGATAG1));
+    }
 
     @Override
     public void disabledPeriodic() {}
@@ -83,6 +87,7 @@ public class Robot extends TimedRobot {
         if (auto != null) {
             auto.cancel();
         }
+         CommandScheduler.getInstance().schedule(new SetMegaTagMode(MegaTagMode.MEGATAG2));
     }
 
     @Override
