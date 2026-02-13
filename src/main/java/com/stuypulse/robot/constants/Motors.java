@@ -62,7 +62,8 @@ public interface Motors {
                             Gains.HoodedShooter.Hood.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV,
                             Gains.HoodedShooter.Hood.kA, 0)
-                    .withRemoteSensor(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, 1);
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    // .withRemoteSensor(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, 1);
 
             SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
@@ -72,7 +73,7 @@ public interface Motors {
 
             CANcoderConfiguration hoodEncoder = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
                         .withAbsoluteSensorDiscontinuityPoint(1)
                         .withMagnetOffset(Constants.HoodedShooter.Hood.ENCODER_OFFSET.getRotations()));
         }

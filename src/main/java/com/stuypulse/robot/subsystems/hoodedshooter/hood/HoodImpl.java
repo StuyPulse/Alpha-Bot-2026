@@ -22,6 +22,7 @@ public class HoodImpl extends Hood {
 
     private final PositionVoltage controller;
     private Optional<Double> voltageOverride;
+    private boolean seededEnc;
 
     public HoodImpl() {
 
@@ -31,8 +32,12 @@ public class HoodImpl extends Hood {
         Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
 
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
+        hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodEncoder);
 
         controller = new PositionVoltage(getTargetAngle().getRotations());
+
+        // hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
+        seededEnc = false;
 
         voltageOverride = Optional.empty();
     }
@@ -64,6 +69,11 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
+        if(!seededEnc) { 
+            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
+            seededEnc = true;
+        }
+
         if (EnabledSubsystems.HOOD.get() && getState() != HoodState.STOW) {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
@@ -76,7 +86,7 @@ public class HoodImpl extends Hood {
 
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("HoodedShooter/Hood/Hood Angle (deg)", getHoodAngle().getDegrees());
-            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getAbsolutePosition().getValueAsDouble() * 360.0);
         }
     }
 }
