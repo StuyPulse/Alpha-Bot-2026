@@ -1,9 +1,6 @@
 package com.stuypulse.robot.constants;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-
-import com.stuypulse.stuylib.network.SmartNumber;
-
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.util.Units;
 
@@ -13,13 +10,14 @@ public interface Constants {
         double TURRET_HEIGHT = Units.inchesToMeters(0.0); // TODO: get value
         public interface Hood {
             public final double GEAR_RATIO = 1290300.0 / 5967.0; 
-            public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(60);
-            public final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(315);
-            public final Rotation2d HUB_ANGLE = Rotation2d.fromDegrees(0); // TBD
-            public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(0); // TBD
-            public final Rotation2d RIGHT_CORNER_ANGLE = Rotation2d.fromDegrees(0); // TBD
+            public final double SENSOR_TO_HOOD_RATIO = 360.0 / 36.0;
+            public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(5);
+            public final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(36.80);
+            public final Rotation2d HUB_ANGLE = Rotation2d.fromDegrees(12); // TBD
+            public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
+            public final Rotation2d RIGHT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
 
-            public final Rotation2d ENCODER_OFFSET = new Rotation2d();
+            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromRotations(0.325);//(0.332);//(0.325);
         }
         public interface Shooter {
             public final double GEAR_RATIO = 1.0;
@@ -59,7 +57,6 @@ public interface Constants {
         public final double GEAR_RATIO_MOTOR_TO_MECH = 1425.0 / 36.0;
     }
 
-    
     public interface Feeder {
         public final double GEAR_RATIO = 1.0; 
     }

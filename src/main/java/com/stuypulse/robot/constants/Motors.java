@@ -57,23 +57,22 @@ public interface Motors {
                     .withCurrentLimitAmps(80)
                     .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Brake)
-                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
                     .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
                             Gains.HoodedShooter.Hood.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV,
                             Gains.HoodedShooter.Hood.kA, 0)
                     .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
-                    // .withRemoteSensor(Ports.HoodedShooter.Hood.THROUGHBORE_ENCODER, FeedbackSensorSourceValue.RemoteCANcoder, 1);
-
+                    
             SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitEnable(true)
                 .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
                 .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
 
-            CANcoderConfiguration hoodEncoder = new CANcoderConfiguration()
+            CANcoderConfiguration HOOD_ENCODER = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.CounterClockwise_Positive)
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                         .withAbsoluteSensorDiscontinuityPoint(1)
                         .withMagnetOffset(Constants.HoodedShooter.Hood.ENCODER_OFFSET.getRotations()));
         }
@@ -103,7 +102,6 @@ public interface Motors {
                 .withPIDConstants(Gains.Spindexer.kP, Gains.Spindexer.kI, Gains.Spindexer.kD, 0)
                 .withSensorToMechanismRatio(Constants.Spindexer.GEAR_RATIO);
     }
-
     public interface Turret {
         TalonFXConfig turretMotor = new TalonFXConfig()
                 .withCurrentLimitAmps(80)

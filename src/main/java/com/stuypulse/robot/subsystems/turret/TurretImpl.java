@@ -79,7 +79,7 @@ public class TurretImpl extends Turret {
     
     @Override
     public Rotation2d getAngle() {
-        return Rotation2d.fromRotations(motor.getPosition().getValueAsDouble());
+        return Rotation2d.fromDegrees(motor.getPosition().getValueAsDouble());
     }
 
     @Override
@@ -102,11 +102,11 @@ public class TurretImpl extends Turret {
     public void periodic() {
         super.periodic();
 
-        if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
-            motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
-            hasUsedAbsoluteEncoder = true;
-            //System.out.println("Absolute Encoder Reset triggered");
-        }
+        // if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
+        //     motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
+        //     hasUsedAbsoluteEncoder = true;
+        //     //System.out.println("Absolute Encoder Reset triggered");
+        // }
         
         if (Settings.EnabledSubsystems.TURRET.get()) {
             if (getState() == TurretState.IDLE) {
@@ -124,7 +124,8 @@ public class TurretImpl extends Turret {
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-            SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
+            // SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
+            SmartDashboard.putNumber("Turret/Position (Deg)", motor.getPosition().getValueAsDouble() * 360.0);
         }
     }
 

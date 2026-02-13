@@ -6,6 +6,7 @@ import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -32,12 +33,11 @@ public class HoodImpl extends Hood {
         Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
 
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
-        hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodEncoder);
+        hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.HOOD_ENCODER);
 
         controller = new PositionVoltage(getTargetAngle().getRotations());
 
-        // hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
-        seededEnc = false;
+        hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
 
         voltageOverride = Optional.empty();
     }
@@ -70,7 +70,7 @@ public class HoodImpl extends Hood {
         super.periodic();
 
         if(!seededEnc) { 
-            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
+            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
             seededEnc = true;
         }
 
@@ -86,7 +86,7 @@ public class HoodImpl extends Hood {
 
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("HoodedShooter/Hood/Hood Angle (deg)", getHoodAngle().getDegrees());
-            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getAbsolutePosition().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO); //* 360.0 / (360.0/35.0) / .97);
         }
     }
 }
