@@ -7,43 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "HP Auto Start to HP"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
+            "pathName": "Top Trench to NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "HP to Depot Side"
+            "pathName": "Top NZ to Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Depot Side to Collect"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 5.0
+            "pathName": "Top Score to NZ"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Depot Collect to Tower Mid 1"
+            "pathName": "Top NZ to Score"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Tower Mid 1 to 2"
+            "pathName": "Top Trench Score to Tower Left"
           }
         }
       ]

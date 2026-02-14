@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.470782442748092,
-        "y": 0.49520038167938996
+        "x": 4.370362595419848,
+        "y": 0.411517175572518
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.562891221374047,
-        "y": 0.5203053435114509
+        "x": 8.462471374045801,
+        "y": 0.4366221374045789
       },
       "isLocked": false,
       "linkedName": "Bottom Trench Auto Start"
@@ -32,11 +32,11 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.5,
+      "minWaypointRelativePos": 0.6830652790917692,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 1.5,
+        "maxVelocity": 3.5,
+        "maxAcceleration": 6.75,
         "maxAngularVelocity": 400.0,
         "maxAngularAcceleration": 900.0,
         "nominalVoltage": 12.0,

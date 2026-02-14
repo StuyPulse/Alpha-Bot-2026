@@ -3,33 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.3577958015267177,
-        "y": 7.516221374045802
+        "x": 3.5921087786259545,
+        "y": 7.63337786259542
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.708377868401204,
-        "y": 5.209028795090849
+        "x": 8.32379596678529,
+        "y": 7.569395017793594
       },
       "isLocked": false,
       "linkedName": "Top Trench Score"
     },
     {
       "anchor": {
-        "x": 2.0523377862595424,
-        "y": 3.7923187022900766
+        "x": 7.851583969465649,
+        "y": 4.595677480916031
       },
       "prevControl": {
-        "x": 2.292937406292524,
-        "y": 4.832201308344197
+        "x": 7.828873072360619,
+        "y": 7.849134045077106
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Tower Mid 1"
+      "linkedName": "NZ Top Center"
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7587511825922443,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 3.5,
+        "maxAcceleration": 6.75,
+        "maxAngularVelocity": 400.0,
+        "maxAngularAcceleration": 900.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
@@ -42,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "To Tower",
+  "folder": "To NZ",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -68.70264595096619
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }
