@@ -9,6 +9,8 @@ import com.stuypulse.robot.commands.BuzzController;
 import com.stuypulse.robot.commands.auton.Box;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.auton.StraightLine;
+import com.stuypulse.robot.commands.auton.TwoCycleBottom;
+import com.stuypulse.robot.commands.auton.TwoCycleTop;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederReverse;
 import com.stuypulse.robot.commands.feeder.FeederStop;
@@ -333,6 +335,14 @@ public class RobotContainer {
         AutonConfig BOX = new AutonConfig("Box", Box::new, 
             "Box 1", "Box 2", "Box 3", "Box 4");
         BOX.register(autonChooser);
+
+        AutonConfig BOTTOM_TWO_CYCLE = new AutonConfig("Bottom Two Cycle", TwoCycleBottom::new, 
+            "Bottom Trench To NZ", "Bottom NZ to Score", "Bottom Score to NZ", "Bottom NZ to Score", "Bottom Trench Score to Tower Right");
+        BOTTOM_TWO_CYCLE.register(autonChooser);
+
+        AutonConfig TOP_TWO_CYCLE = new AutonConfig("Top Two Cycle", TwoCycleTop::new, 
+            "Top Trench To NZ", "Top NZ to Score", "Top Score to NZ", "Top NZ to Score", "Top Trench Score to Tower Left");
+        TOP_TWO_CYCLE.register(autonChooser);
 
         // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));

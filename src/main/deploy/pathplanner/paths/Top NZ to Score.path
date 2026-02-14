@@ -8,36 +8,27 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.244866412213741,
-        "y": 8.11037213740458
+        "x": 6.41223282442748,
+        "y": 7.859322519083969
       },
       "isLocked": false,
       "linkedName": "NZ Top Center"
     },
     {
       "anchor": {
-        "x": 3.3577958015267177,
-        "y": 7.516221374045802
+        "x": 3.5921087786259545,
+        "y": 7.63337786259542
       },
       "prevControl": {
-        "x": 6.847385496183206,
-        "y": 7.599904580152671
+        "x": 7.081698473282444,
+        "y": 7.717061068702289
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Top Trench Score"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": -90.0
-    },
-    {
-      "waypointRelativePos": 0.9036144578313312,
-      "rotationDegrees": -90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -51,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -68.70264595096619
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

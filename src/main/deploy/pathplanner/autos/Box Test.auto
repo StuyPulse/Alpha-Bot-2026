@@ -7,37 +7,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom Trench to NZ"
+            "pathName": "Box 1"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom NZ to Score"
+            "pathName": "Box 2"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom Score to NZ"
+            "pathName": "Box 3"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Bottom NZ to Score"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Bottom Trench Score to Tower Right"
+            "pathName": "Box 4"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Tests",
   "choreoAuto": false
 }
