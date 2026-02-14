@@ -6,8 +6,6 @@ import edu.wpi.first.math.util.Units;
 
 public interface Constants {
     public interface HoodedShooter {
-        Transform2d TURRET_OFFSET = new Transform2d(-2.50, 11.19, Rotation2d.kZero);
-        double TURRET_HEIGHT = Units.inchesToMeters(-10.984); // TODO: get value
         public interface Hood {
             public final double GEAR_RATIO = 1290300.0 / 5967.0; 
             public final double SENSOR_TO_HOOD_RATIO = 360.0 / 36.0;
@@ -35,6 +33,8 @@ public interface Constants {
 
     public interface Turret {
         double RANGE = 420.0;
+        Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-2.50), Units.inchesToMeters(11.19), Rotation2d.kZero);
+        double TURRET_HEIGHT = Units.inchesToMeters(-10.984); // TODO: get value
         public interface Encoder18t {
             public final int TEETH = 18;
             public final Rotation2d OFFSET = new Rotation2d();

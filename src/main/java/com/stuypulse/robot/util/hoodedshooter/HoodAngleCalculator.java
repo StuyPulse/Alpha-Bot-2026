@@ -62,7 +62,7 @@ public class HoodAngleCalculator {
             double shooterRPS = hdsr.getTargetRPM() / 60.0;
             
             AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
-                new Pose3d(currentPose.plus(Constants.HoodedShooter.TURRET_OFFSET)),
+                new Pose3d(currentPose.plus(Constants.Turret.TURRET_OFFSET)),
                 targetPose,
                 axMetersPerSecondSquared,
                 ayMetersPerSecondSquared,
