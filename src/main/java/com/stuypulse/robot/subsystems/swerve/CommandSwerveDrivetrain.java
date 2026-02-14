@@ -437,6 +437,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? getPose() : Field.transformToOppositeAlliance(getPose()));
+        
 
         if (Settings.DEBUG_MODE) {
             for (int i = 0; i < 4; i++) {

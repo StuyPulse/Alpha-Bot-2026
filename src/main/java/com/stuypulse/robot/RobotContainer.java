@@ -83,9 +83,10 @@ public class RobotContainer {
         swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
-        configureAutons();
+        // configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
+       
     }
 
     /****************/
@@ -93,7 +94,7 @@ public class RobotContainer {
     /****************/
 
     private void configureDefaultCommands() {
-        //swerve.setDefaultCommand(new SwerveDriveDrive(driver));
+        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
         //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }   
 
