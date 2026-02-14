@@ -17,7 +17,6 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 public abstract class Turret extends SubsystemBase {
     private static final Turret instance;
     private TurretState state;
-    private Vector2D driverInput;
 
     static {
         instance = Robot.isReal() ? new TurretImpl() : new TurretSim();
@@ -28,12 +27,7 @@ public abstract class Turret extends SubsystemBase {
     }
 
     public Turret() {
-        driverInput = new Vector2D(0, 0);
         state = TurretState.IDLE;
-    }
-
-    public void setDriverInput(Gamepad gamepad) {
-        this.driverInput = gamepad.getLeftStick();
     }
 
     public enum TurretState {
@@ -42,8 +36,7 @@ public abstract class Turret extends SubsystemBase {
         FERRYING,
         HUB,
         LEFT_CORNER,
-        RIGHT_CORNER,
-        TESTING;
+        RIGHT_CORNER;
     }
 
     public Rotation2d getTargetAngle() {
@@ -53,14 +46,8 @@ public abstract class Turret extends SubsystemBase {
             case SHOOTING -> Rotation2d.fromDegrees(360); //getScoringAngle();
             case HUB -> Settings.Turret.HUB;
             case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
-            case TESTING -> driverInputToAngle();
             case RIGHT_CORNER -> Settings.Turret.RIGHT_CORNER;
         };
-    }
-
-    public Rotation2d driverInputToAngle() {
-        SmartDashboard.putNumber("Turret/Driver Input", driverInput.x);
-        return Rotation2d.fromDegrees(driverInput.x * 180); 
     }
  
     public boolean atTargetAngle() {

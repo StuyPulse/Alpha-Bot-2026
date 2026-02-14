@@ -107,8 +107,6 @@ public class TurretImpl extends Turret {
         motor.setPosition(0.0);
     }
     
-    
-
     @Override
     public void periodic() {
         super.periodic();
