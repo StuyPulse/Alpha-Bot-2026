@@ -5,6 +5,7 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.turret.TurretVisualizer;
+import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 public abstract class Turret extends SubsystemBase {
     private static final Turret instance;
     private TurretState state;
+    private Vector2D driverInput;
 
     static {
         instance = Robot.isReal() ? new TurretImpl() : new TurretSim();
@@ -26,7 +28,12 @@ public abstract class Turret extends SubsystemBase {
     }
 
     public Turret() {
+        driverInput = new Vector2D(0, 0);
         state = TurretState.IDLE;
+    }
+
+    public void setDriverInput(Gamepad gamepad) {
+        this.driverInput = gamepad.getLeftStick();
     }
 
     public enum TurretState {
@@ -35,20 +42,27 @@ public abstract class Turret extends SubsystemBase {
         FERRYING,
         HUB,
         LEFT_CORNER,
-        RIGHT_CORNER;
+        RIGHT_CORNER,
+        TESTING;
     }
 
     public Rotation2d getTargetAngle() {
         return switch (getState()) {
             case IDLE -> getAngle(); 
-            case FERRYING -> Rotation2d.fromDegrees(30); //TODO: CHANGE TO getFerryAngle();
-            case SHOOTING -> getScoringAngle();
+            case FERRYING -> Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
+            case SHOOTING -> Rotation2d.fromDegrees(360); //getScoringAngle();
             case HUB -> Settings.Turret.HUB;
             case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
+            case TESTING -> driverInputToAngle();
             case RIGHT_CORNER -> Settings.Turret.RIGHT_CORNER;
         };
     }
 
+    public Rotation2d driverInputToAngle() {
+        SmartDashboard.putNumber("Turret/Driver Input", driverInput.x);
+        return Rotation2d.fromDegrees(driverInput.x * 180); 
+    }
+ 
     public boolean atTargetAngle() {
         return Math.abs(getAngle().minus(getTargetAngle()).getDegrees()) < Settings.Turret.TOLERANCE_DEG;
     }
@@ -65,6 +79,8 @@ public abstract class Turret extends SubsystemBase {
     public abstract Rotation2d getAngle();
 
     public abstract SysIdRoutine getSysIdRoutine();
+
+    public abstract void seedTurret();
    
     public void setState(TurretState state) {
         this.state = state;
@@ -78,6 +94,7 @@ public abstract class Turret extends SubsystemBase {
     public void periodic() {
         SmartDashboard.putString("Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
+        SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
 
         if (Settings.DEBUG_MODE) {
             if (Settings.EnabledSubsystems.TURRET.get()) {

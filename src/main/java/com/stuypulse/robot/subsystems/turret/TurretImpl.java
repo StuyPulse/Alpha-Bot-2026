@@ -7,11 +7,14 @@ import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.math.SLMath;
 
 import java.util.Optional;
 
 import com.ctre.phoenix6.controls.PositionVoltage;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -35,7 +38,9 @@ public class TurretImpl extends Turret {
         encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
         encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
 
-        motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
+        // motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
+
+        motor.setPosition(0);
 
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
@@ -98,6 +103,12 @@ public class TurretImpl extends Turret {
         return delta < 0 ? delta + 360 : delta - 360;
     }
 
+    public void seedTurret() {
+        motor.setPosition(0.0);
+    }
+    
+    
+
     @Override
     public void periodic() {
         super.periodic();
@@ -114,8 +125,15 @@ public class TurretImpl extends Turret {
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                double actualTargetDeg = getAngle().getDegrees() + getDelta(getTargetAngle().getDegrees(), motor.getPosition().getValueAsDouble() * 360.0);
+                // double actualTargetDeg = getAngle().getDegrees() + getDelta(getTargetAngle().getDegrees(), motor.getPosition().getValueAsDouble() * 360.0);
+                // actualTargetDeg = SLMath.clamp(-180, 180);
+
+                double actualTargetDeg = getTargetAngle().getDegrees();
+
+                SmartDashboard.putNumber("Turret/Actual target (deg)", actualTargetDeg);
+
                 motor.setControl(controller.withPosition(actualTargetDeg / 360.0));
+                // motor.setControl(new PositionVoltage(actualTargetDeg / 360.0));
             }
         } else {
             motor.stopMotor();
@@ -125,7 +143,10 @@ public class TurretImpl extends Turret {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
             // SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
-            SmartDashboard.putNumber("Turret/Position (Deg)", motor.getPosition().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("Turret/Position (Rot)", motor.getPosition().getValueAsDouble());
+            SmartDashboard.putNumber("Turret/Volts", motor.getMotorVoltage().getValueAsDouble());
+            // SmartDashboard.putNumber("Turret/Volts supplied", motor.getSupplyVoltage);
+            SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble());
         }
     }
 

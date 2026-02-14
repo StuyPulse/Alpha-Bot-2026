@@ -103,18 +103,18 @@ public interface Motors {
     }
     public interface Turret {
         TalonFXConfig turretMotor = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
+                // .withCurrentLimitAmps(80)
                 .withRampRate(.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withPIDConstants(Gains.Turret.kP, Gains.Turret.kI, Gains.Turret.kD, 0)
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
 
-        SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
-                .withForwardSoftLimitEnable(true)
-                .withReverseSoftLimitEnable(true)
-                .withForwardSoftLimitThreshold(1.5)
-                .withReverseSoftLimitThreshold(1.5);
+        // SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+        //         .withForwardSoftLimitEnable(true)
+        //         .withReverseSoftLimitEnable(true)
+        //         .withForwardSoftLimitThreshold(1.5)
+        //         .withReverseSoftLimitThreshold(1.5);
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
