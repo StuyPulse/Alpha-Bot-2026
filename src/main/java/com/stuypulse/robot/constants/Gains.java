@@ -85,4 +85,10 @@ public class Gains {
         double kA = 0.0028428;
         double kV = 0.11725;
     }
+
+    public interface Turret {
+        double kP = 1.0;
+        double kI = 0.0;
+        double kD = 0.0;
+    }
 }
