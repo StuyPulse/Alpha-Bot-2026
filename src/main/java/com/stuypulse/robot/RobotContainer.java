@@ -113,9 +113,33 @@ public class RobotContainer {
 
         driver.getDPadUp().onTrue(new HoodedShooterShoot());
         driver.getDPadDown().onTrue(new HoodedShooterStow());
+        driver.getDPadLeft().onTrue(new HoodedShooterFerry());
 
         driver.getRightTriggerButton().onTrue(new TurretShoot());
         driver.getLeftTriggerButton().onTrue(new TurretIdle());
+
+        driver.getTopButton()
+            .whileTrue(new SpindexerRun()
+                .alongWith(new HoodedShooterShoot())
+                .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
+                .andThen(new FeederFeed()))
+            .onFalse(new SpindexerStop().alongWith(new HoodedShooterStow()).alongWith(new FeederStop()));
+
+        // driver.getDPadRight()
+        //     .whileTrue(
+        //         new SwerveXMode().alongWith(
+        //             new HoodedShooterShoot().alongWith(
+        //                 new TurretShoot()).alongWith(
+        //                     new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+        //                     new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+        //                     new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+        //                         new SpindexerRun().alongWith(new FeederFeed()))))
+        //     .onFalse(
+        //         new HoodedShooterStow().alongWith(
+        //         new TurretHoodAlignToTarget().alongWith(
+        //         new SpindexerRun().alongWith(
+        //         new FeederStop())))
+        //     );
 
         // driver.getDPadDown()
         //     .onTrue(new HoodedShooterShoot())
