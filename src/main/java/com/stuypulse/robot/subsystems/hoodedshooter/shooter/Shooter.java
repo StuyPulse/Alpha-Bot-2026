@@ -68,7 +68,7 @@ public abstract class Shooter extends SubsystemBase {
 
     public boolean atTolerance() {
         double diff = Math.abs(getTargetRPM() - getShooterRPM());
-        return diff > Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM;
+        return diff < Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM;
     }
 
     public abstract double getShooterRPM();

@@ -104,36 +104,36 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
-        
-        // driver.getBottomButton()
-        //     .whileTrue(new IntakeIntake())
-        //     .onFalse(new IntakeStop());
-        // // driver.getLeftButton().onTrue(new IntakeStop());
-
-        driver.getLeftButton().onTrue(new SpindexerRun());
-        driver.getRightButton().onTrue(new SpindexerStop());
-
-        driver.getBottomButton().onTrue(new FeederFeed());
-        driver.getTopButton().onTrue(new FeederStop());
-
-        // driver.getDPadUp().onTrue(new HoodedShooterShoot());
-        driver.getDPadLeft().onTrue(new HoodedShooterStow());
-        driver.getDPadRight().onTrue(new HoodedShooterFerry());
 
         driver.getRightTriggerButton().onTrue(new TurretShoot());
-        driver.getLeftTriggerButton().onTrue(new TurretFerry());
-        driver.getDPadDown()
-            .onTrue(new TurretSeed())
-            .onTrue(new SwerveResetHeading());
-        driver.getDPadUp().onTrue(new TurretAnalog(driver));
-        // driver.getTopButton().onTrue(new TurretIdle());
 
-        // driver.getTopButton()
-        //     .whileTrue(new SpindexerRun()
-        //         .alongWith(new HoodedShooterShoot())
-        //         .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
-        //         .andThen(new FeederFeed()))
-        //     .onFalse(new SpindexerStop().alongWith(new HoodedShooterStow()).alongWith(new FeederStop()));
+        driver.getLeftTriggerButton().onTrue(new TurretFerry());
+
+        driver.getDPadDown()
+            .onTrue(new TurretSeed());
+
+        driver.getDPadUp()
+            .onTrue(new SwerveResetHeading());
+            
+        // driver.getDPadUp().onTrue(new TurretAnalog(driver));
+
+        // SCORING ROUTINE
+        driver.getTopButton()
+            .whileTrue(new TurretShoot()
+                .alongWith(new HoodedShooterShoot())
+                .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
+                    .andThen(new FeederFeed()
+                        .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
+                            .andThen(new SpindexerRun())
+                    )
+                )
+            )
+            .onFalse(new SpindexerStop()
+                .alongWith(new HoodedShooterStow())
+                .alongWith(new FeederStop()));
+
+        driver.getBottomButton()
+            .onTrue(new TurretShoot());
 
         // driver.getDPadRight()
         //     .whileTrue(
