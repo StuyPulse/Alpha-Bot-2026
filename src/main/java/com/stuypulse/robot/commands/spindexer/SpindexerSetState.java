@@ -5,7 +5,7 @@ import com.stuypulse.robot.subsystems.spindexer.Spindexer.SpindexerState;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 
-public class SpindexerSetState extends InstantCommand{
+public class SpindexerSetState extends InstantCommand {
     
     private final Spindexer spindexer;
     private final SpindexerState state;

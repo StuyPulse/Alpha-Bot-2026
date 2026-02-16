@@ -65,7 +65,7 @@ public class FeederSim extends Feeder {
         controller.correct(VecBuilder.fill(sim.getOutput(0)));
         controller.predict(Settings.DT);
 
-        if (Settings.EnabledSubsystems.SHOOTER.get()) {
+        if (Settings.EnabledSubsystems.FEEDER.get()) {
             if (voltageOverride.isPresent()) {
                 sim.setInput(voltageOverride.get());
                 SmartDashboard.putNumber("Feeder/Input Voltage", voltageOverride.get());

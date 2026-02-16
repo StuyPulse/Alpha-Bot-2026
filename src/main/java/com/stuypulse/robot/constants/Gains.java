@@ -49,19 +49,19 @@ public class Gains {
             double kI = 0.0;
             double kD = 0.0;
 
-            double kS = 0.0; //not accurate -3.7335 actual What the banana vro?
+            double kS = 0.0;
             double kV = 0.18976;
             double kA = 0.52537;
         }
 
         public interface Hood {
-            double kP = 110.0; //110.0;
+            double kP = 110.0;
             double kI = 0.0;
             double kD = 0.0;
 
             double kS = 1.0;
-            double kV = 0.5; // 0.5;
-            double kA = 0.01; //0.01;
+            double kV = 0.5;
+            double kA = 0.01;
         }
         
     }

@@ -30,24 +30,6 @@ public class FeederImpl extends Feeder {
     }
 
     @Override
-    public SysIdRoutine getSysIdRoutine() {
-        return SysId.getRoutine(
-            1, 
-            5, 
-            "Feeder", 
-            voltage -> setVoltageOverride(Optional.of(voltage)), 
-            () -> motor.getPosition().getValueAsDouble(), 
-            () -> motor.getVelocity().getValueAsDouble(), 
-            () -> motor.getMotorVoltage().getValueAsDouble(), 
-            getInstance()
-        );
-    }
-
-    private void setVoltageOverride(Optional<Double> volts) {
-        this.voltageOverride = volts;
-    }
-
-    @Override
     public double getRPM() {
         return motor.getVelocity().getValueAsDouble() * 60.0;
     }
@@ -71,5 +53,23 @@ public class FeederImpl extends Feeder {
             SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
         }
+    }
+
+    private void setVoltageOverride(Optional<Double> volts) {
+        this.voltageOverride = volts;
+    }
+
+    @Override
+    public SysIdRoutine getSysIdRoutine() {
+        return SysId.getRoutine(
+            1, 
+            5, 
+            "Feeder", 
+            voltage -> setVoltageOverride(Optional.of(voltage)), 
+            () -> motor.getPosition().getValueAsDouble(), 
+            () -> motor.getVelocity().getValueAsDouble(), 
+            () -> motor.getMotorVoltage().getValueAsDouble(), 
+            getInstance()
+        );
     }
 }

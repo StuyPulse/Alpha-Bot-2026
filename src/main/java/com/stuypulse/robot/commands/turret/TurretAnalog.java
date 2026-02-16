@@ -1,5 +1,4 @@
 package com.stuypulse.robot.commands.turret;
-import java.time.format.TextStyle;
 
 import com.stuypulse.robot.subsystems.turret.Turret;
 import com.stuypulse.robot.subsystems.turret.Turret.TurretState;

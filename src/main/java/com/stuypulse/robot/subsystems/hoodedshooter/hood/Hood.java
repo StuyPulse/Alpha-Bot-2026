@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,7 +48,7 @@ public abstract class Hood extends SubsystemBase{
             case STOW -> Constants.HoodedShooter.Hood.MIN_ANGLE;
             case FERRY -> Rotation2d.fromDegrees(30);
             // case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
-            case SHOOT -> Rotation2d.fromDegrees(12);
+            case SHOOT -> Rotation2d.fromDegrees(15);
             case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;
             case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;

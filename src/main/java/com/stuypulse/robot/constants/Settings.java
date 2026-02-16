@@ -31,8 +31,8 @@ public interface Settings {
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
     }
@@ -78,7 +78,6 @@ public interface Settings {
                 {5.0, Units.degreesToRadians(20.090654257188444)}
             };
         }
-      
 
         SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
 

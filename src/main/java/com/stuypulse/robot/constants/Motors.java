@@ -38,7 +38,6 @@ import com.revrobotics.spark.config.SparkFlexConfig;
  */
 public interface Motors {
     public interface HoodedShooter {
-        // TODO: MAKE SURE OF INVERTED VALUES
         public interface Shooter {
             TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
                     .withCurrentLimitAmps(80)
@@ -78,9 +77,9 @@ public interface Motors {
     }
 
     public interface Intake {
-        SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig() // TODO: apply later
+        SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig()
                 .closedLoopRampRate(0.25)
-                .inverted(false) // TODO: GET INVERTED VAL
+                .inverted(false)
                 .idleMode(SparkBaseConfig.IdleMode.kBrake);
 
         SparkBaseConfig MOTOR_FOLLOW_CONFIG = new SparkFlexConfig()
@@ -95,8 +94,7 @@ public interface Motors {
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Brake)
-                .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer
-                                                                     // motors
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withFFConstants(Gains.Spindexer.kS, Gains.Spindexer.kV, Gains.Spindexer.kA, 0)
                 .withPIDConstants(Gains.Spindexer.kP, Gains.Spindexer.kI, Gains.Spindexer.kD, 0)
                 .withSensorToMechanismRatio(Constants.Spindexer.GEAR_RATIO);
@@ -114,18 +112,18 @@ public interface Motors {
         // SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
         //         .withForwardSoftLimitEnable(true)
         //         .withReverseSoftLimitEnable(true)
-        //         .withForwardSoftLimitThreshold(1.5)
-        //         .withReverseSoftLimitThreshold(1.5);
+        //         .withForwardSoftLimitThreshold(0.5)
+        //         .withReverseSoftLimitThreshold(0.5);
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                         .withAbsoluteSensorDiscontinuityPoint(1)
                         .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
 
         CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
                         .withAbsoluteSensorDiscontinuityPoint(1)
                         .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
     }

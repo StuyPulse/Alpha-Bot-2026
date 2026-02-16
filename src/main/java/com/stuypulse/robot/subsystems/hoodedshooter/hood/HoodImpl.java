@@ -2,7 +2,6 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import java.util.Optional;
 
-import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -46,24 +45,6 @@ public class HoodImpl extends Hood {
         return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
     }
 
-    @Override
-    public SysIdRoutine getHoodSysIdRoutine() {
-        return SysId.getRoutine(
-            .45, 
-            2, 
-            "Hood", 
-            voltage -> setVoltageOverride(Optional.of(voltage)), 
-            () -> hoodMotor.getPosition().getValueAsDouble(), 
-            () -> hoodMotor.getVelocity().getValueAsDouble(), 
-            () -> hoodMotor.getMotorVoltage().getValueAsDouble(), 
-            getInstance()
-        );
-    }
-
-    public void setVoltageOverride(Optional<Double> voltageOverride) {
-        this.voltageOverride = voltageOverride;
-    }
-
     @Override 
     public void periodic() {
         super.periodic();
@@ -88,4 +69,23 @@ public class HoodImpl extends Hood {
             SmartDashboard.putNumber("HoodedShooter/Hood/Input Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
         }
     }
+
+    public void setVoltageOverride(Optional<Double> voltageOverride) {
+        this.voltageOverride = voltageOverride;
+    }
+
+    @Override
+    public SysIdRoutine getHoodSysIdRoutine() {
+        return SysId.getRoutine(
+            .45, 
+            2, 
+            "Hood", 
+            voltage -> setVoltageOverride(Optional.of(voltage)), 
+            () -> hoodMotor.getPosition().getValueAsDouble(), 
+            () -> hoodMotor.getVelocity().getValueAsDouble(), 
+            () -> hoodMotor.getMotorVoltage().getValueAsDouble(), 
+            getInstance()
+        );
+    }
+
 }

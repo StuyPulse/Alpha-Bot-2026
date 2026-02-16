@@ -31,12 +31,12 @@ public class HoodAngleCalculator {
         return () -> {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-            Translation2d hubPose = Field.getAllianceHubPose().getTranslation();
+            Translation2d hubPose = Field.getHubPose().getTranslation();
             Translation2d currentPose = swerve.getPose().getTranslation();
 
             double distanceMeters = hubPose.getDistance(currentPose);
 
-            SmartDashboard.putNumber("HoodedShooter/distanceToHub", distanceMeters);
+            SmartDashboard.putNumber("HoodedShooter/Distance to Hub", distanceMeters);
 
             return Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
         };

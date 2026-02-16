@@ -30,10 +30,10 @@ public interface Field {
     double LENGTH = Units.inchesToMeters(651.200);
 
     // Alliance relative hub center coordinates
-    public final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
+    public static final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
     public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), Units.inchesToMeters(72), Rotation3d.kZero);
 
-    public static Pose2d getAllianceHubPose() {
+    public static Pose2d getHubPose() {
         return hubCenter;
     }
 

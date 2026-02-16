@@ -53,24 +53,6 @@ public class ShooterImpl extends Shooter {
         return shooterFollower.getVelocity().getValueAsDouble() * 60.0;
     }
 
-    public void setVoltageOverride(Optional<Double> voltageOverride) {
-        this.voltageOverride = voltageOverride;
-    }
-
-    @Override
-    public SysIdRoutine getShooterSysIdRoutine() {
-        return SysId.getRoutine(
-            1, 
-            5, 
-            "Shooter", 
-            voltage -> setVoltageOverride(Optional.of(voltage)), 
-            () -> shooterLeader.getPosition().getValueAsDouble(), 
-            () -> shooterLeader.getVelocity().getValueAsDouble(), 
-            () -> shooterLeader.getMotorVoltage().getValueAsDouble(), 
-            getInstance()
-        );
-    }
-
     @Override 
     public void periodic() {
         super.periodic();
@@ -98,5 +80,23 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());
         }
+    }
+
+    public void setVoltageOverride(Optional<Double> voltageOverride) {
+        this.voltageOverride = voltageOverride;
+    }
+
+    @Override
+    public SysIdRoutine getShooterSysIdRoutine() {
+        return SysId.getRoutine(
+            1, 
+            5, 
+            "Shooter", 
+            voltage -> setVoltageOverride(Optional.of(voltage)), 
+            () -> shooterLeader.getPosition().getValueAsDouble(), 
+            () -> shooterLeader.getVelocity().getValueAsDouble(), 
+            () -> shooterLeader.getMotorVoltage().getValueAsDouble(), 
+            getInstance()
+        );
     }
 }

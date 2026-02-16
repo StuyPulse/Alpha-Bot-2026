@@ -73,7 +73,7 @@ public abstract class Turret extends SubsystemBase {
     }
 
     public Rotation2d getScoringAngle() {
-        return getPointAtTargetAngle(Field.getAllianceHubPose());
+        return getPointAtTargetAngle(Field.getHubPose());
     }
 
     public Rotation2d getFerryAngle() {
