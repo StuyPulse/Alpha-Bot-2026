@@ -11,6 +11,7 @@ import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -19,6 +20,7 @@ public abstract class Turret extends SubsystemBase {
     private static final Turret instance;
     private TurretState state;
     private Vector2D driverInput;
+    private FieldObject2d turret2d;
 
     static {
         instance = Robot.isReal() ? new TurretImpl() : new TurretSim();
@@ -31,6 +33,8 @@ public abstract class Turret extends SubsystemBase {
     public Turret() {
         driverInput = new Vector2D(0, 0);
         state = TurretState.IDLE;
+
+        turret2d = Field.FIELD2D.getObject("Turret 2D");
     }
 
     public void setDriverInput(Gamepad gamepad) {
@@ -97,6 +101,15 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putString("States/Turret", state.name());
         SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
 
+        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
+
+        Pose2d turretTranslation = robotPose.plus(Constants.Turret.TURRET_OFFSET);
+        Rotation2d turretRotation = robotPose.getRotation().plus(getAngle());
+
+        Pose2d turretPose = new Pose2d(turretTranslation.getTranslation(), turretRotation);
+
+        turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
+
         if (Settings.DEBUG_MODE) {
             if (Settings.EnabledSubsystems.TURRET.get()) {
                 TurretVisualizer.getInstance().updateTurretAngle(getAngle().plus((Robot.isBlue() ? Rotation2d.kZero : Rotation2d.k180deg)), atTargetAngle());
@@ -108,27 +121,28 @@ public abstract class Turret extends SubsystemBase {
     }
 
     // Should match implementation on mini turret
-    // Current logic is as of 1/31
+    // Current logic is as of 2/15
     public Rotation2d getPointAtTargetAngle(Pose2d targetPose) {
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Vector2D robot = new Vector2D(robotPose.getTranslation());
-        Vector2D turretToRobot = new Vector2D(Constants.Turret.TURRET_OFFSET.getX(), 0.0);//Constants.Turret.TURRET_OFFSET.getY());
+        Pose2d turretPose = robotPose.plus(Constants.Turret.TURRET_OFFSET);
 
-        Vector2D target = new Vector2D(targetPose.getX(), targetPose.getY());
-        Vector2D robotToHub = target.sub(robot);
-        Vector2D turretToHub = robotToHub.sub(turretToRobot);
+        // Vector2D robot = new Vector2D(robotPose.getTranslation());
+        Vector2D turret = new Vector2D(turretPose.getTranslation());
+        Vector2D target = new Vector2D(targetPose.getTranslation());
+
+        Vector2D turretToTarget = target.sub(turret);
         Vector2D zeroVector = new Vector2D(robotPose.getRotation().getCos(), robotPose.getRotation().getSin());
 
         // https://www.youtube.com/watch?v=_VuZZ9_58Wg
-        double crossProduct = zeroVector.x * turretToHub.y - zeroVector.y * turretToHub.x;
-        double dotProduct = zeroVector.dot(turretToHub);
+        double crossProduct = zeroVector.x * turretToTarget.y - zeroVector.y * turretToTarget.x;
+        double dotProduct = zeroVector.dot(turretToTarget);
 
-        SmartDashboard.putNumber("Turret/Turret to Target Vector X", turretToHub.x);
-        SmartDashboard.putNumber("Turret/Turret to Target Vector Y", turretToHub.y);
+        SmartDashboard.putNumber("Turret/Turret to Target Vector X", turretToTarget.x);
+        SmartDashboard.putNumber("Turret/Turret to Target Vector Y", turretToTarget.y);
         SmartDashboard.putNumber("Turret/Target Pose X", targetPose.getX());
         SmartDashboard.putNumber("Turret/Target Pose Y", targetPose.getY());
-        SmartDashboard.putNumber("Turret/Robot to Target Vector X", robotToHub.x);
-        SmartDashboard.putNumber("Turret/Robot to Target Vector Y", robotToHub.y);
+        // SmartDashboard.putNumber("Turret/Robot to Target Vector X", robotToHub.x);
+        // SmartDashboard.putNumber("Turret/Robot to Target Vector Y", robotToHub.y);
         SmartDashboard.putNumber("Turret/Zero Vector X", zeroVector.x);
         SmartDashboard.putNumber("Turret/Zero Vector Y", zeroVector.y);
 
