@@ -1,40 +1,27 @@
-/************************ PROJECT ALPHABOT ************************/
-/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot;
 
-import com.stuypulse.robot.commands.BuzzController;
+import com.stuypulse.stuylib.input.Gamepad;
+import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
+
 import com.stuypulse.robot.commands.auton.Box;
 import com.stuypulse.robot.commands.auton.DoNothingAuton;
 import com.stuypulse.robot.commands.auton.StraightLine;
 import com.stuypulse.robot.commands.auton.TwoCycleBottom;
 import com.stuypulse.robot.commands.auton.TwoCycleTop;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
-import com.stuypulse.robot.commands.feeder.FeederReverse;
 import com.stuypulse.robot.commands.feeder.FeederStop;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterHub;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterLeftCorner;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterReverse;
-import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterRightCorner;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
-import com.stuypulse.robot.commands.intake.IntakeIntake;
-import com.stuypulse.robot.commands.intake.IntakeOutake;
-import com.stuypulse.robot.commands.intake.IntakeStop;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
-import com.stuypulse.robot.commands.swerve.SwerveXMode;
-import com.stuypulse.robot.commands.turret.TurretAnalog;
 import com.stuypulse.robot.commands.turret.TurretFerry;
-import com.stuypulse.robot.commands.turret.TurretHub;
-import com.stuypulse.robot.commands.turret.TurretIdle;
-import com.stuypulse.robot.commands.turret.TurretLeftCorner;
-import com.stuypulse.robot.commands.turret.TurretRightCorner;
 import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
 import com.stuypulse.robot.constants.Field;
@@ -47,10 +34,8 @@ import com.stuypulse.robot.subsystems.intake.Intake;
 import com.stuypulse.robot.subsystems.spindexer.Spindexer;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.subsystems.turret.Turret;
-import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import com.stuypulse.robot.subsystems.vision.LimelightVision;
-import com.stuypulse.stuylib.input.Gamepad;
-import com.stuypulse.stuylib.input.gamepads.AutoGamepad;
+import com.stuypulse.robot.util.PathUtil.AutonConfig;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;

@@ -1,11 +1,16 @@
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.util.hoodedshooter;
 
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.AlignAngleSolution;
-import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
