@@ -1,5 +1,6 @@
 package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +13,11 @@ public abstract class Shooter extends SubsystemBase {
     private ShooterState state;
 
     static {
-        instance = new ShooterImpl();
+        if (Robot.isReal()) {
+            instance = new ShooterImpl();
+        } else {
+            instance = new ShooterSim();
+        }
     }
 
     public static Shooter getInstance() {
@@ -72,7 +77,10 @@ public abstract class Shooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SmartDashboard.putString("Shooter/State", state.name());
+        SmartDashboard.putString("HoodedShooter/Shooter/State", state.name());
         SmartDashboard.putString("States/Shooter", state.name());
+
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Current RPM", getShooterRPM());
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Target RPM", getTargetRPM());
     }
 }

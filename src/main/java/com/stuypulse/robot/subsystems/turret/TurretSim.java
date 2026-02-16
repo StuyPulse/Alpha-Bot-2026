@@ -102,7 +102,7 @@ public class TurretSim extends Turret {
 
         SmartDashboard.putNumber("Turret/Current Angle (deg)", sim.getOutput(0));
 
-        controller.setNextR(VecBuilder.fill(setpoint.position, 0.0)); // try setpoint.velocity as second arg later
+    controller.setNextR(VecBuilder.fill(setpoint.position, 0.0));
         controller.correct(VecBuilder.fill(sim.getOutput(0), sim.getOutput(1)));
         controller.predict(Settings.DT);
 

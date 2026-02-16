@@ -4,7 +4,6 @@ import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood.HoodState;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter.ShooterState;
-import com.stuypulse.robot.Robot;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,10 +14,7 @@ public class HoodedShooter extends SubsystemBase {
     private static final HoodedShooter instance;
 
     static {
-        if (Robot.isReal())
-            instance = new HoodedShooter();
-        else
-            instance = new HoodedShooterSim();
+        instance = new HoodedShooter();
     }
     
     public static HoodedShooter getInstance(){

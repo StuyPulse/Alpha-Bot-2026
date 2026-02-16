@@ -84,7 +84,6 @@ public class HoodImpl extends Hood {
         }
 
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("HoodedShooter/Hood/Hood Angle (deg)", getHoodAngle().getDegrees());
             SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO); //* 360.0 / (360.0/35.0) / .97);
             SmartDashboard.putNumber("HoodedShooter/Hood/Input Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
         }
