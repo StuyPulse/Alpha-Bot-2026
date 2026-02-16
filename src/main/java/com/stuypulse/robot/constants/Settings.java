@@ -46,7 +46,8 @@ public interface Settings {
         double FEEDER_STOP = 0.0;
         double FEEDER_MAX = 5000.0; 
         double FEEDER_REVERSE = -500.0;
-        public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", 6000);
+        double RPM_TOLERANCE = 100.0;
+        public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", 2000);
 
     }
 

@@ -48,6 +48,11 @@ public class FeederImpl extends Feeder {
     }
 
     @Override
+    public double getRPM() {
+        return motor.getVelocity().getValueAsDouble() * 60.0;
+    }
+
+    @Override
     public void periodic() {
         super.periodic();
 
@@ -62,9 +67,6 @@ public class FeederImpl extends Feeder {
         }
 
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Feeder/Target RPM", getState().getTargetRPM());
-            SmartDashboard.putNumber("Feeder/Motor RPM", motor.getVelocity().getValueAsDouble() * 60.0);
-
             SmartDashboard.putNumber("Feeder/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
             SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());

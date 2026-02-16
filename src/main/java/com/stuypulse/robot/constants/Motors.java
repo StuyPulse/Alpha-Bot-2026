@@ -134,7 +134,7 @@ public interface Motors {
         TalonFXConfig FEEDER_MOTOR_CONFIG = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Coast)
+                .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
                 .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
                 .withPIDConstants(Gains.Feeder.kP, Gains.Feeder.kI, Gains.Feeder.kD, 0)

@@ -1,6 +1,6 @@
 package com.stuypulse.robot.subsystems.feeder;
 
-import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,7 +12,11 @@ public abstract class Feeder extends SubsystemBase{
     private FeederState state;
 
     static {
-        instance = new FeederImpl();
+        if (Robot.isReal()) {
+            instance = new FeederImpl();
+        } else {
+            instance = new FeederSim();
+        }
     }
 
     public static Feeder getInstance() {
@@ -51,10 +55,21 @@ public abstract class Feeder extends SubsystemBase{
         return getState().getTargetRPM();
     }
 
+    public boolean atTolerance() {
+        double diff = Math.abs(getTargetRPM() - getRPM());
+        return diff < Settings.Feeder.RPM_TOLERANCE;
+    }
+
+    public abstract double getRPM();
+
     public abstract SysIdRoutine getSysIdRoutine();
 
     public void periodic() {
         SmartDashboard.putString("Feeder/State", getState().name());
         SmartDashboard.putString("States/Feeder", getState().name());
+
+        SmartDashboard.putNumber("Feeder/Target RPM", getState().getTargetRPM());
+        SmartDashboard.putNumber("Feeder/Current RPM", getRPM());
+        SmartDashboard.putBoolean("Feeder/At Tolerance", atTolerance());
     }
 }
