@@ -31,7 +31,7 @@ public interface Settings {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
@@ -45,9 +45,9 @@ public interface Settings {
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
-        double FEEDER_MAX = 3100.0; 
+        double FEEDER_MAX = 6000.0;
         double FEEDER_REVERSE = -500.0;
-        double RPM_TOLERANCE = 100.0;
+        double RPM_TOLERANCE = 500.0;
         public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", FEEDER_MAX);
 
     }
@@ -59,10 +59,10 @@ public interface Settings {
     }
     public interface HoodedShooter {
 
-        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3200.0);
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3400.0);
         SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
-        double SHOOTER_TOLERANCE_RPM = 50.0;
+        double SHOOTER_TOLERANCE_RPM = 25.0;
         double HOOD_TOLERANCE_DEG = 5.0;
 
         public interface AngleInterpolation {

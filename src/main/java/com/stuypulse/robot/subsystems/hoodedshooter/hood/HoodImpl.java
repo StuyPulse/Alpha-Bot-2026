@@ -38,7 +38,7 @@ public class HoodImpl extends Hood {
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
         hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.HOOD_ENCODER);
 
-        hoodMotor.setPosition(hoodEncoder.getPosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
+        hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
 
         controller = new PositionVoltage(getTargetAngle().getRotations());
 

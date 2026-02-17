@@ -11,14 +11,18 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.units.Units;
+import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
-import java.util.Optional;
 
 public class ShooterImpl extends Shooter {
     private final TalonFX shooterLeader;
@@ -42,6 +46,12 @@ public class ShooterImpl extends Shooter {
 
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterLeader);
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower);
+
+        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        feedbackConfigs.withVelocityFilterTimeConstant(Time.ofBaseUnits(0.1, Units.Seconds));
+
+        shooterLeader.getConfigurator().apply(feedbackConfigs);
+        // TODO: refactor this to be in the motor configs 
 
         voltageOverride = Optional.empty();
     }
@@ -76,10 +86,10 @@ public class ShooterImpl extends Shooter {
             } else if (voltageOverride.isPresent()) {
                 shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
-            } else if (shouldAddFeedforward) {
-                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
-                shooterFollower.setControl(follower);
-            } else {
+            } //else if (shouldAddFeedforward) {
+                // shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
+                // shooterFollower.setControl(follower);
+              else {
                 shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
                 shooterFollower.setControl(follower);
             }

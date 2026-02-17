@@ -10,7 +10,9 @@ import com.stuypulse.robot.subsystems.vision.LimelightVision;
 
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -22,6 +24,7 @@ public class Robot extends TimedRobot {
     private RobotContainer robot;
     private Command auto;
     private static Alliance alliance;
+    private PowerDistribution powerDistribution;
 
     public static boolean isBlue() {
         return alliance == Alliance.Blue;
@@ -37,6 +40,8 @@ public class Robot extends TimedRobot {
 
         DataLogManager.start();
         SignalLogger.start();
+
+        powerDistribution = new PowerDistribution();
     }
 
     @Override
@@ -88,7 +93,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
-        
+
         if (auto != null) {
             auto.cancel();
         }
@@ -97,6 +102,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopPeriodic() {
         // CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        SmartDashboard.putNumber("Robot/Voltage of Robot", powerDistribution.getVoltage());
     }
 
     @Override

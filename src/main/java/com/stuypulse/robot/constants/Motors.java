@@ -41,7 +41,8 @@ public interface Motors {
     public interface HoodedShooter {
         public interface Shooter {
             TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
-                    .withCurrentLimitAmps(80)
+                    .withSupplyCurrentLimitAmps(100.0)
+                    .withCurrentLimitAmps(100.0)
                     .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Coast)
                     .withInvertedValue(InvertedValue.CounterClockwise_Positive)
@@ -49,7 +50,8 @@ public interface Motors {
                             Gains.HoodedShooter.Shooter.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
                             Gains.HoodedShooter.Shooter.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO)
+                    .withLowerLimitSupplyCurrent(80.0);
         }
 
         public interface Hood {
@@ -110,11 +112,11 @@ public interface Motors {
                 .withFFConstants(Gains.Turret.kS, 0.0, 0.0, 0)
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
 
-        // SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
-        //         .withForwardSoftLimitEnable(true)
-        //         .withReverseSoftLimitEnable(true)
-        //         .withForwardSoftLimitThreshold(0.5)
-        //         .withReverseSoftLimitThreshold(0.5);
+        SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(0.5) // 0.75
+                .withReverseSoftLimitThreshold(-0.5); // -0.66
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
@@ -264,6 +266,15 @@ public interface Motors {
 
         public TalonFXConfig withCurrentLimitAmps(double currentLimitAmps) {
             currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
+            currentLimitsConfigs.StatorCurrentLimitEnable = true;
+
+            configuration.withCurrentLimits(currentLimitsConfigs);
+
+            return this;
+        }
+
+        public TalonFXConfig withLowerLimitSupplyCurrent(double currentLowerLimitAmps) {
+            currentLimitsConfigs.SupplyCurrentLowerLimit= currentLowerLimitAmps;
             currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
             configuration.withCurrentLimits(currentLimitsConfigs);
