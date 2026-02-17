@@ -29,6 +29,7 @@ public class ShooterImpl extends Shooter {
     private final Follower follower;
 
     private Optional<Double> voltageOverride;
+    private boolean hasHitSetpoint;
 
     public ShooterImpl() {
 
@@ -62,12 +63,21 @@ public class ShooterImpl extends Shooter {
     public void periodic() {
         super.periodic();
 
+        if (getState() == ShooterState.SHOOT && getLeaderRPM() - getTargetRPM() < Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM) {
+            hasHitSetpoint = true;
+        }
+
+        boolean shouldAddFeedforward = hasHitSetpoint && getLeaderRPM() - getTargetRPM() < -Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM;
+
         if (EnabledSubsystems.SHOOTER.get()) {
             if (getState() == ShooterState.STOP) {
                 shooterLeader.stopMotor();
                 shooterFollower.stopMotor();
             } else if (voltageOverride.isPresent()) {
                 shooterLeader.setVoltage(voltageOverride.get());
+                shooterFollower.setControl(follower);
+            } else if (shouldAddFeedforward) {
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
                 shooterFollower.setControl(follower);
             } else {
                 shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
@@ -84,6 +94,8 @@ public class ShooterImpl extends Shooter {
 
             SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());
+
+            SmartDashboard.putBoolean("HoodedShooter/Shooter/Should Add Feedforward", shouldAddFeedforward);
         }
     }
 
