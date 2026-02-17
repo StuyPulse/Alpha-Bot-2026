@@ -54,7 +54,7 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
-        if (EnabledSubsystems.HOOD.get() && getState() != HoodState.STOW) {
+        if (EnabledSubsystems.HOOD.get()) {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
             } else {

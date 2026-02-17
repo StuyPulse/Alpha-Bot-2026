@@ -15,6 +15,7 @@ import com.stuypulse.robot.commands.auton.TwoCycleBottom;
 import com.stuypulse.robot.commands.auton.TwoCycleTop;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
@@ -120,6 +121,9 @@ public class RobotContainer {
         driver.getBottomButton()
             .onTrue(new TurretShoot());
 
+        driver.getLeftButton()
+            .whileTrue(new HoodedShooterShoot())
+            .onFalse(new HoodedShooterFerry());
         // driver.getDPadRight()
         //     .whileTrue(
         //         new SwerveXMode().alongWith(

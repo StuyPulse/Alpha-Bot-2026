@@ -14,7 +14,7 @@ public interface Constants {
         public interface Hood {
             public final double GEAR_RATIO = 1290300.0 / 5967.0; 
             public final double SENSOR_TO_HOOD_RATIO = 360.0 / 36.0;
-            public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(5);
+            public final Rotation2d MIN_ANGLE = Rotation2d.fromDegrees(7);
             public final Rotation2d MAX_ANGLE = Rotation2d.fromDegrees(36.80);
             public final Rotation2d HUB_ANGLE = Rotation2d.fromDegrees(12); // TBD
             public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
