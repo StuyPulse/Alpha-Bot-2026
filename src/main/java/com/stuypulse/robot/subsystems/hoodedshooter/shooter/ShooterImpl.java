@@ -79,8 +79,8 @@ public class ShooterImpl extends Shooter {
         }
         
         if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Current (amps)", shooterLeader.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Current (amps)", shooterFollower.getStatorCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Current (amps)", shooterLeader.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Current (amps)", shooterFollower.getSupplyCurrent().getValueAsDouble());
 
             SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());

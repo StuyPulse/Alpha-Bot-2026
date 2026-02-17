@@ -40,7 +40,7 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public Shooter() {
-        state = ShooterState.STOP;
+        state = ShooterState.SHOOT;
     }
 
     public void setState(ShooterState state) {

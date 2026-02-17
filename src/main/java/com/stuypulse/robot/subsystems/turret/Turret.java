@@ -49,6 +49,7 @@ public abstract class Turret extends SubsystemBase {
 
     public enum TurretState {
         IDLE,
+        ZERO,
         SHOOTING,
         FERRYING,
         HUB,
@@ -60,6 +61,7 @@ public abstract class Turret extends SubsystemBase {
     public Rotation2d getTargetAngle() {
         return switch (getState()) {
             case IDLE -> getAngle(); 
+            case ZERO -> Rotation2d.kZero;
             case FERRYING -> Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
             case SHOOTING -> getScoringAngle();
             case HUB -> Settings.Turret.HUB;

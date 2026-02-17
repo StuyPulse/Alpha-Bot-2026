@@ -22,8 +22,10 @@ import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
 import com.stuypulse.robot.commands.turret.TurretFerry;
+import com.stuypulse.robot.commands.turret.TurretIdle;
 import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
+import com.stuypulse.robot.commands.turret.TurretZero;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.subsystems.feeder.Feeder;
@@ -48,7 +50,7 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     
     // Subsystem
-    public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+    // public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     public final Hood hood = Hood.getInstance();
     public final Shooter shooter = Shooter.getInstance();
@@ -66,7 +68,7 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
-        swerve.configureAutoBuilder();
+        // swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
         // configureAutons();
@@ -80,7 +82,7 @@ public class RobotContainer {
     /****************/
 
     private void configureDefaultCommands() {
-        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
+        // swerve.setDefaultCommand(new SwerveDriveDrive(driver));
         //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }   
 
@@ -104,17 +106,16 @@ public class RobotContainer {
 
         // SCORING ROUTINE
         driver.getTopButton()
-            .whileTrue(new TurretShoot()
+            .whileTrue(new TurretZero()
                 .alongWith(new HoodedShooterShoot())
-                .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
-                    .andThen(new FeederFeed()
+                    .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
+                    .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
                         .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
-                            .andThen(new SpindexerRun())
+                            .andThen(new SpindexerRun().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))
                     )
-                )
             )
             .onFalse(new SpindexerStop()
-                .alongWith(new HoodedShooterStow())
+                // .alongWith(new HoodedShooterStow())
                 .alongWith(new FeederStop()));
 
         driver.getBottomButton()

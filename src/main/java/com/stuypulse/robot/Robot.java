@@ -54,11 +54,12 @@ public class Robot extends TimedRobot {
     
     @Override
     public void disabledInit() {
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
     }
     
     @Override
     public void disabledPeriodic() {
-        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
+        // CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG1));
     }
 
     /***********************/
@@ -86,6 +87,8 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
+        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        
         if (auto != null) {
             auto.cancel();
         }
@@ -93,7 +96,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopPeriodic() {
-        CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
+        // CommandScheduler.getInstance().schedule(new SetMegaTagMode(LimelightVision.MegaTagMode.MEGATAG2));
     }
 
     @Override

@@ -50,12 +50,12 @@ public class Gains {
     }
     public interface HoodedShooter {
         public interface Shooter {
-            double kP = 2.562;
+            double kP = 5.0;
             double kI = 0.0;
             double kD = 0.0;
 
             double kS = 0.0;
-            double kV = 0.18976;
+            double kV = 0.18976 * 0.67;
             double kA = 0.52537;
         }
 
