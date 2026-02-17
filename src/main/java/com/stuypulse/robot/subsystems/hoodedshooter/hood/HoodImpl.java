@@ -26,8 +26,8 @@ public class HoodImpl extends Hood {
     private final CANcoder hoodEncoder;
 
     private final PositionVoltage controller;
+    
     private Optional<Double> voltageOverride;
-    private boolean seededEnc;
 
     public HoodImpl() {
         hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
@@ -38,9 +38,9 @@ public class HoodImpl extends Hood {
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
         hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.HOOD_ENCODER);
 
-        controller = new PositionVoltage(getTargetAngle().getRotations());
-
         hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValue());
+
+        controller = new PositionVoltage(getTargetAngle().getRotations());
 
         voltageOverride = Optional.empty();
     }
@@ -53,11 +53,6 @@ public class HoodImpl extends Hood {
     @Override 
     public void periodic() {
         super.periodic();
-
-        if(!seededEnc) { 
-            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
-            seededEnc = true;
-        }
 
         if (EnabledSubsystems.HOOD.get() && getState() != HoodState.STOW) {
             if (voltageOverride.isPresent()) {
