@@ -50,12 +50,11 @@ public class RobotContainer {
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
     
     // Subsystem
-    // public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+    public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     public final Hood hood = Hood.getInstance();
     public final Shooter shooter = Shooter.getInstance();
     public final LimelightVision limelight = LimelightVision.getInstance();
-    
     public final Spindexer spindexer = Spindexer.getInstance();
     public final Feeder feeder = Feeder.getInstance();
     public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
@@ -68,7 +67,7 @@ public class RobotContainer {
     // Robot container
 
     public RobotContainer() {
-        // swerve.configureAutoBuilder();
+        swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
         // configureAutons();
@@ -82,7 +81,7 @@ public class RobotContainer {
     /****************/
 
     private void configureDefaultCommands() {
-        // swerve.setDefaultCommand(new SwerveDriveDrive(driver));
+        swerve.setDefaultCommand(new SwerveDriveDrive(driver));
         //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }   
 

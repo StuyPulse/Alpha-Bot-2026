@@ -436,14 +436,15 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Target Speed (m per s)", getModule(i).getTargetState().speedMetersPerSecond);
             SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Angle (deg)", getModule(i).getCurrentState().angle.getDegrees() % 360);
             SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Target Angle (deg)", getModule(i).getTargetState().angle.getDegrees() % 360);
+            if (Settings.DEBUG_MODE) {
+                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Stator Current", getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
+                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Supply Current", getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+            }
         }
 
         Field.FIELD2D.getRobotObject().setPose(Robot.isBlue() ? pose : Field.transformToOppositeAlliance(pose));
 
         if (Settings.DEBUG_MODE) {
-            for (int i = 0; i < 4; i++) {
-                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Stator Current", getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
-                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Supply Current", getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
             }
 
             SmartDashboard.putNumber("Swerve/Velocity Robot Relative X (m per s)", getChassisSpeeds().vxMetersPerSecond);
@@ -456,4 +457,4 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", getChassisSpeeds().omegaRadiansPerSecond);
         }
     }
-}
+    
