@@ -432,13 +432,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SmartDashboard.putNumber("Swerve/Pose/Theta", pose.getRotation().getDegrees());
 
         for (int i = 0; i < 4; i++) {
-            SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Speed (m per s)", getModule(i).getCurrentState().speedMetersPerSecond);
-            SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Target Speed (m per s)", getModule(i).getTargetState().speedMetersPerSecond);
-            SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Angle (deg)", getModule(i).getCurrentState().angle.getDegrees() % 360);
-            SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Target Angle (deg)", getModule(i).getTargetState().angle.getDegrees() % 360);
+            String prefix = "Swerve/Modules/Module " + i;
+            SwerveModuleState current = getModule(i).getCurrentState();
+            SwerveModuleState target = getModule(i).getTargetState();
+            
+
+            SmartDashboard.putNumber(prefix + "/Speed (m per s)", current.speedMetersPerSecond);
+            SmartDashboard.putNumber(prefix + "/Target Speed (m per s)", target.speedMetersPerSecond);
+            SmartDashboard.putNumber(prefix + "/Angle (deg)", current.angle.getDegrees() % 360);
+            SmartDashboard.putNumber(prefix + "/Target Angle (deg)", target.angle.getDegrees() % 360);
+
             if (Settings.DEBUG_MODE) {
-                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Stator Current", getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
-                SmartDashboard.putNumber("Swerve/Modules/Module " + i + "/Supply Current", getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
+                SmartDashboard.putNumber(prefix + "/Stator Current", getModule(i).getDriveMotor().getStatorCurrent().getValueAsDouble());
+                SmartDashboard.putNumber(prefix + "/Supply Current", getModule(i).getDriveMotor().getSupplyCurrent().getValueAsDouble());
             }
         }
 
@@ -457,4 +463,4 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             SmartDashboard.putNumber("Swerve/Angular Velocity (rad per s)", getChassisSpeeds().omegaRadiansPerSecond);
         }
     }
-    
+
