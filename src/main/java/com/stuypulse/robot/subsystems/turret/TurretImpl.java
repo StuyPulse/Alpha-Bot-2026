@@ -42,7 +42,7 @@ public class TurretImpl extends Turret {
 
         // motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
 
-        motor.setPosition(0);
+        seedTurret();
 
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
@@ -97,10 +97,10 @@ public class TurretImpl extends Turret {
     private double getDelta(double target, double current) {
         double delta = (target - current) % 360;
 
-        if(delta > 180.0) delta -= 360;
-        else if(delta < -180) delta += 360;
+        if (delta > 180.0) delta -= 360;
+        else if (delta < -180) delta += 360;
 
-        if(Math.abs(current + delta) < Constants.Turret.RANGE) return delta;
+        if (Math.abs(current + delta) < Constants.Turret.RANGE) return delta;
         
         return delta < 0 ? delta + 360 : delta - 360;
     }
@@ -113,25 +113,23 @@ public class TurretImpl extends Turret {
     public void periodic() {
         super.periodic();
 
-        // if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
-        //     motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
-        //     hasUsedAbsoluteEncoder = true;
-        //     //System.out.println("Absolute Encoder Reset triggered");
-        // }
-                double currentAngle = getAngle().getDegrees();
-                double actualTargetDeg = currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);
-                SmartDashboard.putNumber("Turret/Delta (deg)", getDelta(getTargetAngle().getDegrees(), getAngle().getDegrees()));
+        if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
+            motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
+            hasUsedAbsoluteEncoder = true;
+            System.out.println("Absolute Encoder Reset triggered");
+        }
 
-                SmartDashboard.putNumber("Turret/Actual target (deg)", actualTargetDeg);
-        if (Settings.EnabledSubsystems.TURRET.get()) {
-            if (getState() == TurretState.IDLE) {
-                motor.stopMotor();
-            } else if (voltageOverride.isPresent()) {
+        double currentAngle = getAngle().getDegrees();
+        double actualTargetDeg = currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);
+
+        SmartDashboard.putNumber("Turret/Delta (deg)", getDelta(getTargetAngle().getDegrees(), getAngle().getDegrees()));
+        SmartDashboard.putNumber("Turret/Actual Target (deg)", actualTargetDeg);
+
+        if (Settings.EnabledSubsystems.TURRET.get() && getState() != TurretState.IDLE) {
+            if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-
                 motor.setControl(controller.withPosition(actualTargetDeg / 360.0));
-                // motor.setControl(new PositionVoltage(actualTargetDeg / 360.0));
             }
         } else {
             motor.stopMotor();
@@ -140,10 +138,9 @@ public class TurretImpl extends Turret {
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-            // SmartDashboard.putNumber("Turret/Position (Rot)", getAbsoluteTurretAngle().getRotations());
-            SmartDashboard.putNumber("Turret/Position (Rot)", motor.getPosition().getValueAsDouble() *360.0);
-            SmartDashboard.putNumber("Turret/Volts", motor.getMotorVoltage().getValueAsDouble());
-            // SmartDashboard.putNumber("Turret/Volts supplied", motor.getSupplyVoltage);
+            SmartDashboard.putNumber("Turret/CRT Position (Rot)", getAbsoluteTurretAngle().getRotations());
+            SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
         }
     }

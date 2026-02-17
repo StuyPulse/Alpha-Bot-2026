@@ -37,7 +37,7 @@ public interface Constants {
     }
 
     public interface Turret {
-        double RANGE = 420.0;
+        double RANGE = 180.0; // 420.0;
         Transform2d TURRET_OFFSET = new Transform2d(Units.inchesToMeters(-2.50), Units.inchesToMeters(11.19), Rotation2d.kZero);
         double TURRET_HEIGHT = Units.inchesToMeters(10.984); // TODO: get value
         public interface Encoder18t {

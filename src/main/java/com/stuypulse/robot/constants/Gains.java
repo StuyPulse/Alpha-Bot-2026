@@ -94,8 +94,9 @@ public class Gains {
     public interface Turret {
         double kS = 0.179;
 
-        double kP = 600.0;
+        // smaller gains temporarily, change back once turret is deemed safe
+        double kP = 25.0; //600.0;
         double kI = 0.0;
-        double kD = 65.0;
+        double kD = 3.0; //65.0;
     }
 }
