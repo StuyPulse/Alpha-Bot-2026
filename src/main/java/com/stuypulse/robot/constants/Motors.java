@@ -43,15 +43,15 @@ public interface Motors {
             TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
                     .withSupplyCurrentLimitAmps(100.0)
                     .withCurrentLimitAmps(100.0)
-                    .withRampRate(0.25)
+                    // .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Coast)
                     .withInvertedValue(InvertedValue.CounterClockwise_Positive)
                     .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
                             Gains.HoodedShooter.Shooter.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
                             Gains.HoodedShooter.Shooter.kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO)
-                    .withLowerLimitSupplyCurrent(80.0);
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    // .withLowerLimitSupplyCurrent(80.0);
         }
 
         public interface Hood {

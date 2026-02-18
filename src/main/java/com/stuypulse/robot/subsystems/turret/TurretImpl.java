@@ -113,11 +113,11 @@ public class TurretImpl extends Turret {
     public void periodic() {
         super.periodic();
 
-        if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
-            motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
-            hasUsedAbsoluteEncoder = true;
-            System.out.println("Absolute Encoder Reset triggered");
-        }
+        // if (!hasUsedAbsoluteEncoder || getAbsoluteTurretAngle().getRotations() > 1.0 || getAngle().getRotations() < 0.0) {
+        //     motor.setPosition((getAbsoluteTurretAngle().getDegrees() % 360.0) / 360.0);
+        //     hasUsedAbsoluteEncoder = true;
+        //     System.out.println("Absolute Encoder Reset triggered");
+        // }
 
         double currentAngle = getAngle().getDegrees();
         double actualTargetDeg = currentAngle + getDelta(getTargetAngle().getDegrees(), currentAngle);

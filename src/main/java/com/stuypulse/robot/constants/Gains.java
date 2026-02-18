@@ -50,13 +50,13 @@ public class Gains {
     }
     public interface HoodedShooter {
         public interface Shooter {
-            double kP = 5.0;
+            double kP = 0.45;
             double kI = 0.0;
             double kD = 0.0;
 
             double kS = 0.0;
-            double kV = 0.18976 * 0.67;
-            double kA = 0.52537;
+            double kV = 0.123;
+            double kA = 0.0;
         }
 
         public interface Hood {
@@ -94,9 +94,9 @@ public class Gains {
     public interface Turret {
         double kS = 0.179;
 
-        // smaller gains temporarily, change back once turret is deemed safe
-        double kP = 25.0; //600.0;
+        // safe gains commented out
+        double kP = 600.0; //25.0;
         double kI = 0.0;
-        double kD = 3.0; //65.0;
+        double kD = 65.0; //3.0;
     }
 }

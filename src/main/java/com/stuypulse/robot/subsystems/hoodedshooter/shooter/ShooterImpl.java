@@ -47,10 +47,10 @@ public class ShooterImpl extends Shooter {
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterLeader);
         Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.configure(shooterFollower);
 
-        FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
-        feedbackConfigs.withVelocityFilterTimeConstant(Time.ofBaseUnits(0.1, Units.Seconds));
+        // FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
+        // feedbackConfigs.withVelocityFilterTimeConstant(Time.ofBaseUnits(0.1, Units.Seconds));
 
-        shooterLeader.getConfigurator().apply(feedbackConfigs);
+        // shooterLeader.getConfigurator().apply(feedbackConfigs);
         // TODO: refactor this to be in the motor configs 
 
         voltageOverride = Optional.empty();
@@ -106,6 +106,7 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());
 
             SmartDashboard.putBoolean("HoodedShooter/Shooter/Should Add Feedforward", shouldAddFeedforward);
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Follower RPM", getFollowerRPM());
         }
     }
 
