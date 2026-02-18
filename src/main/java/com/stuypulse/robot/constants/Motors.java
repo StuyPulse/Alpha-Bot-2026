@@ -108,15 +108,16 @@ public interface Motors {
                 .withRampRate(.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withPIDConstants(Gains.Turret.kP, Gains.Turret.kI, Gains.Turret.kD, 0)
+                .withPIDConstants(Gains.Turret.kP, 0.0, Gains.Turret.kD, 0)
                 .withFFConstants(Gains.Turret.kS, 0.0, 0.0, 0)
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
+                // .withMotionProfile(Settings.Turret.MAX_VEL.getRotations(), Settings.Turret.MAX_ACCEL.getRotations());
 
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitEnable(true)
-                .withForwardSoftLimitThreshold(0.5) // 0.75
-                .withReverseSoftLimitThreshold(-0.5); // -0.66
+                .withForwardSoftLimitThreshold(0.75) // 0.75
+                .withReverseSoftLimitThreshold(-2.0 / 3.0); // -0.66
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()

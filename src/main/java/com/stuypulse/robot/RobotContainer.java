@@ -22,6 +22,7 @@ import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
 import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
+import com.stuypulse.robot.commands.turret.TurretAnalog;
 import com.stuypulse.robot.commands.turret.TurretFerry;
 import com.stuypulse.robot.commands.turret.TurretIdle;
 import com.stuypulse.robot.commands.turret.TurretSeed;
@@ -44,6 +45,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
@@ -71,7 +74,7 @@ public class RobotContainer {
         swerve.configureAutoBuilder();
         configureDefaultCommands();
         configureButtonBindings();
-        // configureAutons();
+        configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
        
@@ -92,21 +95,16 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
-        driver.getRightTriggerButton().onTrue(new TurretShoot());
-
-        driver.getLeftTriggerButton().onTrue(new TurretFerry());
-
         driver.getDPadDown()
+            .onTrue(new TurretIdle())
             .onTrue(new TurretSeed());
 
         driver.getDPadUp()
             .onTrue(new SwerveResetHeading());
             
-        // driver.getDPadUp().onTrue(new TurretAnalog(driver));
-
         // SCORING ROUTINE
         driver.getTopButton()
-            .whileTrue(new TurretZero()
+            .whileTrue(new TurretShoot()
                 .alongWith(new HoodedShooterShoot())
                     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
                     .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
@@ -118,12 +116,10 @@ public class RobotContainer {
                 // .alongWith(new HoodedShooterStow())
                 .alongWith(new FeederStop()));
 
-        driver.getBottomButton()
-            .onTrue(new TurretShoot());
-
-        driver.getLeftButton()
-            .whileTrue(new HoodedShooterShoot())
-            .onFalse(new HoodedShooterFerry());
+//-------------------------------------------------------------------------------------------------------------------------\\
+        // driver.getLeftButton()
+        //     .whileTrue(new HoodedShooterShoot())
+        //     .onFalse(new HoodedShooterFerry());
         // driver.getDPadRight()
         //     .whileTrue(
         //         new SwerveXMode().alongWith(
@@ -325,21 +321,21 @@ public class RobotContainer {
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
         
-        AutonConfig STRAIGHT_LINE = new AutonConfig("Straight Line", StraightLine::new, 
-            "Straight Line");
-        STRAIGHT_LINE.register(autonChooser);
+        // AutonConfig STRAIGHT_LINE = new AutonConfig("Straight Line", StraightLine::new, 
+        //     "Straight Line");
+        // STRAIGHT_LINE.register(autonChooser);
 
-        AutonConfig BOX = new AutonConfig("Box", Box::new, 
-            "Box 1", "Box 2", "Box 3", "Box 4");
-        BOX.register(autonChooser);
+        // AutonConfig BOX = new AutonConfig("Box", Box::new, 
+        //     "Box 1", "Box 2", "Box 3", "Box 4");
+        // BOX.register(autonChooser);
 
-        AutonConfig BOTTOM_TWO_CYCLE = new AutonConfig("Bottom Two Cycle", TwoCycleBottom::new, 
-            "Bottom Trench To NZ", "Bottom NZ to Score", "Bottom Score to NZ", "Bottom NZ to Score", "Bottom Trench Score to Tower Right");
-        BOTTOM_TWO_CYCLE.register(autonChooser);
+        // AutonConfig BOTTOM_TWO_CYCLE = new AutonConfig("Bottom Two Cycle", TwoCycleBottom::new, 
+        //     "Bottom Trench To NZ", "Bottom NZ to Score", "Bottom Score to NZ", "Bottom NZ to Score", "Bottom Trench Score to Tower Right");
+        // BOTTOM_TWO_CYCLE.register(autonChooser);
 
-        AutonConfig TOP_TWO_CYCLE = new AutonConfig("Top Two Cycle", TwoCycleTop::new, 
-            "Top Trench To NZ", "Top NZ to Score", "Top Score to NZ", "Top NZ to Score", "Top Trench Score to Tower Left");
-        TOP_TWO_CYCLE.register(autonChooser);
+        // AutonConfig TOP_TWO_CYCLE = new AutonConfig("Top Two Cycle", TwoCycleTop::new, 
+        //     "Top Trench To NZ", "Top NZ to Score", "Top Score to NZ", "Top NZ to Score", "Top Trench Score to Tower Left");
+        // TOP_TWO_CYCLE.register(autonChooser);
 
         // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
         // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
@@ -374,6 +370,12 @@ public class RobotContainer {
         // autonChooser.addOption("SysID Feed Dynamic Backwards", feederSysId.dynamic(Direction.kReverse));
         // autonChooser.addOption("SysID Feed Quasi Forwards", feederSysId.quasistatic(Direction.kForward));
         // autonChooser.addOption("SysID Feed Quasi Backwards", feederSysId.quasistatic(Direction.kReverse));
+
+        // SysIdRoutine turretSysId = turret.getSysIdRoutine();
+        // autonChooser.addOption("SysID Turret Dynamic Forward", turretSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Dynamic Backwards", turretSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Turret Quasi Forward", turretSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Quasi Backwards", turretSysId.quasistatic(Direction.kReverse));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

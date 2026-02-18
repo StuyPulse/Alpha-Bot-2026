@@ -60,7 +60,7 @@ public class Gains {
         }
 
         public interface Hood {
-            double kP = 300.0; //50.0; //110.0;
+            double kP = 300.0;
             double kI = 0.0;
             double kD = 0.0;
 
@@ -93,10 +93,11 @@ public class Gains {
 
     public interface Turret {
         double kS = 0.179;
+        double kA = 0.0; //0.20;
 
-        // safe gains commented out
-        double kP = 600.0; //25.0;
+        //safe gains commented out - POSITION CONTROL ONLY
+        double kP = 1300.0; //25.0;
         double kI = 0.0;
-        double kD = 65.0; //3.0;
+        double kD = 140.0; //3.0;
     }
 }

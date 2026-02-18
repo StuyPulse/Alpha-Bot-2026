@@ -98,8 +98,8 @@ public interface Settings {
     }
 
     public interface Turret {
-        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
-        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));        
+        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(900.0));
+        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(720.0));        
         double TOLERANCE_DEG = 2.0;
 
         Rotation2d HUB = Rotation2d.fromDegrees(0.0);
