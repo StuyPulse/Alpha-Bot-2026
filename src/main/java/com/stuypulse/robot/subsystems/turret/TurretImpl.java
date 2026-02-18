@@ -12,6 +12,7 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -28,6 +29,7 @@ public class TurretImpl extends Turret {
 
     private boolean hasUsedAbsoluteEncoder;
     private Optional<Double> voltageOverride;
+    private CRTStatus lastStatus;
     private final PositionVoltage controller;
     
 
@@ -47,6 +49,12 @@ public class TurretImpl extends Turret {
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
         controller = new PositionVoltage(getTargetAngle().getRotations());
+    }
+
+    public enum CRTStatus {
+        OK,
+        AMBIGUOUS,
+        NO_SOLUTION
     }
 
     private Rotation2d getEncoderPos17t() {
@@ -84,6 +92,93 @@ public class TurretImpl extends Turret {
         return Rotation2d.fromRotations(turretAngle);
     }
     
+    public Rotation2d getEasyCRT() {
+        double lastIterations;
+        double lastErrorRot;
+
+        double matchTolerance = 0.005;
+
+        double ratio1 = Constants.Turret.BigGear.TEETH / Constants.Turret.Encoder17t.TEETH;
+        double ratio2 = Constants.Turret.BigGear.TEETH / Constants.Turret.Encoder18t.TEETH;
+        double minMechanismRotations = -Constants.Turret.SoftwareLimit.BACKWARDS_MAX_ROTATIONS; 
+        double maxMechanismRotations = Constants.Turret.SoftwareLimit.FORWARD_MAX_ROTATIONS; 
+
+        lastIterations = 0;
+        lastErrorRot = Double.NaN;
+
+        if (!Double.isFinite(getEncoderPos17t().getRotations())
+                || !Double.isFinite(getEncoderPos18t().getRotations())
+                || !Double.isFinite(ratio1)
+                || !Double.isFinite(ratio2)
+                || Math.abs(ratio1) < 1e-12
+                || !Double.isFinite(minMechanismRotations)
+                || !Double.isFinite(maxMechanismRotations)
+                || minMechanismRotations > maxMechanismRotations
+                || !Double.isFinite(matchTolerance)
+                || matchTolerance < 0.0) {
+            return null;
+        }
+
+        double bestErr = Double.MAX_VALUE;
+        double secondErr = Double.MAX_VALUE;
+        double bestRot = Double.NaN;
+
+        // Derive integer wrap-count bounds from the allowed mechanism angle range.
+        //
+        // abs1 = (ratio1 * mechRot) mod 1
+        // ratio1 * mechRot = abs1 + n, where n is an integer.
+        // mechRot = (abs1 + n) / ratio1
+        //
+        // For mechRot within [min, max], n lies within [ratio1*min - abs1, ratio1*max - abs1]
+        // (endpoints swap if ratio1 is negative).
+        double abs1 = getEncoderPos17t().getRotations();
+        double nMinD = Math.min(ratio1 * minMechanismRotations, ratio1 * maxMechanismRotations) - abs1;
+        double nMaxD = Math.max(ratio1 * minMechanismRotations, ratio1 * maxMechanismRotations) - abs1;
+        int minN = (int) Math.floor(nMinD) - 1;
+        int maxN = (int) Math.ceil(nMaxD) + 1;
+
+        for (int n = minN; n <= maxN; n++) {
+            lastIterations++;
+
+            double mechRot = (abs1 + n) / ratio1;
+            if (mechRot < minMechanismRotations - 1e-6 || mechRot > maxMechanismRotations + 1e-6) {
+                continue;
+            }
+
+            double predicted2 = MathUtil.inputModulus(ratio2 * mechRot, 0.0, 1.0);
+            double err = modularError(predicted2, getEncoderPos18t().getRotations());
+
+            if (err < bestErr) {
+                secondErr = bestErr;
+                bestErr = err;
+                bestRot = mechRot;
+            } else if (err < secondErr) {
+                secondErr = err;
+            }
+        }
+
+        if (!Double.isFinite(bestRot) || bestErr > matchTolerance) {
+            lastStatus = CRTStatus.NO_SOLUTION;
+            lastErrorRot = bestErr;
+            return null;
+        }
+
+        // If there are two nearly-equal matches within tolerance, the solution is ambiguous.
+        if (secondErr <= matchTolerance && Math.abs(secondErr - bestErr) < 1e-3) {
+            lastStatus = CRTStatus.AMBIGUOUS;
+            lastErrorRot = bestErr;
+            return null;
+        }
+
+        lastStatus = CRTStatus.OK;
+        lastErrorRot = bestErr;
+        return Rotation2d.fromRotations(bestErr);
+    }    
+
+    private static double modularError(double a, double b) {
+        double diff = Math.abs(a - b);
+        return diff > 0.5 ? 1.0 - diff : diff;
+    }
     @Override
     public Rotation2d getAngle() {
         return Rotation2d.fromDegrees(motor.getPosition().getValueAsDouble());
