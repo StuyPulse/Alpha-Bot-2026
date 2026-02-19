@@ -7,13 +7,19 @@ package com.stuypulse.robot.subsystems.turret;
 
 
 import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -48,7 +54,8 @@ public class TurretImpl extends Turret {
 
         hasUsedAbsoluteEncoder = false;
         voltageOverride = Optional.empty();
-        controller = new PositionVoltage(getTargetAngle().getRotations());
+        controller = new PositionVoltage(getTargetAngle().getRotations())
+            .withEnableFOC(true);
     }
 
     public enum CRTStatus {
@@ -237,6 +244,12 @@ public class TurretImpl extends Turret {
             SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
+
+            Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
+            // TODO: CHANGE TURRET OFFSET CALCULATION BETWEEN ALLIANCES
+            Translation2d turretPose = robotPose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(robotPose.getRotation()));
+
+            SmartDashboard.putNumber("Turret/Dist from hub", turretPose.getDistance(Field.hubCenter.getTranslation()));
         }
     }
 

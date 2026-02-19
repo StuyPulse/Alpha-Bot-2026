@@ -49,7 +49,7 @@ public class FeederImpl extends Feeder {
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
             } else {
-                motor.setControl(controller.withVelocity(getState().getTargetRPM() / 60.0));
+                motor.setControl(controller.withVelocity(getState().getTargetRPM() / 60.0).withEnableFOC(true));
             }
         }
 

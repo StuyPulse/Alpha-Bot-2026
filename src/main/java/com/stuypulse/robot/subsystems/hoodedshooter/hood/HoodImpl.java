@@ -11,6 +11,7 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,7 +41,8 @@ public class HoodImpl extends Hood {
 
         hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
 
-        controller = new PositionVoltage(getTargetAngle().getRotations());
+        controller = new PositionVoltage(getTargetAngle().getRotations())
+            .withEnableFOC(true);
 
         voltageOverride = Optional.empty();
     }
@@ -63,6 +65,7 @@ public class HoodImpl extends Hood {
         } else {
             hoodMotor.stopMotor();
         }
+
 
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO); //* 360.0 / (360.0/35.0) / .97);

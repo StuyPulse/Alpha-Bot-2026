@@ -29,7 +29,7 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
         SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
         SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
@@ -62,21 +62,21 @@ public interface Settings {
         SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3750.0);
         SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
+        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 15.0);
+
         double SHOOTER_TOLERANCE_RPM = 500.0;
         double HOOD_TOLERANCE_DEG = 5.0;
 
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
-                // values calculated with kinematics and RPM = 3000. TODO: tuning
-                {1.0, Units.degreesToRadians(61.329899416056854)}, // meters, radians
-                {1.5, Units.degreesToRadians(50.64110128774519)},
-                {2.0, Units.degreesToRadians(42.43985862934761)}, 
-                {2.5, Units.degreesToRadians(36.18629462556821)},
-                {3.0, Units.degreesToRadians(31.36657857810849)},
-                {3.5, Units.degreesToRadians(27.587819826188184)},
-                {4.0, Units.degreesToRadians(24.570004144436282)},
-                {4.5, Units.degreesToRadians(22.116965225162573)},
-                {5.0, Units.degreesToRadians(20.090654257188444)}
+                {1.43, Units.degreesToRadians(21.0)}, // meters, radians
+                {3.65, Units.degreesToRadians(28.0)},
+            };
+        }
+        public interface RPMInterpolation{
+            double[][] distanceRPMInterpolationValues = {
+                {1.43, 3000.0}, // meters, RPM 
+                {3.65, 3400.0},
             };
         }
 

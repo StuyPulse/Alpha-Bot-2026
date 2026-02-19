@@ -90,7 +90,7 @@ public class ShooterImpl extends Shooter {
                 // shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
                 // shooterFollower.setControl(follower);
               else {
-                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withEnableFOC(true));
                 shooterFollower.setControl(follower);
             }
         } else {

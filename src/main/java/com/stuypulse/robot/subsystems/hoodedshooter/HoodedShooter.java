@@ -9,6 +9,7 @@ import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood.HoodState;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter.ShooterState;
+import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -44,7 +45,8 @@ public class HoodedShooter extends SubsystemBase {
         REVERSE(HoodState.SHOOT, ShooterState.REVERSE),
         HUB(HoodState.HUB, ShooterState.HUB),
         LEFT_CORNER(HoodState.LEFT_CORNER, ShooterState.LEFT_CORNER),
-        RIGHT_CORNER(HoodState.RIGHT_CORNER, ShooterState.RIGHT_CORNER);
+        RIGHT_CORNER(HoodState.RIGHT_CORNER, ShooterState.RIGHT_CORNER),
+        INTERPOLATION(HoodState.INTERPOLATION, ShooterState.INTERPOLATION);
 
         private HoodState hoodState;
         private ShooterState shooterState;
@@ -110,5 +112,8 @@ public class HoodedShooter extends SubsystemBase {
 
         SmartDashboard.putBoolean("HoodedShooter/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("HoodedShooter/Hood At Tolerance?", isHoodAtTolerance());
+
+        SmartDashboard.putNumber("HoodedShooter/Interpolated Hood Angle", HoodAngleCalculator.interpolateHoodAngle().get().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", HoodAngleCalculator.interpolateShooterRPM().get());
     }
 }

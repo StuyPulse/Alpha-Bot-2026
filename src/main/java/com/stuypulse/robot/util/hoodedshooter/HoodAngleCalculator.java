@@ -8,6 +8,7 @@ package com.stuypulse.robot.util.hoodedshooter;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.AlignAngleSolution;
@@ -24,11 +25,19 @@ import java.util.function.Supplier;
 
 public class HoodAngleCalculator {
     public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
+    public static InterpolatingDoubleTreeMap distanceRPMInterpolator;
 
     static {
         distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
         for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
             distanceAngleInterpolator.put(pair[0], pair[1]);
+        }
+    }
+
+    static {
+        distanceRPMInterpolator = new InterpolatingDoubleTreeMap();
+        for (double[] pair : RPMInterpolation.distanceRPMInterpolationValues) {
+            distanceRPMInterpolator.put(pair[0], pair[1]);
         }
     }
 
@@ -41,9 +50,28 @@ public class HoodAngleCalculator {
 
             double distanceMeters = hubPose.getDistance(currentPose);
 
-            SmartDashboard.putNumber("HoodedShooter/Distance to Hub", distanceMeters);
+            SmartDashboard.putNumber("HoodedShooter/THIS IS HAPPENING", distanceMeters);
 
-            return Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
+            Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
+            SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle in Degrees", targetAngle.getDegrees());
+
+            return targetAngle;
+        };
+    }
+
+    public static Supplier<Double> interpolateShooterRPM() {
+        return () -> {
+            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+            Translation2d hubPose = Field.getHubPose().getTranslation();
+            Translation2d currentPose = swerve.getPose().getTranslation();
+
+            double distanceMeters = hubPose.getDistance(currentPose);
+
+
+            double targetRPM = distanceRPMInterpolator.get(distanceMeters);
+            SmartDashboard.putNumber("HoodedShooter/Interpolated RPM ", targetRPM);
+            return targetRPM;
         };
     }
 

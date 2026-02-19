@@ -55,7 +55,7 @@ public class Gains {
             double kD = 0.0;
 
             double kS = 0.0;
-            double kV = 0.123;
+            double kV = 0.125;
             double kA = 0.0;
         }
 

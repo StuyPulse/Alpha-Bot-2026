@@ -16,6 +16,7 @@ import com.stuypulse.robot.commands.auton.TwoCycleTop;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
 import com.stuypulse.robot.commands.feeder.FeederStop;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterInterpolation;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
@@ -52,7 +53,7 @@ public class RobotContainer {
 
     // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
-    
+
     // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
     public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
@@ -77,7 +78,7 @@ public class RobotContainer {
         configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
-       
+
     }
 
     /****************/
@@ -86,8 +87,8 @@ public class RobotContainer {
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
-        //hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
-    }   
+        // hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
+    }
 
     /***************/
     /*** BUTTONS ***/
@@ -96,221 +97,225 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         driver.getDPadDown()
-            .onTrue(new TurretIdle())
-            .onTrue(new TurretSeed());
+                .onTrue(new TurretIdle())
+                .onTrue(new TurretSeed());
 
         driver.getDPadUp()
-            .onTrue(new SwerveResetHeading());
-            
+                .onTrue(new SwerveResetHeading());
+
         // SCORING ROUTINE
         driver.getTopButton()
-            .whileTrue(new TurretShoot()
-                .alongWith(new HoodedShooterShoot())
-                    .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
-                    .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
-                        .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
-                            .andThen(new SpindexerRun().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))
-                    )
-            )
-            .onFalse(new SpindexerStop()
-                // .alongWith(new HoodedShooterStow())
-                .alongWith(new FeederStop()));
+                .whileTrue(new TurretIdle()
+                        .alongWith(new HoodedShooterInterpolation())
+                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
+                        .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
+                                .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
+                                .andThen(new SpindexerRun().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))))
+                .onFalse(new SpindexerStop()
+                        // .alongWith(new HoodedShooterStow())
+                        .alongWith(new FeederStop()));
 
-//-------------------------------------------------------------------------------------------------------------------------\\
+        driver.getLeftButton()
+                .onTrue(new TurretShoot());
+
+        driver.getBottomButton()
+                .onTrue(new HoodedShooterInterpolation());
+
+        // -------------------------------------------------------------------------------------------------------------------------\\
         // driver.getLeftButton()
-        //     .whileTrue(new HoodedShooterShoot())
-        //     .onFalse(new HoodedShooterFerry());
+        // .whileTrue(new HoodedShooterShoot())
+        // .onFalse(new HoodedShooterFerry());
         // driver.getDPadRight()
-        //     .whileTrue(
-        //         new SwerveXMode().alongWith(
-        //             new HoodedShooterShoot().alongWith(
-        //                 new TurretShoot()).alongWith(
-        //                     new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-        //                     new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-        //                     new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-        //                         new SpindexerRun().alongWith(new FeederFeed()))))
-        //     .onFalse(
-        //         new HoodedShooterStow().alongWith(
-        //         new TurretHoodAlignToTarget().alongWith(
-        //         new SpindexerRun().alongWith(
-        //         new FeederStop())))
-        //     );
+        // .whileTrue(
+        // new SwerveXMode().alongWith(
+        // new HoodedShooterShoot().alongWith(
+        // new TurretShoot()).alongWith(
+        // new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+        // new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+        // new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+        // new SpindexerRun().alongWith(new FeederFeed()))))
+        // .onFalse(
+        // new HoodedShooterStow().alongWith(
+        // new TurretHoodAlignToTarget().alongWith(
+        // new SpindexerRun().alongWith(
+        // new FeederStop())))
+        // );
 
         // driver.getDPadDown()
-        //     .onTrue(new HoodedShooterShoot())
-        //     .onFalse(new HoodedShooterStow());
+        // .onTrue(new HoodedShooterShoot())
+        // .onFalse(new HoodedShooterStow());
 
         // driver.getDPadUp()
-        //     .onTrue(new HoodedShooterFerry())
-        //     .onFalse(new HoodedShooterStow());
+        // .onTrue(new HoodedShooterFerry())
+        // .onFalse(new HoodedShooterStow());
 
         // driver.getDPadUp().whileTrue(new HoodedShooterShoot()
-        //     .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
-        //     .andThen(new FeederFeed())))
+        // .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())
+        // .andThen(new FeederFeed())))
         // .onFalse(new HoodedShooterStow()
-        //     .alongWith(new FeederStop()));
+        // .alongWith(new FeederStop()));
 
-//-------------------------------------------------------------------------------------------------------------------------\\
-//-------------------------------------------------------------------------------------------------------------------------\\
-//-------------------------------------------------------------------------------------------------------------------------\\
-//-------------------------------------------------------------------------------------------------------------------------\\
-//-------------------------------------------------------------------------------------------------------------------------\\
+        // -------------------------------------------------------------------------------------------------------------------------\\
+        // -------------------------------------------------------------------------------------------------------------------------\\
+        // -------------------------------------------------------------------------------------------------------------------------\\
+        // -------------------------------------------------------------------------------------------------------------------------\\
+        // -------------------------------------------------------------------------------------------------------------------------\\
 
         /**
-        // Climb Align
-        driver.getTopButton()
-            .whileTrue(SwerveClimbAlign());
-
-        // Left Corner Shoot
-        driver.getLeftButton()
-            .whileTrue(
-                new SwerveXMode().alongWith(
-                    new HoodedShooterLeftCorner().alongWith(
-                        new TurretLeftCorner()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed()))))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        // Right Corner Shoot
-        driver.getRightButton()
-            .whileTrue(
-                new SwerveXMode().alongWith(
-                    new HoodedShooterRightCorner().alongWith(
-                        new TurretRightCorner()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed()))))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        // Hub Shoot
-        driver.getBottomButton()
-            .whileTrue(
-                new SwerveXMode().alongWith(
-                    new HoodedShooterHub().alongWith(
-                        new TurretHub()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed()))))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        // Intake On
-        driver.getLeftTriggerButton()
-            .onTrue(new IntakeIntake());
-
-        // Intake Off
-        driver.getRightTriggerButton()
-            .onTrue(new IntakeStop());
-
-        // Climb Down Placeholder
-        driver.getLeftBumper()
-            .onTrue(new BuzzController(driver));
-
-        // Climb Up Placeholder
-        driver.getRightBumper()
-            .onTrue(new BuzzController(driver));
-
-        // Reset Heading
-        driver.getDPadUp()
-            .onTrue(new SwerveResetHeading());
-
-        // Ferry In Place
-        driver.getDPadLeft()
-            .whileTrue(
-                new SwerveXMode().alongWith(
-                    new HoodedShooterFerry().alongWith(
-                        new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed()))))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        // Score In Place
-        driver.getDPadRight()
-            .whileTrue(
-                new SwerveXMode().alongWith(
-                    new HoodedShooterShoot().alongWith(
-                        new TurretShoot()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed()))))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        // Unjam
-        driver.getDPadDown()
-            .whileTrue(
-                new HoodedShooterReverse().alongWith(
-                    new FeederReverse().alongWith(
-                        new IntakeOutake())))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop().alongWith(
-                new IntakeStop()))))
-            );
-
-        driver.getLeftMenuButton()
-            .onTrue(
-                new HoodedShooterFerry().alongWith(
-                        new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed())))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-                new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        driver.getRightMenuButton()
-            .onTrue(
-                new HoodedShooterFerry().alongWith(
-                        new TurretFerry()).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
-                            new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
-                                new SpindexerRun().alongWith(new FeederFeed())))
-            .onFalse(
-                new HoodedShooterStow().alongWith(
-               new TurretHoodAlignToTarget().alongWith(
-                new SpindexerRun().alongWith(
-                new FeederStop())))
-            );
-
-        **/
+         * // Climb Align
+         * driver.getTopButton()
+         * .whileTrue(SwerveClimbAlign());
+         * 
+         * // Left Corner Shoot
+         * driver.getLeftButton()
+         * .whileTrue(
+         * new SwerveXMode().alongWith(
+         * new HoodedShooterLeftCorner().alongWith(
+         * new TurretLeftCorner()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed()))))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * // Right Corner Shoot
+         * driver.getRightButton()
+         * .whileTrue(
+         * new SwerveXMode().alongWith(
+         * new HoodedShooterRightCorner().alongWith(
+         * new TurretRightCorner()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed()))))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * // Hub Shoot
+         * driver.getBottomButton()
+         * .whileTrue(
+         * new SwerveXMode().alongWith(
+         * new HoodedShooterHub().alongWith(
+         * new TurretHub()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed()))))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * // Intake On
+         * driver.getLeftTriggerButton()
+         * .onTrue(new IntakeIntake());
+         * 
+         * // Intake Off
+         * driver.getRightTriggerButton()
+         * .onTrue(new IntakeStop());
+         * 
+         * // Climb Down Placeholder
+         * driver.getLeftBumper()
+         * .onTrue(new BuzzController(driver));
+         * 
+         * // Climb Up Placeholder
+         * driver.getRightBumper()
+         * .onTrue(new BuzzController(driver));
+         * 
+         * // Reset Heading
+         * driver.getDPadUp()
+         * .onTrue(new SwerveResetHeading());
+         * 
+         * // Ferry In Place
+         * driver.getDPadLeft()
+         * .whileTrue(
+         * new SwerveXMode().alongWith(
+         * new HoodedShooterFerry().alongWith(
+         * new TurretFerry()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed()))))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * // Score In Place
+         * driver.getDPadRight()
+         * .whileTrue(
+         * new SwerveXMode().alongWith(
+         * new HoodedShooterShoot().alongWith(
+         * new TurretShoot()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed()))))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * // Unjam
+         * driver.getDPadDown()
+         * .whileTrue(
+         * new HoodedShooterReverse().alongWith(
+         * new FeederReverse().alongWith(
+         * new IntakeOutake())))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop().alongWith(
+         * new IntakeStop()))))
+         * );
+         * 
+         * driver.getLeftMenuButton()
+         * .onTrue(
+         * new HoodedShooterFerry().alongWith(
+         * new TurretFerry()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed())))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         * driver.getRightMenuButton()
+         * .onTrue(
+         * new HoodedShooterFerry().alongWith(
+         * new TurretFerry()).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isHoodAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance())).alongWith(
+         * new WaitUntilCommand(() -> turret.atTargetAngle())).andThen(
+         * new SpindexerRun().alongWith(new FeederFeed())))
+         * .onFalse(
+         * new HoodedShooterStow().alongWith(
+         * new TurretHoodAlignToTarget().alongWith(
+         * new SpindexerRun().alongWith(
+         * new FeederStop())))
+         * );
+         * 
+         **/
 
     }
 
@@ -320,62 +325,95 @@ public class RobotContainer {
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
-        
-        // AutonConfig STRAIGHT_LINE = new AutonConfig("Straight Line", StraightLine::new, 
-        //     "Straight Line");
+
+        // AutonConfig STRAIGHT_LINE = new AutonConfig("Straight Line",
+        // StraightLine::new,
+        // "Straight Line");
         // STRAIGHT_LINE.register(autonChooser);
 
-        // AutonConfig BOX = new AutonConfig("Box", Box::new, 
-        //     "Box 1", "Box 2", "Box 3", "Box 4");
+        // AutonConfig BOX = new AutonConfig("Box", Box::new,
+        // "Box 1", "Box 2", "Box 3", "Box 4");
         // BOX.register(autonChooser);
 
-        // AutonConfig BOTTOM_TWO_CYCLE = new AutonConfig("Bottom Two Cycle", TwoCycleBottom::new, 
-        //     "Bottom Trench To NZ", "Bottom NZ to Score", "Bottom Score to NZ", "Bottom NZ to Score", "Bottom Trench Score to Tower Right");
+        // AutonConfig BOTTOM_TWO_CYCLE = new AutonConfig("Bottom Two Cycle",
+        // TwoCycleBottom::new,
+        // "Bottom Trench To NZ", "Bottom NZ to Score", "Bottom Score to NZ", "Bottom NZ
+        // to Score", "Bottom Trench Score to Tower Right");
         // BOTTOM_TWO_CYCLE.register(autonChooser);
 
-        // AutonConfig TOP_TWO_CYCLE = new AutonConfig("Top Two Cycle", TwoCycleTop::new, 
-        //     "Top Trench To NZ", "Top NZ to Score", "Top Score to NZ", "Top NZ to Score", "Top Trench Score to Tower Left");
+        // AutonConfig TOP_TWO_CYCLE = new AutonConfig("Top Two Cycle",
+        // TwoCycleTop::new,
+        // "Top Trench To NZ", "Top NZ to Score", "Top Score to NZ", "Top NZ to Score",
+        // "Top Trench Score to Tower Left");
         // TOP_TWO_CYCLE.register(autonChooser);
 
-        // autonChooser.addOption("SysID Module Translation Dynamic Forward", swerve.sysIdDynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Dynamic Backwards", swerve.sysIdDynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Module Translation Quasi Forwards", swerve.sysIdQuasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Translation Quasi Backwards", swerve.sysIdQuasistatic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Translation Dynamic Forward",
+        // swerve.sysIdDynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Dynamic Backwards",
+        // swerve.sysIdDynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Translation Quasi Forwards",
+        // swerve.sysIdQuasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Translation Quasi Backwards",
+        // swerve.sysIdQuasistatic(Direction.kReverse));
 
-        // autonChooser.addOption("SysID Module Rotation Dynamic Forwards", swerve.sysIdRotDynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Module Rotation Dynamic Backwards", swerve.sysIdRotDynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Module Rotation Quasi Forwards", swerve.sysIdRotQuasi(Direction.kForward));
-        // autonChooser.addOption("SysID Module Rotation Quasi Backwards", swerve.sysIdRotQuasi(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Rotation Dynamic Forwards",
+        // swerve.sysIdRotDynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Module Rotation Dynamic Backwards",
+        // swerve.sysIdRotDynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Module Rotation Quasi Forwards",
+        // swerve.sysIdRotQuasi(Direction.kForward));
+        // autonChooser.addOption("SysID Module Rotation Quasi Backwards",
+        // swerve.sysIdRotQuasi(Direction.kReverse));
 
         // SysIdRoutine shooterSysId = shooter.getShooterSysIdRoutine();
-        // autonChooser.addOption("SysID Shooter Dynamic Forward", shooterSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Shooter Dynamic Backwards", shooterSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Shooter Quasi Forwards", shooterSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Shooter Quasi Backwards", shooterSysId.quasistatic(Direction.kReverse));
+        // autonChooser.addOption("SysID Shooter Dynamic Forward",
+        // shooterSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Shooter Dynamic Backwards",
+        // shooterSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Shooter Quasi Forwards",
+        // shooterSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Shooter Quasi Backwards",
+        // shooterSysId.quasistatic(Direction.kReverse));
 
         // SysIdRoutine hoodSysId = hood.getHoodSysIdRoutine();
-        // autonChooser.addOption("SysID Hood Dynamic Forward", hoodSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Hood Dynamic Backwards", hoodSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Hood Quasi Forwards", hoodSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Hood Quasi Backwards", hoodSysId.quasistatic(Direction.kReverse));
+        // autonChooser.addOption("SysID Hood Dynamic Forward",
+        // hoodSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Dynamic Backwards",
+        // hoodSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Hood Quasi Forwards",
+        // hoodSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Hood Quasi Backwards",
+        // hoodSysId.quasistatic(Direction.kReverse));
 
         // SysIdRoutine spindexerSysId = spindexer.getSysIdRoutine();
-        // autonChooser.addOption("SysID Spinny Boi Dynamic Forward", spindexerSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Spinny Boi Dynamic Backwards", spindexerSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Spinny Boi Quasi Forwards", spindexerSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Spinny Boi Quasi Backwards", spindexerSysId.quasistatic(Direction.kReverse));
-   
+        // autonChooser.addOption("SysID Spinny Boi Dynamic Forward",
+        // spindexerSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Spinny Boi Dynamic Backwards",
+        // spindexerSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Spinny Boi Quasi Forwards",
+        // spindexerSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Spinny Boi Quasi Backwards",
+        // spindexerSysId.quasistatic(Direction.kReverse));
+
         // SysIdRoutine feederSysId = feeder.getSysIdRoutine();
-        // autonChooser.addOption("SysID Feed Dynamic Forward", feederSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Feed Dynamic Backwards", feederSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Feed Quasi Forwards", feederSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Feed Quasi Backwards", feederSysId.quasistatic(Direction.kReverse));
+        // autonChooser.addOption("SysID Feed Dynamic Forward",
+        // feederSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Feed Dynamic Backwards",
+        // feederSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Feed Quasi Forwards",
+        // feederSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Feed Quasi Backwards",
+        // feederSysId.quasistatic(Direction.kReverse));
 
         // SysIdRoutine turretSysId = turret.getSysIdRoutine();
-        // autonChooser.addOption("SysID Turret Dynamic Forward", turretSysId.dynamic(Direction.kForward));
-        // autonChooser.addOption("SysID Turret Dynamic Backwards", turretSysId.dynamic(Direction.kReverse));
-        // autonChooser.addOption("SysID Turret Quasi Forward", turretSysId.quasistatic(Direction.kForward));
-        // autonChooser.addOption("SysID Turret Quasi Backwards", turretSysId.quasistatic(Direction.kReverse));
+        // autonChooser.addOption("SysID Turret Dynamic Forward",
+        // turretSysId.dynamic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Dynamic Backwards",
+        // turretSysId.dynamic(Direction.kReverse));
+        // autonChooser.addOption("SysID Turret Quasi Forward",
+        // turretSysId.quasistatic(Direction.kForward));
+        // autonChooser.addOption("SysID Turret Quasi Backwards",
+        // turretSysId.quasistatic(Direction.kReverse));
 
         SmartDashboard.putData("Autonomous", autonChooser);
     }

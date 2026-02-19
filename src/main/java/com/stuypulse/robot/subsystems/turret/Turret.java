@@ -132,7 +132,7 @@ public abstract class Turret extends SubsystemBase {
     // Current logic is as of 2/15
     public Rotation2d getPointAtTargetAngle(Pose2d targetPose) {
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Pose2d turretPose = robotPose.plus(Constants.Turret.TURRET_OFFSET);
+        Pose2d turretPose = robotPose.plus(Constants.Turret.TURRET_OFFSET); // TODO: TEST IF THIS PLUS SHOULD BE MINUS
 
         // Vector2D robot = new Vector2D(robotPose.getTranslation());
         Vector2D turret = new Vector2D(turretPose.getTranslation());

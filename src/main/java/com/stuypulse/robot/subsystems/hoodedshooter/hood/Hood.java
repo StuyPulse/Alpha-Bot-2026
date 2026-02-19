@@ -7,6 +7,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -33,7 +34,8 @@ public abstract class Hood extends SubsystemBase{
         HUB,
         LEFT_CORNER,
         RIGHT_CORNER,
-        IDLE;
+        IDLE,
+        INTERPOLATION;
     }
 
     public Hood() {
@@ -50,13 +52,14 @@ public abstract class Hood extends SubsystemBase{
 
     public Rotation2d getTargetAngle() {
         return switch(state) {
-            case STOW -> Rotation2d.fromDegrees(33.5);//Constants.HoodedShooter.Hood.MIN_ANGLE;
+            case STOW -> Rotation2d.fromDegrees(7.0);//Constants.HoodedShooter.Hood.MIN_ANGLE;
             case FERRY -> Rotation2d.fromDegrees(30);
             // case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
-            case SHOOT -> Rotation2d.fromDegrees(33.5);
+            case SHOOT -> Rotation2d.fromDegrees(Settings.HoodedShooter.SHOOT_ANGLE.get());
             case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;
             case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
+            case INTERPOLATION -> HoodAngleCalculator.interpolateHoodAngle().get();
             case IDLE -> getHoodAngle();
         };
     }

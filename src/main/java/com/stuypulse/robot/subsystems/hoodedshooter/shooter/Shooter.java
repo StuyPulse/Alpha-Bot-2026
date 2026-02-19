@@ -7,6 +7,8 @@ package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
+import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -36,7 +38,8 @@ public abstract class Shooter extends SubsystemBase {
         REVERSE,
         HUB,
         LEFT_CORNER,
-        RIGHT_CORNER;
+        RIGHT_CORNER,  
+        INTERPOLATION;
     }
 
     public Shooter() {
@@ -60,6 +63,7 @@ public abstract class Shooter extends SubsystemBase {
             case HUB -> Settings.HoodedShooter.ShooterRPMS.HUB_RPM;
             case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
             case RIGHT_CORNER -> Settings.HoodedShooter.ShooterRPMS.RIGHT_CORNER_RPM;
+            case INTERPOLATION -> HoodAngleCalculator.interpolateShooterRPM().get();
         };
     }
 

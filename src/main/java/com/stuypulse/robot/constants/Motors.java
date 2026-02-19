@@ -116,8 +116,8 @@ public interface Motors {
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitEnable(true)
-                .withForwardSoftLimitThreshold(0.75) // 0.75
-                .withReverseSoftLimitThreshold(-2.0 / 3.0); // -0.66
+                .withForwardSoftLimitThreshold(0.25) // 0.75
+                .withReverseSoftLimitThreshold(-0.25); // -0.66
 
         CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
                 .withMagnetSensor(new MagnetSensorConfigs()
