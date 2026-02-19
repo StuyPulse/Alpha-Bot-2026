@@ -60,11 +60,11 @@ public class Gains {
         }
 
         public interface Hood {
-            double kP = 300.0;
+            double kP = 1200.0;
             double kI = 0.0;
-            double kD = 0.0;
+            double kD = 50.0; //TODO: ADD MORE KD
 
-            double kS = 0.0;
+            double kS = 0.5; //found .45 from tests
             double kV = 0.0;
             double kA = 0.0;
         }

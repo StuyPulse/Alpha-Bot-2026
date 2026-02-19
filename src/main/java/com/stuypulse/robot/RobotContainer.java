@@ -105,8 +105,8 @@ public class RobotContainer {
 
         // SCORING ROUTINE
         driver.getTopButton()
-                .whileTrue(new TurretIdle()
-                        .alongWith(new HoodedShooterInterpolation())
+                .whileTrue(new TurretShoot()
+                        .alongWith(new HoodedShooterShoot())
                         .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
                         .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
                                 .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
@@ -116,7 +116,15 @@ public class RobotContainer {
                         .alongWith(new FeederStop()));
 
         driver.getLeftButton()
-                .onTrue(new TurretShoot());
+                .whileTrue(new TurretShoot()
+                        .alongWith(new HoodedShooterInterpolation())
+                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance()))
+                        .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance())
+                                .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
+                                .andThen(new SpindexerRun().onlyIf(() -> hoodedShooter.isShooterAtTolerance()))))
+                .onFalse(new SpindexerStop()
+                        // .alongWith(new HoodedShooterStow())
+                        .alongWith(new FeederStop()));
 
         driver.getBottomButton()
                 .onTrue(new HoodedShooterInterpolation());

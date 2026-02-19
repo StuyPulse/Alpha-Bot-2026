@@ -241,15 +241,14 @@ public class TurretImpl extends Turret {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/CRT Position (Rot)", getAbsoluteTurretAngle().getRotations());
-            SmartDashboard.putNumber("Turret/Relative Encoder Position (Rot)", motor.getPosition().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("Turret/Relative Encoder Position (deg)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
 
-            Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-            // TODO: CHANGE TURRET OFFSET CALCULATION BETWEEN ALLIANCES
-            Translation2d turretPose = robotPose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(robotPose.getRotation()));
+            // Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
+            // Translation2d turretPose = robotPose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(robotPose.getRotation()));
 
-            SmartDashboard.putNumber("Turret/Dist from hub", turretPose.getDistance(Field.hubCenter.getTranslation()));
+            // SmartDashboard.putNumber("Turret/OG turret from hub", turretPose.getDistance(Field.hubCenter.getTranslation()));
         }
     }
 

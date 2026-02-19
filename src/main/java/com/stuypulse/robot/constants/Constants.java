@@ -20,7 +20,7 @@ public interface Constants {
             public final Rotation2d LEFT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
             public final Rotation2d RIGHT_CORNER_ANGLE = Rotation2d.fromDegrees(10); // TBD
 
-            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromDegrees(20.0 * 10.0);//(0.332);//(0.325);
+            public final Rotation2d ENCODER_OFFSET = Rotation2d.fromDegrees(3.3 * 10.0);//(20.0 * 10.0);//(0.332);//(0.325);
         }
         public interface Shooter {
             public final double GEAR_RATIO = 1.0;

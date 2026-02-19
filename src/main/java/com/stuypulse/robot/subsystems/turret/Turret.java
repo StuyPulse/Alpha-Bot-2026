@@ -110,11 +110,7 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
 
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-
-        Pose2d turretTranslation = robotPose.plus(Constants.Turret.TURRET_OFFSET);
-        Rotation2d turretRotation = robotPose.getRotation().plus(getAngle());
-
-        Pose2d turretPose = new Pose2d(turretTranslation.getTranslation(), turretRotation);
+        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose();
 
         turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
@@ -132,7 +128,7 @@ public abstract class Turret extends SubsystemBase {
     // Current logic is as of 2/15
     public Rotation2d getPointAtTargetAngle(Pose2d targetPose) {
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Pose2d turretPose = robotPose.plus(Constants.Turret.TURRET_OFFSET); // TODO: TEST IF THIS PLUS SHOULD BE MINUS
+        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose(); // TODO: TEST IF THIS PLUS SHOULD BE MINUS
 
         // Vector2D robot = new Vector2D(robotPose.getTranslation());
         Vector2D turret = new Vector2D(turretPose.getTranslation());

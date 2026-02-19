@@ -30,10 +30,10 @@ public interface Settings {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
     }
@@ -71,12 +71,14 @@ public interface Settings {
             double[][] distanceAngleInterpolationValues = {
                 {1.43, Units.degreesToRadians(21.0)}, // meters, radians
                 {3.65, Units.degreesToRadians(28.0)},
+                {5.32, Units.degreesToRadians(33.5)}
             };
         }
         public interface RPMInterpolation{
             double[][] distanceRPMInterpolationValues = {
                 {1.43, 3000.0}, // meters, RPM 
                 {3.65, 3400.0},
+                {5.32, 3850.0}
             };
         }
 

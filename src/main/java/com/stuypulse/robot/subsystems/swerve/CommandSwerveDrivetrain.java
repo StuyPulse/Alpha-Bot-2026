@@ -12,13 +12,16 @@ import com.stuypulse.stuylib.math.Angle;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.TunerConstants.TunerSwerveDrivetrain;
+import com.stuypulse.robot.subsystems.turret.Turret;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.numbers.N1;
@@ -51,6 +54,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final static CommandSwerveDrivetrain instance;
 
     private FieldObject2d turret2d;
+    private Pose2d turretPose = new Pose2d();
 
     static {
         instance = TunerConstants.createDrivetrain();
@@ -423,9 +427,19 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             .withRotationalRate(robotSpeeds.omegaRadiansPerSecond));
     }
 
+    public Pose2d getTurretPose() {
+        return turretPose;
+    }
+
     @Override
     public void periodic() {
         Pose2d pose = getPose();
+        turretPose = new Pose2d(
+            pose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(pose.getRotation())),
+            pose.getRotation().plus(Turret.getInstance().getAngle())
+        );
+
+        SmartDashboard.putNumber("Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
 
         SmartDashboard.putNumber("Swerve/Pose/X", pose.getX());
         SmartDashboard.putNumber("Swerve/Pose/Y", pose.getY());
