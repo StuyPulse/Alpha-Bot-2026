@@ -46,7 +46,7 @@ public class HoodAngleCalculator {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
             Translation2d hubPose = Field.getHubPose().getTranslation();
-            Translation2d currentPose = swerve.getPose().getTranslation();
+            Translation2d currentPose = swerve.getTurretPose().getTranslation();
 
             double distanceMeters = hubPose.getDistance(currentPose);
 
@@ -63,10 +63,9 @@ public class HoodAngleCalculator {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
             Translation2d hubPose = Field.getHubPose().getTranslation();
-            Translation2d currentPose = swerve.getPose().getTranslation();
+            Translation2d currentPose = swerve.getTurretPose().getTranslation();
 
             double distanceMeters = hubPose.getDistance(currentPose);
-
 
             double targetRPM = distanceRPMInterpolator.get(distanceMeters);
 

@@ -14,11 +14,13 @@ import com.stuypulse.robot.commands.auton.StraightLine;
 import com.stuypulse.robot.commands.auton.TwoCycleBottom;
 import com.stuypulse.robot.commands.auton.TwoCycleTop;
 import com.stuypulse.robot.commands.feeder.FeederFeed;
+import com.stuypulse.robot.commands.feeder.FeederReverse;
 import com.stuypulse.robot.commands.feeder.FeederStop;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterInterpolation;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
+import com.stuypulse.robot.commands.spindexer.SpindexerReverse;
 import com.stuypulse.robot.commands.spindexer.SpindexerRun;
 import com.stuypulse.robot.commands.spindexer.SpindexerStop;
 import com.stuypulse.robot.commands.swerve.SwerveDriveDrive;
@@ -128,6 +130,16 @@ public class RobotContainer {
 
         driver.getBottomButton()
                 .onTrue(new HoodedShooterInterpolation());
+
+        driver.getRightButton()
+                .onTrue(new HoodedShooterShoot())
+                .onFalse(new HoodedShooterStow());
+
+        driver.getRightMenuButton()
+                .whileTrue(new FeederReverse().alongWith(new SpindexerReverse()));
+
+        driver.getDPadRight()
+                .onTrue(new TurretZero());
 
         // -------------------------------------------------------------------------------------------------------------------------\\
         // driver.getLeftButton()

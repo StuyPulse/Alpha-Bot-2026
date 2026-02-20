@@ -30,7 +30,8 @@ public abstract class Spindexer extends SubsystemBase {
 
     public enum SpindexerState {
         RUNNING(Settings.Spindexer.RUNNING_SPEED),
-        STOP(Settings.Spindexer.STOP_SPEED);
+        STOP(Settings.Spindexer.STOP_SPEED),
+        REVERSE(Settings.Spindexer.REVERSE_SPEED);
 
         private double targetRPM;
 

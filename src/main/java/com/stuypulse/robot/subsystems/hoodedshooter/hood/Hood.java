@@ -79,5 +79,7 @@ public abstract class Hood extends SubsystemBase{
 
         SmartDashboard.putNumber("HoodedShooter/Hood/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getHoodAngle().getDegrees());
+
+        SmartDashboard.putNumber("InterpolationTesting/Hood Interpolated Target Angle (deg)", HoodAngleCalculator.interpolateHoodAngle().get().getDegrees());
     }
 }

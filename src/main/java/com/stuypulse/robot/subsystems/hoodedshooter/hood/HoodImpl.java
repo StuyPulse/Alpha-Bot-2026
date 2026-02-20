@@ -29,6 +29,7 @@ public class HoodImpl extends Hood {
     private final PositionVoltage controller;
     
     private Optional<Double> voltageOverride;
+    private boolean hasUsedAbsoluteEncoder;
 
     public HoodImpl() {
         hoodMotor = new TalonFX(Ports.HoodedShooter.Hood.MOTOR);
@@ -36,10 +37,10 @@ public class HoodImpl extends Hood {
 
         Motors.HoodedShooter.Hood.HOOD_CONFIG.configure(hoodMotor);
 
+        hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.slot0Configs);
+
         hoodMotor.getConfigurator().apply(Motors.HoodedShooter.Hood.hoodSoftwareLimitSwitchConfigs);
         hoodEncoder.getConfigurator().apply(Motors.HoodedShooter.Hood.HOOD_ENCODER);
-
-        hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
 
         controller = new PositionVoltage(getTargetAngle().getRotations())
             .withEnableFOC(true);
@@ -56,6 +57,11 @@ public class HoodImpl extends Hood {
     public void periodic() {
         super.periodic();
 
+        if (!hasUsedAbsoluteEncoder) {
+            hoodMotor.setPosition(hoodEncoder.getAbsolutePosition().getValueAsDouble() / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO);
+            hasUsedAbsoluteEncoder = true;
+        }
+
         if (EnabledSubsystems.HOOD.get()) {
             if (voltageOverride.isPresent()) {
                 hoodMotor.setVoltage(voltageOverride.get());
@@ -69,7 +75,15 @@ public class HoodImpl extends Hood {
 
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("HoodedShooter/Hood/Hood Absolute Angle (deg)", hoodEncoder.getPosition().getValueAsDouble() * 360.0 / Constants.HoodedShooter.Hood.SENSOR_TO_HOOD_RATIO); //* 360.0 / (360.0/35.0) / .97);
-            SmartDashboard.putNumber("HoodedShooter/Hood/Input Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Hood/Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
+            double valueInRotations = hoodMotor.getClosedLoopError().getValueAsDouble();
+            SmartDashboard.putNumber("HoodedShooter/Hood/Closed Loop Error in Rotations", valueInRotations);
+            SmartDashboard.putNumber("HoodedShooter/Hood/Closed Loop Error in Degrees", valueInRotations * 360.0);
+            SmartDashboard.putBoolean("HoodedShooter/Hood/Has Used Absolute Encoder", hasUsedAbsoluteEncoder);
+
+            SmartDashboard.putNumber("InterpolationTesting/Hood Closed Loop Error", hoodMotor.getClosedLoopError().getValueAsDouble() * 360.0);
+            SmartDashboard.putNumber("InterpolationTesting/Hood Applied Voltage", hoodMotor.getMotorVoltage().getValueAsDouble());
+            SmartDashboard.putNumber("InterpolationTesting/Hood Supply Current", hoodMotor.getSupplyCurrent().getValueAsDouble());
         }
     }
 

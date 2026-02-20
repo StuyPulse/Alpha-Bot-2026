@@ -29,11 +29,11 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
     }
@@ -41,12 +41,13 @@ public interface Settings {
     public interface Spindexer {
         double RUNNING_SPEED = 6000.0;
         double STOP_SPEED = 0.0;
+        double REVERSE_SPEED = -6000.0;
     }
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
         double FEEDER_MAX = 4800.0;
-        double FEEDER_REVERSE = -500.0;
+        double FEEDER_REVERSE = -4800.0;
         double RPM_TOLERANCE = 500.0;
         public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", FEEDER_MAX);
 
@@ -65,20 +66,28 @@ public interface Settings {
         SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 15.0);
 
         double SHOOTER_TOLERANCE_RPM = 500.0;
-        double HOOD_TOLERANCE_DEG = 5.0;
+        double HOOD_TOLERANCE_DEG = 0.30; //.3
 
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
+                {1.30, Units.degreesToRadians(16.5)},
                 {1.43, Units.degreesToRadians(21.0)}, // meters, radians
+                {2.15, Units.degreesToRadians(23.23)},
+                {2.864967, Units.degreesToRadians(25.460189)},
                 {3.65, Units.degreesToRadians(28.0)},
+                {4.43, Units.degreesToRadians(30.65)},
                 {5.32, Units.degreesToRadians(33.5)}
             };
         }
         public interface RPMInterpolation{
             double[][] distanceRPMInterpolationValues = {
+                {1.30, 3000.0},
                 {1.43, 3000.0}, // meters, RPM 
+                {2.15, 3050.0},
+                {2.864967, 3215.271125},
                 {3.65, 3400.0},
-                {5.32, 3850.0}
+                {4.43, 3650.0},
+                {5.32, 3950.0}
             };
         }
 
