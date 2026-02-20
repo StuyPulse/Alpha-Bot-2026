@@ -6,6 +6,7 @@
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.config.PIDConstants;
+import com.stuypulse.stuylib.network.SmartNumber;
 
 public class Gains {
     public interface Swerve {
@@ -60,15 +61,14 @@ public class Gains {
         }
 
         public interface Hood {
-            double kP = 1200.0;
+            double kP = 400.0; //1200.0
             double kI = 0.0;
-            double kD = 50.0; //TODO: ADD MORE KD
+            double kD = 0.0; //TODO: ADD MORE KD
 
-            double kS = 0.5; //found .45 from tests
+            double kS = 0.28; //found .45 from tests
             double kV = 0.0;
             double kA = 0.0;
-        }
-        
+        }   
     }
 
     public interface Spindexer {
@@ -82,13 +82,13 @@ public class Gains {
     }
 
     public interface Feeder {
-        double kP = 0.00015508;
-        double kI = 0.0;
-        double kD = 0.0;
-        
         double kS = 0.1728;
         double kA = 0.0028428;
         double kV = 0.11725;
+
+        SmartNumber kP = new SmartNumber("Feeder/kP", 0.00015508);
+        SmartNumber kI = new SmartNumber("Feeder/kI", 0.0);
+        SmartNumber kD = new SmartNumber("Feeder/kD", 0.0);
     }
 
     public interface Turret {

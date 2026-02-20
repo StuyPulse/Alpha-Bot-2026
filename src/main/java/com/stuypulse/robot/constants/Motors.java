@@ -27,6 +27,7 @@ import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -64,6 +65,15 @@ public interface Motors {
                             Gains.HoodedShooter.Hood.kD, 0)
                     .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
                     .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+
+            Slot0Configs slot0Configs = new Slot0Configs()
+            .withKP(Gains.HoodedShooter.Hood.kP)
+            .withKI(Gains.HoodedShooter.Hood.kI)
+            .withKD(Gains.HoodedShooter.Hood.kD)
+            .withKS(Gains.HoodedShooter.Hood.kS)
+            .withKV(Gains.HoodedShooter.Hood.kV)
+            .withKA(Gains.HoodedShooter.Hood.kA)
+            .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
                     
             SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
@@ -139,7 +149,7 @@ public interface Motors {
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
                 .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
-                .withPIDConstants(Gains.Feeder.kP, Gains.Feeder.kI, Gains.Feeder.kD, 0)
+                .withPIDConstants(Gains.Feeder.kP.get(), Gains.Feeder.kI.get(), Gains.Feeder.kD.get(), 0)
                 .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
     }
 
@@ -230,6 +240,10 @@ public interface Motors {
             configuration.withSlot2(slot2Configs);
 
             return this;
+        }
+
+        public TalonFXConfiguration getConfiguration() {
+            return this.configuration;
         }
 
         // MOTOR OUTPUT CONFIGS
