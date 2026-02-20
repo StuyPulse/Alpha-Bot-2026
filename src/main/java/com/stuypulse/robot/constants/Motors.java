@@ -156,6 +156,10 @@ public interface Motors {
         private final MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
 
         public void configure(TalonFX motor) {
+            // We want to reset configs here before applying configs; prevents unwanted configs from persisting
+            TalonFXConfiguration defaultConfig = new TalonFXConfiguration();
+            motor.getConfigurator().apply(defaultConfig);
+
             motor.getConfigurator().apply(configuration);
         }
 
