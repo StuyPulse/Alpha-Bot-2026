@@ -53,7 +53,7 @@ import com.pathplanner.lib.util.PathPlannerLogging;
 public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Subsystem {
     private final static CommandSwerveDrivetrain instance;
 
-    private FieldObject2d turret2d;
+    private FieldObject2d turret2d = Field.FIELD2D.getObject("Turret 2D");
     private Pose2d turretPose = new Pose2d();
 
     static {
@@ -438,6 +438,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             pose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(pose.getRotation())),
             pose.getRotation().plus(Turret.getInstance().getAngle())
         );
+        
+        turret2d.setPose(turretPose);
 
         SmartDashboard.putNumber("Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
 

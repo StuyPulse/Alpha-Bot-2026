@@ -114,8 +114,5 @@ public class HoodedShooter extends SubsystemBase {
 
         SmartDashboard.putBoolean("HoodedShooter/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("HoodedShooter/Hood At Tolerance?", isHoodAtTolerance());
-
-        SmartDashboard.putNumber("HoodedShooter/Interpolated Hood Angle", HoodAngleCalculator.interpolateHoodAngle().get().getDegrees());
-        SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", HoodAngleCalculator.interpolateShooterRPM().get());
     }
 }

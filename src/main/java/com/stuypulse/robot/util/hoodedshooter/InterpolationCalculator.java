@@ -1,4 +1,4 @@
-package main.java.com.stuypulse.robot.util.hoodedshooter;
+package com.stuypulse.robot.util.hoodedshooter;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.geometry.Rotation2d;

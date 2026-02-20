@@ -50,10 +50,9 @@ public class HoodAngleCalculator {
 
             double distanceMeters = hubPose.getDistance(currentPose);
 
-            SmartDashboard.putNumber("HoodedShooter/THIS IS HAPPENING", distanceMeters);
-
             Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
-            SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle in Degrees", targetAngle.getDegrees());
+
+            SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle", targetAngle.getDegrees());
 
             return targetAngle;
         };
@@ -70,7 +69,9 @@ public class HoodAngleCalculator {
 
 
             double targetRPM = distanceRPMInterpolator.get(distanceMeters);
+
             SmartDashboard.putNumber("HoodedShooter/Interpolated RPM ", targetRPM);
+            
             return targetRPM;
         };
     }

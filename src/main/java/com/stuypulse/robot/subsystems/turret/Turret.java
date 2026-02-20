@@ -26,7 +26,6 @@ public abstract class Turret extends SubsystemBase {
     private static final Turret instance;
     private TurretState state;
     private Vector2D driverInput;
-    private FieldObject2d turret2d;
 
     static {
         instance = Robot.isReal() ? new TurretImpl() : new TurretSim();
@@ -39,8 +38,6 @@ public abstract class Turret extends SubsystemBase {
     public Turret() {
         driverInput = new Vector2D(0, 0);
         state = TurretState.IDLE;
-
-        turret2d = Field.FIELD2D.getObject("Turret 2D");
     }
 
     public void setDriverInput(Gamepad gamepad) {
@@ -108,11 +105,6 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putString("Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
         SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
-
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose();
-
-        turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
         if (Settings.DEBUG_MODE) {
             if (Settings.EnabledSubsystems.TURRET.get()) {
