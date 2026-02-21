@@ -11,6 +11,8 @@ public class CalculateTurretAngle {
     private static final double MIN_ANGLE_DEGREES = Settings.Turret.MIN_THEORETICAL_ROTATION.getDegrees();
     private static final double RESOLUTION = Settings.Turret.RESOLUTION_OF_ABSOLUTE_ENCODER;
     private static final int NUM_POINTS = (int) ((MAX_ANGLE_DEGREES - MIN_ANGLE_DEGREES) / RESOLUTION);
+    private static int leastDistanceIndex = 0;
+    private static double leastDistance = Double.MAX_VALUE;
 
     private static final double[] mechanismAngles = new double[NUM_POINTS];
     private static final double[] ARRAY_17T = generateEncoderValues(17);
@@ -31,12 +33,12 @@ public class CalculateTurretAngle {
     }
 
     public static Rotation2d getAbsoluteAngle(double encoder17TValue, double encoder18TValue) {
-        int leastDistanceIndex = 0;
-        double leastDistance = Double.MAX_VALUE;
-
         for (int i = 0; i < NUM_POINTS; i++) {
-            double distance = Math.abs(encoder17TValue - ARRAY_17T[i])
-                    + Math.abs(encoder18TValue - ARRAY_18T[i]);
+            double distance = (Math.abs(encoder17TValue - ARRAY_17T[i])
+                    + Math.abs(encoder18TValue - ARRAY_18T[i]));
+
+            distance = distance * distance; // square the distance
+
             if (distance < leastDistance) {
                 leastDistance = distance;
                 leastDistanceIndex = i;
@@ -45,4 +47,13 @@ public class CalculateTurretAngle {
 
         return Rotation2d.fromDegrees(mechanismAngles[leastDistanceIndex]);
     }
+
+    public static double getClosestDistance() {
+        return leastDistance;
+    }
+
+    public static int lowestDistanceIndex() {
+        return leastDistanceIndex;
+    }
+    // maybe you want these ? 
 }
