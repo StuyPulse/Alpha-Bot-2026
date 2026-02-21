@@ -39,6 +39,8 @@ public class CalculateTurretAngle {
 
             distance = distance * distance; // square the distance
 
+            distance = Math.min(distance, (360.0 - distance));
+
             if (distance < leastDistance) {
                 leastDistance = distance;
                 leastDistanceIndex = i;
