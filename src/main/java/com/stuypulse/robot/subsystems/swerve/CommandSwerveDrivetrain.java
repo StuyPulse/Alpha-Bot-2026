@@ -439,7 +439,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             pose.getRotation().plus(Turret.getInstance().getAngle())
         );
         
-        turret2d.setPose(turretPose);
+        turret2d.setPose(Robot.isBlue() ? turretPose : Field.transformToOppositeAlliance(turretPose));
 
         SmartDashboard.putNumber("Turret/Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));
         SmartDashboard.putNumber("InterpolationTesting/Turret Dist From Hub", turretPose.getTranslation().getDistance(Field.hubCenter.getTranslation()));

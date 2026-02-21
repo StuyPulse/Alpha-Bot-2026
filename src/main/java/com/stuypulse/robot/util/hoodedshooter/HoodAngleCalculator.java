@@ -42,6 +42,8 @@ public class HoodAngleCalculator {
 
 
     static {
+        sol = new SOTMSolution(Constants.HoodedShooter.Hood.MIN_ANGLE, Rotation2d.kZero, Field.getHubPose(), 0.0);
+
         hubPose2d = Field.FIELD2D.getObject("hubPose");
         virtualHubPose2d = Field.FIELD2D.getObject("virtualHubPose");
         futureTurretPose2d = Field.FIELD2D.getObject("futureTurretPose");

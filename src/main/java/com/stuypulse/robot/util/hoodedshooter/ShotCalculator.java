@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.util.hoodedshooter;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
@@ -198,7 +199,9 @@ public final class ShotCalculator {
         double yaw = Math.atan2(
             virtualTranslation.getY() - turretTranslation.getY(),
             virtualTranslation.getX() - turretTranslation.getX() 
-        ); 
+        );
+        
+        yaw *= Robot.isReal() ? -1 : 1;
 
         return new SOTMSolution(
             sol.targetHoodAngle(),
