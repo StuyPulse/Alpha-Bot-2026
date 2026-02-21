@@ -9,7 +9,6 @@ import com.stuypulse.stuylib.input.Gamepad;
 import com.stuypulse.stuylib.math.Vector2D;
 
 import com.stuypulse.robot.Robot;
-import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -18,7 +17,6 @@ import com.stuypulse.robot.util.turret.TurretVisualizer;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -47,7 +45,6 @@ public abstract class Turret extends SubsystemBase {
 
     public enum TurretState {
         IDLE,
-        ZERO,
         SHOOTING,
         SOTM,
         FERRYING,
@@ -60,7 +57,6 @@ public abstract class Turret extends SubsystemBase {
     public Rotation2d getTargetAngle() {
         return switch (getState()) {
             case IDLE -> getAngle(); 
-            case ZERO -> Rotation2d.kZero;
             case FERRYING -> getFerryAngle(); //Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
             case SHOOTING -> getScoringAngle();
             case SOTM -> HoodAngleCalculator.calculateTurretAngleSOTM().get();
@@ -94,6 +90,8 @@ public abstract class Turret extends SubsystemBase {
     public abstract SysIdRoutine getSysIdRoutine();
 
     public abstract void seedTurret();
+
+    public abstract void zeroEncoders();
    
     public void setState(TurretState state) {
         this.state = state;
@@ -119,13 +117,10 @@ public abstract class Turret extends SubsystemBase {
         }
     }
 
-    // Should match implementation on mini turret
-    // Current logic is as of 2/15
     public Rotation2d getPointAtTargetAngle(Pose2d targetPose) {
         Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose(); // TODO: TEST IF THIS PLUS SHOULD BE MINUS
+        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose();
 
-        // Vector2D robot = new Vector2D(robotPose.getTranslation());
         Vector2D turret = new Vector2D(turretPose.getTranslation());
         Vector2D target = new Vector2D(targetPose.getTranslation());
 
