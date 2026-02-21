@@ -128,13 +128,13 @@ public interface Motors {
 
         CANCoderConfig turretEncoder17t = new CANCoderConfig()
             .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-            .withAbsoluteSensorDiscontinuityPoint(1)
-            .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations());
+            .withAbsoluteSensorDiscontinuityPoint(1);
+            // .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations());
 
         CANCoderConfig turretEncoder18t = new CANCoderConfig()
             .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-            .withAbsoluteSensorDiscontinuityPoint(1)
-            .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations());
+            .withAbsoluteSensorDiscontinuityPoint(1);
+            // .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations());
 
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)

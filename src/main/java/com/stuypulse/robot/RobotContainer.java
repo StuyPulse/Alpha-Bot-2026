@@ -80,6 +80,7 @@ public class RobotContainer {
         configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
+        SmartDashboard.putData("Zero Encoders", new TurretZero());
 
     }
 

@@ -155,6 +155,8 @@ public class TurretImpl extends Turret {
             Translation2d cornerPose = Field.getFerryZonePose(currentPose).getTranslation();
 
             SmartDashboard.putNumber("Turret/Dist from corner", cornerPose.getDistance(currentPose));
+
+            SmartDashboard.putNumber("Turret/Vector Space Solution", getVectorSpaceAngle().getDegrees());
         }
     }
 

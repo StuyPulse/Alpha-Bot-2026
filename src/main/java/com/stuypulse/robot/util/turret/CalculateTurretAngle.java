@@ -4,15 +4,15 @@ import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CalculateTurretAngle {
 
     private static final double MAX_ANGLE_DEGREES = Settings.Turret.MAX_THEORETICAL_ROTATION.getDegrees();
     private static final double MIN_ANGLE_DEGREES = Settings.Turret.MIN_THEORETICAL_ROTATION.getDegrees();
-    private static final double RESOLUTION = Settings.Turret.RESOLUTION_OF_ABSOLUTE_ENCODER;
+    private static final double RESOLUTION = 0.5; //Settings.Turret.RESOLUTION_OF_ABSOLUTE_ENCODER;
     private static final int NUM_POINTS = (int) ((MAX_ANGLE_DEGREES - MIN_ANGLE_DEGREES) / RESOLUTION);
     private static int leastDistanceIndex = 0;
-    private static double leastDistance = Double.MAX_VALUE;
 
     private static final double[] mechanismAngles = new double[NUM_POINTS];
     private static final double[] ARRAY_17T = generateEncoderValues(17);
@@ -20,12 +20,15 @@ public class CalculateTurretAngle {
 
     private static double[] generateEncoderValues(int teeth) {
         double[] values = new double[NUM_POINTS];
-        double gearRatio = Constants.Turret.BigGear.TEETH/ teeth;
+        double gearRatio = 1.0 * Constants.Turret.BigGear.TEETH/ teeth;
         int i = 0;
 
         for (double angle = MIN_ANGLE_DEGREES; angle < MAX_ANGLE_DEGREES; angle += RESOLUTION) {
             mechanismAngles[i] = angle;
-            values[i] = (angle * gearRatio) % 360.0;
+            values[i] = (((angle * gearRatio) % 360.0) + 360.0) % 360.0;
+            if (i < 30) {
+                System.out.println(angle + " " + values[i]);
+            }
             i++;
         }
 
@@ -33,13 +36,18 @@ public class CalculateTurretAngle {
     }
 
     public static Rotation2d getAbsoluteAngle(double encoder17TValue, double encoder18TValue) {
+        double leastDistance = Double.MAX_VALUE;
         for (int i = 0; i < NUM_POINTS; i++) {
-            double distance = (Math.abs(encoder17TValue - ARRAY_17T[i])
-                    + Math.abs(encoder18TValue - ARRAY_18T[i]));
+            double diff17 = Math.abs(encoder17TValue - ARRAY_17T[i]);
+            double diff18 = Math.abs(encoder18TValue - ARRAY_18T[i]);
 
-            distance = distance * distance; // square the distance
+            diff17 = Math.min(diff17, 360.0 - diff17);
+            diff18 = Math.min(diff18, 360.0 - diff18);
 
-            distance = Math.min(distance, (360.0 - distance));
+            double distance17 = diff17 * diff17;
+            double distance18 = diff18 * diff18;
+
+            double distance = distance17 + distance18;
 
             if (distance < leastDistance) {
                 leastDistance = distance;
@@ -47,15 +55,17 @@ public class CalculateTurretAngle {
             }
         }
 
-        return Rotation2d.fromDegrees(mechanismAngles[leastDistanceIndex]);
-    }
+        SmartDashboard.putNumber("Turret/Nearest Distance", leastDistance);
+        SmartDashboard.putNumber("Turret/Encoder 17T Value passed to function", encoder17TValue);
+        SmartDashboard.putNumber("Turret/Encoder 18T Value passed to function", encoder18TValue);
 
-    public static double getClosestDistance() {
-        return leastDistance;
+        // SmartDashboard.putNumber("Turret/")
+
+        return Rotation2d.fromDegrees(mechanismAngles[leastDistanceIndex]);
     }
 
     public static int lowestDistanceIndex() {
         return leastDistanceIndex;
     }
-    // maybe you want these ? 
+    // maybe you want these ? maybe i didnt decide yet
 }

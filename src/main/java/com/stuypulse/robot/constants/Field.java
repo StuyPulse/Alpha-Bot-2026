@@ -38,8 +38,8 @@ public interface Field {
     }
 
     // 1.0 meters from driverstation wall and field wall
-    public final Pose2d leftFerryZone = new Pose2d(1.0, WIDTH - 1.0, new Rotation2d());
-    public final Pose2d rightFerryZone = new Pose2d(1.0 + Units.feetToMeters(6), 1.0 + Units.feetToMeters(3), new Rotation2d()); //TODO: GET ACTUAL POS
+    public final Pose2d leftFerryZone = new Pose2d(Units.inchesToMeters(47.5), WIDTH-Units.inchesToMeters(78.25), new Rotation2d());
+    public final Pose2d rightFerryZone = new Pose2d(Units.inchesToMeters(48.75), Units.inchesToMeters(79.5), new Rotation2d());
 
     public static Pose2d getFerryZonePose(Translation2d robot) { 
         if (robot.getDistance(leftFerryZone.getTranslation()) > robot.getDistance(rightFerryZone.getTranslation())) {
@@ -85,6 +85,7 @@ public interface Field {
         BLUE_TOWER_MID,
         BLUE_TOWER_RIGHT;
 
+    
         public final AprilTag tag;
 
         public int getID() {

@@ -123,8 +123,8 @@ public interface Settings {
         Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
 
         double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
-        Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(620);
-        Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-620);
+        Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(612);
+        Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
     }
 
     public interface Swerve {

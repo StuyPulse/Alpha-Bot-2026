@@ -102,7 +102,9 @@ public class HoodedShooter extends SubsystemBase {
 
     @Override
     public void periodic() {
-        HoodAngleCalculator.updateSOTMSolution();
+        if (getState() == HoodedShooterState.SOTM) {
+            HoodAngleCalculator.updateSOTMSolution();
+        }
 
         SmartDashboard.putString("HoodedShooter/State", state.name());
         SmartDashboard.putString("States/HoodedShooter", state.name());
