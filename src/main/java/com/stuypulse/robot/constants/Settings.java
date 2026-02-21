@@ -195,5 +195,7 @@ public interface Settings {
     public interface Vision {
             Vector<N3> MT1_STDEV = VecBuilder.fill(0.5, 0.5, 1.0); 
             Vector<N3> MT2_STDEV = VecBuilder.fill(0.7, 0.7, 694694); 
+            int RESET_IMU_INDEX = 1;
+            int IMU_ASSIST_MODE = 4;
     }
 }
