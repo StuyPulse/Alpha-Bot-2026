@@ -8,6 +8,7 @@ package com.stuypulse.robot.util.hoodedshooter;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.FerryRPMInterpolation;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
@@ -21,12 +22,14 @@ import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class HoodAngleCalculator {
     public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
     public static InterpolatingDoubleTreeMap distanceRPMInterpolator;
-
+    public static InterpolatingDoubleTreeMap ferryingDistanceRPMInterpolator;
+ 
     static {
         distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
         for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
@@ -38,6 +41,13 @@ public class HoodAngleCalculator {
         distanceRPMInterpolator = new InterpolatingDoubleTreeMap();
         for (double[] pair : RPMInterpolation.distanceRPMInterpolationValues) {
             distanceRPMInterpolator.put(pair[0], pair[1]);
+        }
+    }
+
+    static {
+        ferryingDistanceRPMInterpolator = new InterpolatingDoubleTreeMap();
+        for(double[] pair: FerryRPMInterpolation.distanceRPMInterpolationValues) {
+            ferryingDistanceRPMInterpolator.put(pair[0], pair[1]);
         }
     }
 
@@ -69,7 +79,24 @@ public class HoodAngleCalculator {
 
             double targetRPM = distanceRPMInterpolator.get(distanceMeters);
 
-            SmartDashboard.putNumber("HoodedShooter/Interpolated RPM ", targetRPM);
+            SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", targetRPM);
+            
+            return targetRPM;
+        };
+    }
+
+    public static Supplier<Double> interpolateFerryingRPM() {
+        return () -> {
+            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+            Translation2d currentPose = swerve.getTurretPose().getTranslation();
+            Translation2d cornerPose = Field.getFerryZonePose(currentPose).getTranslation();
+
+            double distanceMeters = cornerPose.getDistance(currentPose);
+
+            double targetRPM = ferryingDistanceRPMInterpolator.get(distanceMeters);
+
+            SmartDashboard.putNumber("HoodedShooter/Interpolated Ferrying RPM", targetRPM);
             
             return targetRPM;
         };

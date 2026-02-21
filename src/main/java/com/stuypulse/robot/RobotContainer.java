@@ -129,7 +129,19 @@ public class RobotContainer {
                         .alongWith(new FeederStop()));
 
         driver.getBottomButton()
-                .onTrue(new HoodedShooterInterpolation());
+                .onTrue(new HoodedShooterFerry()
+                        .alongWith(new TurretFerry())
+                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))
+                        .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance())
+                                .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
+                                .andThen(new SpindexerRun().onlyIf(() -> feeder.atTolerance() && hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance())))      
+                )
+                .onFalse(new SpindexerStop()
+                        // .alongWith(new HoodedShooterStow())
+                        .alongWith(new FeederStop()));
+
+        // driver.getBottomButton()
+        //         .onTrue(new HoodedShooterInterpolation());
 
         driver.getRightButton()
                 .onTrue(new HoodedShooterShoot())

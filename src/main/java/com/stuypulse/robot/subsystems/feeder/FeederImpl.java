@@ -53,7 +53,10 @@ public class FeederImpl extends Feeder {
             motor.getConfigurator().apply(new Slot0Configs()
                 .withKP(Gains.Feeder.kP.get())
                 .withKI(Gains.Feeder.kI.get())
-                .withKD(Gains.Feeder.kD.get()));
+                .withKD(Gains.Feeder.kD.get())
+                .withKS(Gains.Feeder.kS)
+                .withKV(Gains.Feeder.kV)
+                .withKA(Gains.Feeder.kA));
             lastKP = Gains.Feeder.kP.get();
             lastKI = Gains.Feeder.kI.get();
             lastKD = Gains.Feeder.kD.get();

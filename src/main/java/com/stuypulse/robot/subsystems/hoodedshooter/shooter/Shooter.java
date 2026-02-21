@@ -58,7 +58,7 @@ public abstract class Shooter extends SubsystemBase {
         return switch(state) {
             case STOP -> 0;
             case SHOOT -> getShootRPM();
-            case FERRY -> getFerryRPM();
+            case FERRY -> HoodAngleCalculator.interpolateFerryingRPM().get();
             case REVERSE -> Settings.HoodedShooter.ShooterRPMS.REVERSE;
             case HUB -> Settings.HoodedShooter.ShooterRPMS.HUB_RPM;
             case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
@@ -71,6 +71,10 @@ public abstract class Shooter extends SubsystemBase {
         return Settings.HoodedShooter.SHOOT_RPM.get(); // will return different speeds in future based on distance to hub
     }
 
+    /**
+     * DEPRECATED FR
+     * @return
+     */
     public double getFerryRPM() {
         return Settings.HoodedShooter.FERRY_RPM.get(); 
     }

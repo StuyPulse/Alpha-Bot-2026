@@ -245,6 +245,13 @@ public class TurretImpl extends Turret {
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
 
+            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+            Translation2d currentPose = swerve.getTurretPose().getTranslation();
+            Translation2d cornerPose = Field.getFerryZonePose(currentPose).getTranslation();
+
+            SmartDashboard.putNumber("Turret/Dist from corner", cornerPose.getDistance(currentPose));
+
             // Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
             // Translation2d turretPose = robotPose.getTranslation().plus(Constants.Turret.TURRET_OFFSET.getTranslation().rotateBy(robotPose.getRotation()));
 

@@ -68,6 +68,12 @@ public interface Settings {
         double SHOOTER_TOLERANCE_RPM = 500.0;
         double HOOD_TOLERANCE_DEG = 0.30; //.3
 
+        public interface FerryRPMInterpolation {
+            double[][] distanceRPMInterpolationValues = {
+                {3.79, 3450} // DONE ON 2/20
+            };
+        }
+
         public interface AngleInterpolation {
             double[][] distanceAngleInterpolationValues = {
                 {1.30, Units.degreesToRadians(16.5)},

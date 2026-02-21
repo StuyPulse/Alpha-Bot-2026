@@ -53,7 +53,7 @@ public abstract class Hood extends SubsystemBase{
     public Rotation2d getTargetAngle() {
         return switch(state) {
             case STOW -> Rotation2d.fromDegrees(7.0);//Constants.HoodedShooter.Hood.MIN_ANGLE;
-            case FERRY -> Rotation2d.fromDegrees(30);
+            case FERRY -> Rotation2d.fromDegrees(35);
             // case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
             case SHOOT -> Rotation2d.fromDegrees(Settings.HoodedShooter.SHOOT_ANGLE.get());
             case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;

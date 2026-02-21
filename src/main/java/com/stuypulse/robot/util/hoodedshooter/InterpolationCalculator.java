@@ -20,7 +20,6 @@ public class InterpolationCalculator {
             this.distanceInMetersToCenterOfHub = distanceInMetersToCenterOfHub;
         }
 
-
        @Override
         public ShotInformation interpolate(ShotInformation endValue, double t) {
             return new ShotInformation(

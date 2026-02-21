@@ -41,7 +41,7 @@ public class HoodedShooter extends SubsystemBase {
     public enum HoodedShooterState {
         STOW(HoodState.STOW, ShooterState.SHOOT),
         SHOOT(HoodState.SHOOT, ShooterState.SHOOT),
-        FERRY(HoodState.FERRY, ShooterState.FERRY),
+        FERRY(HoodState.FERRY, ShooterState.SHOOT), //CHANGE TO SHOOTERSTATE.FERRY
         REVERSE(HoodState.SHOOT, ShooterState.REVERSE),
         HUB(HoodState.HUB, ShooterState.HUB),
         LEFT_CORNER(HoodState.LEFT_CORNER, ShooterState.LEFT_CORNER),

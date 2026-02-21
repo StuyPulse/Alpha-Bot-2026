@@ -59,7 +59,7 @@ public abstract class Turret extends SubsystemBase {
         return switch (getState()) {
             case IDLE -> getAngle(); 
             case ZERO -> Rotation2d.kZero;
-            case FERRYING -> Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
+            case FERRYING -> getFerryAngle(); //Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
             case SHOOTING -> getScoringAngle();
             case HUB -> Settings.Turret.HUB;
             case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
