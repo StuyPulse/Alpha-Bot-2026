@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.5167938931297718,
-        "y": 0.6290935114503815
+        "x": 3.7296204033160913,
+        "y": 5.968082061068702
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.778958199431634,
-        "y": 0.6379571783462319
+        "x": 3.9920262726131046,
+        "y": 5.956602493249752
       },
       "isLocked": false,
-      "linkedName": "HP Auto Start"
+      "linkedName": "Top Bump Start"
     },
     {
       "anchor": {
-        "x": 0.47072519083969466,
-        "y": 0.6290935114503815
+        "x": 0.6632502965545264,
+        "y": 5.968082061068702
       },
       "prevControl": {
-        "x": 2.689380405136211,
-        "y": 0.6275468757575534
+        "x": 1.613412361420885,
+        "y": 5.968117899160344
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "HP"
+      "linkedName": "Depot Collect"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
   "folder": "Misc",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

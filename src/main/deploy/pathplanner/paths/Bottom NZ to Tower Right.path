@@ -8,27 +8,52 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.763712930011864,
-        "y": 0.32845788849347635
+        "x": 6.5485290628707,
+        "y": 0.4683274021352313
       },
       "isLocked": false,
       "linkedName": "NZ Bottom Center"
     },
     {
       "anchor": {
-        "x": 4.370362595419848,
-        "y": 0.4282538167938924
+        "x": 4.579596678529064,
+        "y": 0.43604982206405685
       },
       "prevControl": {
-        "x": 7.274169847328244,
-        "y": 0.47009541984732894
+        "x": 6.558452312157588,
+        "y": 0.5020116765183412
+      },
+      "nextControl": {
+        "x": 2.965717674970344,
+        "y": 0.382253855278766
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.1258956109134053,
+        "y": 2.5448517200474496
+      },
+      "prevControl": {
+        "x": 2.1695373665480435,
+        "y": 0.4037722419928822
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Bottom Trench Score"
+      "linkedName": "Tower Right 1"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.0510046367851622,
+      "rotationDegrees": 90.0
+    },
+    {
+      "waypointRelativePos": 1.3261205564142173,
+      "rotationDegrees": 90.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -42,10 +67,10 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": "To Score",
+  "folder": "To Tower",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 90.0

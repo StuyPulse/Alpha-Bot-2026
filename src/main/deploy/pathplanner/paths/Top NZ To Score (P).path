@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.47072519083969466,
-        "y": 7.214961832056345
+        "x": 8.259240806642943,
+        "y": 4.43846975088968
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.470820386808089,
-        "y": 6.89511093629359
+        "x": 6.849786476868328,
+        "y": 7.956725978647688
       },
       "isLocked": false,
-      "linkedName": "Depot Side"
+      "linkedName": "NZ Top Center (P)"
     },
     {
       "anchor": {
-        "x": 0.47072519083969466,
-        "y": 5.968082061068702
+        "x": 3.5921087786259545,
+        "y": 7.63337786259542
       },
       "prevControl": {
-        "x": 0.4743935848742669,
-        "y": 6.508802148589976
+        "x": 6.623843416370107,
+        "y": 7.655468564650059
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Collect"
+      "linkedName": "Top Trench Score"
     }
   ],
   "rotationTargets": [],
@@ -33,8 +33,8 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 5.75,
+    "maxAcceleration": 6.75,
     "maxAngularVelocity": 400.0,
     "maxAngularAcceleration": 900.0,
     "nominalVoltage": 12.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Misc",
+  "folder": "To Score",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": -90.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }
