@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.constants;
 
+import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
@@ -14,8 +15,6 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
-
-import com.pathplanner.lib.path.PathConstraints;
 
 /*-
  * File containing tunable settings for every subsystem on the robot.
@@ -97,7 +96,7 @@ public interface Settings {
             };
         }
 
-        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.00);
+        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
 
         public interface ShooterRPMS {
             public final double REVERSE = -0.0;
@@ -123,6 +122,9 @@ public interface Settings {
         Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
         Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
 
+        double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
+        Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(620);
+        Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-620);
     }
 
     public interface Swerve {

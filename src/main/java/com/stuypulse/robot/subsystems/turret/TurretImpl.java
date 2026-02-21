@@ -6,6 +6,11 @@
 package com.stuypulse.robot.subsystems.turret;
 
 
+import java.util.Optional;
+
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.hardware.CANcoder;
+import com.ctre.phoenix6.hardware.TalonFX;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Motors;
@@ -13,20 +18,13 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.robot.util.turret.CalculateTurretAngle;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
-import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
-import com.ctre.phoenix6.controls.PositionVoltage;
-import com.ctre.phoenix6.hardware.CANcoder;
-import com.ctre.phoenix6.hardware.TalonFX;
-import java.util.Optional;
 
 public class TurretImpl extends Turret {
     private final TalonFX motor;
@@ -97,6 +95,10 @@ public class TurretImpl extends Turret {
         final double turretAngle = (crt_pos / (double) Constants.Turret.BigGear.TEETH);
 
         return Rotation2d.fromRotations(turretAngle);
+    }
+
+    public Rotation2d getVectorSpaceAngle() {
+        return CalculateTurretAngle.getAbsoluteAngle(getEncoderPos17t().getDegrees(), getEncoderPos18t().getDegrees());
     }
     
     public Rotation2d getEasyCRT() {
