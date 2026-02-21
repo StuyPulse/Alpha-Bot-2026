@@ -69,7 +69,9 @@ public interface Settings {
 
         public interface FerryRPMInterpolation {
             double[][] distanceRPMInterpolationValues = {
-                {3.79, 3450} // DONE ON 2/20
+                {4.97, 3310},
+                {5.15, 3350}
+                
             };
         }
 

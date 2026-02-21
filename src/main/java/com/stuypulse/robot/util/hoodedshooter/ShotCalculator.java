@@ -201,11 +201,13 @@ public final class ShotCalculator {
             virtualTranslation.getX() - turretTranslation.getX() 
         );
         
-        yaw *= Robot.isReal() ? -1 : 1;
+        Rotation2d targetTurretAngle = Robot.isReal() ? 
+            Rotation2d.fromRadians(-yaw).plus(robotPose.getRotation()) :
+            Rotation2d.fromRadians(yaw).minus(robotPose.getRotation());
 
         return new SOTMSolution(
             sol.targetHoodAngle(),
-            Rotation2d.fromRadians(yaw).minus(robotPose.getRotation()),
+            targetTurretAngle,
             virtualPose,
             sol.flightTimeSeconds()
         );

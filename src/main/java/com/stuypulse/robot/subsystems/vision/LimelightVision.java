@@ -163,6 +163,8 @@ public class LimelightVision extends SubsystemBase{
 
                     SmartDashboard.putString("Vision/MegaTag Mode", megaTagMode.toString());
                         SmartDashboard.putNumber("Vision/Robot Yaw", LimelightHelpers.getIMUData(limelightName).robotYaw);
+
+                    SmartDashboard.putString("Vision/IMU mode", getIMUData()[0].toString()); //only 1 camera on alpha, so will need to change on Big T
                 }
             }
         }
