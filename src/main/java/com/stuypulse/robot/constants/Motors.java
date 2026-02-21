@@ -23,6 +23,7 @@ import com.ctre.phoenix6.configs.Slot2Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
@@ -125,23 +126,33 @@ public interface Motors {
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
                 // .withMotionProfile(Settings.Turret.MAX_VEL.getRotations(), Settings.Turret.MAX_ACCEL.getRotations());
 
+        CANCoderConfig turretEncoder17t = new CANCoderConfig()
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+            .withAbsoluteSensorDiscontinuityPoint(1)
+            .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations());
+
+        CANCoderConfig turretEncoder18t = new CANCoderConfig()
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+            .withAbsoluteSensorDiscontinuityPoint(1)
+            .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations());
+
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
                 .withForwardSoftLimitEnable(true)
                 .withReverseSoftLimitEnable(true)
                 .withForwardSoftLimitThreshold(0.25) // 0.75
                 .withReverseSoftLimitThreshold(-0.25); // -0.66
 
-        CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
-                .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                        .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
+        // CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
+        //         .withMagnetSensor(new MagnetSensorConfigs()
+        //                 .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+        //                 .withAbsoluteSensorDiscontinuityPoint(1)
+        //                 .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
 
-        CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
-                .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
-                        .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
+        // CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
+        //         .withMagnetSensor(new MagnetSensorConfigs()
+        //                 .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+        //                 .withAbsoluteSensorDiscontinuityPoint(1)
+        //                 .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
     }
 
     public interface Feeder {
@@ -153,6 +164,48 @@ public interface Motors {
                 .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
                 .withPIDConstants(Gains.Feeder.kP.get(), Gains.Feeder.kI.get(), Gains.Feeder.kD.get(), 0)
                 .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
+    }
+
+    public static class CANCoderConfig {
+        private final CANcoderConfiguration configuration = new CANcoderConfiguration();
+        private final MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+
+        public void configure(CANcoder encoder) {
+            // We want to reset configs here before applying configs; prevents unwanted configs from persisting
+            CANcoderConfiguration defaultConfig = new CANcoderConfiguration();
+            encoder.getConfigurator().apply(defaultConfig);
+
+            encoder.getConfigurator().apply(configuration);
+        }
+
+        public CANcoderConfiguration getConfiguration() {
+            return this.configuration;
+        }
+
+        // MAGNET SENSOR CONFIGS
+        public CANCoderConfig withSensorDirection(SensorDirectionValue sensorDirection) {
+            magnetSensorConfigs.SensorDirection = sensorDirection;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
+
+        public CANCoderConfig withAbsoluteSensorDiscontinuityPoint(double discontinuityPoint) {
+            magnetSensorConfigs.AbsoluteSensorDiscontinuityPoint = discontinuityPoint;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
+
+        public CANCoderConfig withMagnetOffset(double magnetOffset) {
+            magnetSensorConfigs.MagnetOffset = magnetOffset;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
     }
 
     public static class TalonFXConfig {
@@ -182,9 +235,13 @@ public interface Motors {
             motor.getConfigurator().apply(configuration);
         }
 
+        public TalonFXConfiguration getConfiguration() {
+            return this.configuration;
+        }
+
         // SMARTNUMBER TUNABLE GAINS FOR TALONFX MOTOR CONTROLLERS
         // Note that this should ONLY be used during testing/debugging and not for competition code
-        // Provide a double supplier using {SmartNumberObject}::get, or use () -> {constant} for terms that do not need to be tuned
+        // Provide a double supplier using () -> {SmartNumberObject}.get(). Use () -> {constant} for terms that do not need to be tuned
         public void updateGainsConfig(TalonFX motor, int slot, DoubleSupplier kP, DoubleSupplier kI, DoubleSupplier kD, DoubleSupplier kS, DoubleSupplier kV, DoubleSupplier kA) {
             if (slot != 0 && slot != 1 && slot != 2) {
                 return;
@@ -308,10 +365,6 @@ public interface Motors {
             configuration.withSlot2(slot2Configs);
 
             return this;
-        }
-
-        public TalonFXConfiguration getConfiguration() {
-            return this.configuration;
         }
 
         // MOTOR OUTPUT CONFIGS

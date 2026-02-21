@@ -15,7 +15,6 @@ import com.stuypulse.robot.util.SysId;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import java.util.Optional;
@@ -48,9 +47,9 @@ public class FeederImpl extends Feeder {
         Motors.Feeder.FEEDER_MOTOR_CONFIG.updateGainsConfig(
             motor, 
             0, 
-            Gains.Feeder.kP::get, 
-            Gains.Feeder.kI::get,
-            Gains.Feeder.kD::get,
+            () -> Gains.Feeder.kP.get(), 
+            () -> Gains.Feeder.kI.get(),
+            () -> Gains.Feeder.kD.get(),
             () -> Gains.Feeder.kS,
             () -> Gains.Feeder.kV,
             () -> Gains.Feeder.kA

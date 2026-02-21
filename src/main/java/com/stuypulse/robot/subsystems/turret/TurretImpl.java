@@ -42,8 +42,11 @@ public class TurretImpl extends Turret {
         encoder18t = new CANcoder(Ports.Turret.ENCODER18T, Ports.bus);
 
         Motors.Turret.turretMotor.configure(motor);
-        encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
-        encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
+        Motors.Turret.turretEncoder17t.configure(encoder17t);
+        Motors.Turret.turretEncoder18t.configure(encoder18t);
+
+        // encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
+        // encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
 
         // motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
 
@@ -63,45 +66,8 @@ public class TurretImpl extends Turret {
         return Rotation2d.fromRotations(this.encoder18t.getAbsolutePosition().getValueAsDouble());
     }
 
-    public Rotation2d getAbsoluteTurretAngle() {
-        final int inverseMod17t = 1;
-        final int inverseMod18t = -1;
-
-        final Rotation2d encoder17tPosition = getEncoderPos17t();
-        final double numberOfGearTeethRotated17 = (encoder17tPosition.getRotations()
-                * (double) Constants.Turret.Encoder17t.TEETH);
-
-        final Rotation2d encoder18tPosition = getEncoderPos18t();
-        final double numberOfGearTeethRotated18 = (encoder18tPosition.getRotations()
-                * (double) Constants.Turret.Encoder18t.TEETH);
-
-        final double crt_Partial17 = numberOfGearTeethRotated17 * inverseMod17t * Constants.Turret.Encoder17t.TEETH;
-        final double crt_Partial18 = numberOfGearTeethRotated18 * inverseMod18t * Constants.Turret.Encoder18t.TEETH;
-
-        double crt_pos = (crt_Partial17 + crt_Partial18)
-                % (Constants.Turret.Encoder17t.TEETH * Constants.Turret.Encoder18t.TEETH);
-
-        // Java's % operator is not actually the same as the modulo operator, the lines below account for that 
-        crt_pos = (crt_pos < 0) ? (crt_pos + Constants.Turret.Encoder17t.TEETH * Constants.Turret.Encoder18t.TEETH)
-                : crt_pos;
-
-        final double turretAngle = (crt_pos / (double) Constants.Turret.BigGear.TEETH);
-
-        return Rotation2d.fromRotations(turretAngle);
-    }
-
     public Rotation2d getVectorSpaceAngle() {
         return CalculateTurretAngle.getAbsoluteAngle(getEncoderPos17t().getDegrees(), getEncoderPos18t().getDegrees());
-    }
-
-    @Override
-    public Rotation2d getAngle() {
-        return Rotation2d.fromDegrees(motor.getPosition().getValueAsDouble());
-    }
-
-    @Override
-    public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
     }
 
     private double getDelta(double target, double current) {
@@ -117,6 +83,29 @@ public class TurretImpl extends Turret {
 
     public void seedTurret() {
         motor.setPosition(0.0);
+    }
+
+    public void zeroEncoders() {
+        double encoderPos17T = encoder17t.getAbsolutePosition().getValueAsDouble();
+        double encoderPos18T = encoder18t.getAbsolutePosition().getValueAsDouble();
+        double currentOffset17T = Motors.Turret.turretEncoder17t.getConfiguration().MagnetSensor.MagnetOffset;
+        double currentOffset18T = Motors.Turret.turretEncoder18t.getConfiguration().MagnetSensor.MagnetOffset;
+
+        double newOffset17T = currentOffset17T - encoderPos17T;
+        double newOffset18T = currentOffset18T - encoderPos18T;
+
+        Motors.Turret.turretEncoder17t.withMagnetOffset(newOffset17T);
+        Motors.Turret.turretEncoder17t.withMagnetOffset(newOffset18T);
+    }
+
+    @Override
+    public Rotation2d getAngle() {
+        return Rotation2d.fromDegrees(motor.getPosition().getValueAsDouble());
+    }
+
+    @Override
+    public boolean atTargetAngle() {
+        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
     }
     
     @Override
@@ -177,5 +166,32 @@ public class TurretImpl extends Turret {
 
     private void setVoltageOverride(Optional<Double> volts) {
         this.voltageOverride = volts;
+    }
+
+    public Rotation2d getAbsoluteTurretAngle() {
+        final int inverseMod17t = 1;
+        final int inverseMod18t = -1;
+
+        final Rotation2d encoder17tPosition = getEncoderPos17t();
+        final double numberOfGearTeethRotated17 = (encoder17tPosition.getRotations()
+                * (double) Constants.Turret.Encoder17t.TEETH);
+
+        final Rotation2d encoder18tPosition = getEncoderPos18t();
+        final double numberOfGearTeethRotated18 = (encoder18tPosition.getRotations()
+                * (double) Constants.Turret.Encoder18t.TEETH);
+
+        final double crt_Partial17 = numberOfGearTeethRotated17 * inverseMod17t * Constants.Turret.Encoder17t.TEETH;
+        final double crt_Partial18 = numberOfGearTeethRotated18 * inverseMod18t * Constants.Turret.Encoder18t.TEETH;
+
+        double crt_pos = (crt_Partial17 + crt_Partial18)
+                % (Constants.Turret.Encoder17t.TEETH * Constants.Turret.Encoder18t.TEETH);
+
+        // Java's % operator is not actually the same as the modulo operator, the lines below account for that 
+        crt_pos = (crt_pos < 0) ? (crt_pos + Constants.Turret.Encoder17t.TEETH * Constants.Turret.Encoder18t.TEETH)
+                : crt_pos;
+
+        final double turretAngle = (crt_pos / (double) Constants.Turret.BigGear.TEETH);
+
+        return Rotation2d.fromRotations(turretAngle);
     }
 }

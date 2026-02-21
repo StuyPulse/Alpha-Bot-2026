@@ -5,10 +5,22 @@
 /***************************************************************/
 package com.stuypulse.robot.commands.turret;
 
-import com.stuypulse.robot.subsystems.turret.Turret.TurretState;
+import com.stuypulse.robot.subsystems.turret.Turret;
 
-public class TurretZero extends TurretSetState {
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+
+public class TurretZero extends InstantCommand {
+
+    private final Turret turret;
+
     public TurretZero() {
-        super(TurretState.ZERO);
+        this.turret = Turret.getInstance();
+
+        addRequirements(turret);
+    }
+
+    @Override
+    public void initialize() {
+        turret.zeroEncoders();
     }
 }

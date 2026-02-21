@@ -78,11 +78,6 @@ public class TurretSim extends Turret {
         return Rotation2d.fromRadians(sim.getOutput(0));
     }
 
-    @Override
-    public void seedTurret() {
-        return;
-    }
-
     private double getAngularVelocityRadPerSec() {
         return sim.getOutput(1);
     }
@@ -138,4 +133,10 @@ public class TurretSim extends Turret {
                 () -> sim.getInput(0),
                 getInstance());
     }
+
+    @Override
+    public void seedTurret() {}
+
+    @Override
+    public void zeroEncoders() {}
 }
