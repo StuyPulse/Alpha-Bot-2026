@@ -46,7 +46,8 @@ public class HoodedShooter extends SubsystemBase {
         HUB(HoodState.HUB, ShooterState.HUB),
         LEFT_CORNER(HoodState.LEFT_CORNER, ShooterState.LEFT_CORNER),
         RIGHT_CORNER(HoodState.RIGHT_CORNER, ShooterState.RIGHT_CORNER),
-        INTERPOLATION(HoodState.INTERPOLATION, ShooterState.INTERPOLATION);
+        INTERPOLATION(HoodState.INTERPOLATION, ShooterState.INTERPOLATION),
+        SOTM(HoodState.SOTM, ShooterState.INTERPOLATION);
 
         private HoodState hoodState;
         private ShooterState shooterState;
@@ -101,6 +102,8 @@ public class HoodedShooter extends SubsystemBase {
 
     @Override
     public void periodic() {
+        HoodAngleCalculator.updateSOTMSolution();
+
         SmartDashboard.putString("HoodedShooter/State", state.name());
         SmartDashboard.putString("States/HoodedShooter", state.name());
 

@@ -35,7 +35,8 @@ public abstract class Hood extends SubsystemBase{
         LEFT_CORNER,
         RIGHT_CORNER,
         IDLE,
-        INTERPOLATION;
+        INTERPOLATION,
+        SOTM;
     }
 
     public Hood() {
@@ -60,6 +61,7 @@ public abstract class Hood extends SubsystemBase{
             case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
             case INTERPOLATION -> HoodAngleCalculator.interpolateHoodAngle().get();
+            case SOTM -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
             case IDLE -> getHoodAngle();
         };
     }

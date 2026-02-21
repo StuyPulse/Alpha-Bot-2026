@@ -97,7 +97,7 @@ public interface Settings {
             };
         }
 
-        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
+        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.00);
 
         public interface ShooterRPMS {
             public final double REVERSE = -0.0;

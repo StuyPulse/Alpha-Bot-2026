@@ -13,6 +13,7 @@ import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 import com.stuypulse.robot.util.turret.TurretVisualizer;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -48,6 +49,7 @@ public abstract class Turret extends SubsystemBase {
         IDLE,
         ZERO,
         SHOOTING,
+        SOTM,
         FERRYING,
         HUB,
         LEFT_CORNER,
@@ -61,6 +63,7 @@ public abstract class Turret extends SubsystemBase {
             case ZERO -> Rotation2d.kZero;
             case FERRYING -> getFerryAngle(); //Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
             case SHOOTING -> getScoringAngle();
+            case SOTM -> HoodAngleCalculator.calculateTurretAngleSOTM().get();
             case HUB -> Settings.Turret.HUB;
             case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
             case TESTING -> driverInputToAngle();

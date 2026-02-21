@@ -5,43 +5,45 @@
 /***************************************************************/
 package com.stuypulse.robot.util.hoodedshooter;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.FerryRPMInterpolation;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.AlignAngleSolution;
+import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.SOTMSolution;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 
 public class HoodAngleCalculator {
-    public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
-    public static InterpolatingDoubleTreeMap distanceRPMInterpolator;
+    
+    public static SOTMSolution sol;
+
+    private static FieldObject2d hubPose2d;
+    private static FieldObject2d virtualHubPose2d;
+    private static FieldObject2d futureTurretPose2d;
+
     public static InterpolatingDoubleTreeMap ferryingDistanceRPMInterpolator;
- 
-    static {
-        distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
-        for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
-            distanceAngleInterpolator.put(pair[0], pair[1]);
-        }
-    }
+
 
     static {
-        distanceRPMInterpolator = new InterpolatingDoubleTreeMap();
-        for (double[] pair : RPMInterpolation.distanceRPMInterpolationValues) {
-            distanceRPMInterpolator.put(pair[0], pair[1]);
-        }
+        hubPose2d = Field.FIELD2D.getObject("hubPose");
+        virtualHubPose2d = Field.FIELD2D.getObject("virtualHubPose");
+        futureTurretPose2d = Field.FIELD2D.getObject("futureTurretPose");
     }
 
     static {
@@ -55,12 +57,10 @@ public class HoodAngleCalculator {
         return () -> {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-            Translation2d hubPose = Field.getHubPose().getTranslation();
-            Translation2d currentPose = swerve.getTurretPose().getTranslation();
+            Pose2d hubPose = Field.getHubPose();
+            Pose2d turretPose = swerve.getTurretPose();
 
-            double distanceMeters = hubPose.getDistance(currentPose);
-
-            Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
+            Rotation2d targetAngle = ShotCalculator.solveInterpolation(turretPose, hubPose).targetHoodAngle();
 
             SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle", targetAngle.getDegrees());
 
@@ -72,12 +72,10 @@ public class HoodAngleCalculator {
         return () -> {
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-            Translation2d hubPose = Field.getHubPose().getTranslation();
-            Translation2d currentPose = swerve.getTurretPose().getTranslation();
+            Pose2d hubPose = Field.getHubPose();
+            Pose2d turretPose = swerve.getTurretPose();
 
-            double distanceMeters = hubPose.getDistance(currentPose);
-
-            double targetRPM = distanceRPMInterpolator.get(distanceMeters);
+            double targetRPM = ShotCalculator.solveInterpolation(turretPose, hubPose).targetRPM();
 
             SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", targetRPM);
             
@@ -102,37 +100,55 @@ public class HoodAngleCalculator {
         };
     }
 
+    public static void updateSOTMSolution() {
+
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+        
+        Pose2d robotPose = swerve.getPose();
+        Pose2d hubPose = Field.getHubPose();
+        
+        ChassisSpeeds robotRelativeSpeeds = swerve.getChassisSpeeds();
+        ChassisSpeeds fieldRelativeSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
+            robotRelativeSpeeds, 
+            robotPose.getRotation()
+        );
+
+        Pose2d futureTurretPose = swerve.getTurretPose().exp(
+            new Twist2d(
+                robotRelativeSpeeds.vxMetersPerSecond * Settings.HoodedShooter.UPDATE_DELAY.doubleValue(),
+                robotRelativeSpeeds.vyMetersPerSecond * Settings.HoodedShooter.UPDATE_DELAY.doubleValue(),
+                0
+            )
+        );
+        
+
+        SOTMSolution solution = ShotCalculator.solveShootOnTheMove(
+            futureTurretPose,
+            robotPose,
+            hubPose,
+            fieldRelativeSpeeds,
+            Constants.Align.MAX_ITERATIONS,
+            Constants.Align.TIME_TOLERANCE
+        );
+
+        sol = solution;
+
+        hubPose2d.setPose(Robot.isBlue() ? hubPose : Field.transformToOppositeAlliance(hubPose));
+        virtualHubPose2d.setPose((Robot.isBlue() ? sol.virtualPose() : Field.transformToOppositeAlliance(sol.virtualPose())));
+        futureTurretPose2d.setPose((Robot.isBlue() ? futureTurretPose : Field.transformToOppositeAlliance(futureTurretPose)));
+  
+  
+        SmartDashboard.putNumber("HoodedShooter/SOTM/calculated turret angle", sol.targetTurretAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/SOTM/calculated hood angle", sol.targetHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/SOTM/calculated flight time", sol.flightTime());
+        SmartDashboard.putNumber("HoodedShooter/SOTM/turret dist to virtual pose", futureTurretPose.getTranslation().getDistance(sol.virtualPose().getTranslation()));
+    }
+
     public static Supplier<Rotation2d> calculateHoodAngleSOTM() {
-        return () -> {
-            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-            HoodedShooter hdsr = HoodedShooter.getInstance();
-            
-            Pose2d currentPose = swerve.getPose();
-            
-            ChassisSpeeds robotRelSpeeds = swerve.getChassisSpeeds();
-            ChassisSpeeds fieldRelSpeeds = ChassisSpeeds.fromRobotRelativeSpeeds(
-                robotRelSpeeds, 
-                currentPose.getRotation()
-            );
-            
-            Pose3d targetPose = Field.hubCenter3d;
-            double axMetersPerSecondSquared = swerve.getPigeon2().getAccelerationX().getValueAsDouble();
-            double ayMetersPerSecondSquared = swerve.getPigeon2().getAccelerationY().getValueAsDouble();
-            
-            double shooterRPS = hdsr.getTargetRPM() / 60.0;
-            
-            AlignAngleSolution sol = ShotCalculator.solveShootOnTheFly(
-                new Pose3d(currentPose.plus(Constants.Turret.TURRET_OFFSET)),
-                targetPose,
-                axMetersPerSecondSquared,
-                ayMetersPerSecondSquared,
-                fieldRelSpeeds, // current speeds
-                shooterRPS,
-                Constants.Align.MAX_ITERATIONS,
-                Constants.Align.TIME_TOLERANCE
-            );
-            
-            return sol.launchPitchAngle();
-        };
+        return () -> sol.targetHoodAngle();
+    }
+
+    public static Supplier<Rotation2d> calculateTurretAngleSOTM() {
+        return () -> sol.targetTurretAngle();
     }
 }
