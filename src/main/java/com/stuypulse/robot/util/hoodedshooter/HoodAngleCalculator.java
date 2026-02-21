@@ -14,6 +14,7 @@ import com.stuypulse.robot.constants.Settings.HoodedShooter.FerryRPMInterpolatio
 import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+import com.stuypulse.robot.subsystems.turret.Turret;
 import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.SOTMSolution;
 
 import edu.wpi.first.math.geometry.Pose2d;
@@ -44,6 +45,7 @@ public class HoodAngleCalculator {
         hubPose2d = Field.FIELD2D.getObject("hubPose");
         virtualHubPose2d = Field.FIELD2D.getObject("virtualHubPose");
         futureTurretPose2d = Field.FIELD2D.getObject("futureTurretPose");
+        // sol = new SOTMSolution(Constants.HoodedShooter.Hood.MIN_ANGLE, Rotation2d.kZero, Field.getHubPose(), 0);
     }
 
     static {

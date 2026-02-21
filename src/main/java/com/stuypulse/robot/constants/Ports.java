@@ -35,8 +35,8 @@ public interface Ports {
 
     public interface Turret {
         int MOTOR = 50;
-        int ENCODER17T = 38;
-        int ENCODER18T = 21;
+        int ENCODER17T = 21;
+        int ENCODER18T = 38;
     }
 
     public interface Feeder {

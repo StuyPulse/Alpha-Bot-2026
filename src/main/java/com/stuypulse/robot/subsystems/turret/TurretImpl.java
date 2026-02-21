@@ -43,11 +43,11 @@ public class TurretImpl extends Turret {
         encoder18t = new CANcoder(Ports.Turret.ENCODER18T, Ports.bus);
 
         Motors.Turret.turretMotor.configure(motor);
-        Motors.Turret.turretEncoder17t.configure(encoder17t);
-        Motors.Turret.turretEncoder18t.configure(encoder18t);
+        MagnetSensorConfigs existingEncoder17TConfig = new MagnetSensorConfigs();
+        encoder17t.getConfigurator().refresh(existingEncoder17TConfig);
 
-        // encoder17t.getConfigurator().apply(Motors.Turret.turretEncoder17t);
-        // encoder18t.getConfigurator().apply(Motors.Turret.turretEncoder18t);
+        MagnetSensorConfigs existingEncoder18TConfig = new MagnetSensorConfigs();
+        encoder17t.getConfigurator().refresh(existingEncoder18TConfig);
 
         // motor.getConfigurator().apply(Motors.Turret.turretSoftwareLimitSwitchConfigs);
 
@@ -89,6 +89,10 @@ public class TurretImpl extends Turret {
     public void zeroEncoders() {
         double encoderPos17T = encoder17t.getAbsolutePosition().getValueAsDouble();
         double encoderPos18T = encoder18t.getAbsolutePosition().getValueAsDouble();
+        
+        encoder17t.getConfigurator().refresh(Motors.Turret.turretEncoder17t.getConfiguration().MagnetSensor);
+        encoder18t.getConfigurator().refresh(Motors.Turret.turretEncoder18t.getConfiguration().MagnetSensor);
+
         double currentOffset17T = Motors.Turret.turretEncoder17t.getConfiguration().MagnetSensor.MagnetOffset;
         double currentOffset18T = Motors.Turret.turretEncoder18t.getConfiguration().MagnetSensor.MagnetOffset;
 
@@ -100,9 +104,6 @@ public class TurretImpl extends Turret {
 
         Motors.Turret.turretEncoder17t.configure(encoder17t);
         Motors.Turret.turretEncoder18t.configure(encoder18t);
-        
-        encoder17t.getConfigurator().refresh(Motors.Turret.turretEncoder17t.getConfiguration().MagnetSensor);
-        encoder18t.getConfigurator().refresh(Motors.Turret.turretEncoder18t.getConfiguration().MagnetSensor);
     }
 
     @Override
@@ -144,7 +145,7 @@ public class TurretImpl extends Turret {
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-            SmartDashboard.putNumber("Turret/CRT Position (Rot)", getAbsoluteTurretAngle().getRotations());
+            // SmartDashboard.putNumber("Turret/CRT Position (Rot)", getAbsoluteTurretAngle().getRotations());
             SmartDashboard.putNumber("Turret/Relative Encoder Position (deg)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
@@ -156,7 +157,14 @@ public class TurretImpl extends Turret {
 
             SmartDashboard.putNumber("Turret/Dist from corner", cornerPose.getDistance(currentPose));
 
+            Field.FIELD2D.getObject("Ferry pose").setPose(Field.getFerryZonePose(currentPose));
+
             SmartDashboard.putNumber("Turret/Vector Space Solution", getVectorSpaceAngle().getDegrees());
+
+            // double encoder_a = encoder17t.getAbsolutePosition().getValueAsDouble();
+            // double encoder_b = encoder18t.getAbsolutePosition().getValueAsDouble();
+            // SmartDashboard.putNumber("Turret/Nickolai Solution", (encoder_a + Math.floor(((encoder_a * 17) - (encoder_b * 18) + 18) % 18)) * (17/90)*360);
+
         }
     }
 

@@ -26,9 +26,6 @@ public class CalculateTurretAngle {
         for (double angle = MIN_ANGLE_DEGREES; angle < MAX_ANGLE_DEGREES; angle += RESOLUTION) {
             mechanismAngles[i] = angle;
             values[i] = (((angle * gearRatio) % 360.0) + 360.0) % 360.0;
-            if (i < 30) {
-                System.out.println(angle + " " + values[i]);
-            }
             i++;
         }
 
@@ -58,8 +55,6 @@ public class CalculateTurretAngle {
         SmartDashboard.putNumber("Turret/Nearest Distance", leastDistance);
         SmartDashboard.putNumber("Turret/Encoder 17T Value passed to function", encoder17TValue);
         SmartDashboard.putNumber("Turret/Encoder 18T Value passed to function", encoder18TValue);
-
-        // SmartDashboard.putNumber("Turret/")
 
         return Rotation2d.fromDegrees(mechanismAngles[leastDistanceIndex]);
     }
