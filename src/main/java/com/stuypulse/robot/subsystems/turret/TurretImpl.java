@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.turret;
 
 import java.util.Optional;
 
+import com.ctre.phoenix6.configs.MagnetSensorConfigs;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -95,7 +96,13 @@ public class TurretImpl extends Turret {
         double newOffset18T = currentOffset18T - encoderPos18T;
 
         Motors.Turret.turretEncoder17t.withMagnetOffset(newOffset17T);
-        Motors.Turret.turretEncoder17t.withMagnetOffset(newOffset18T);
+        Motors.Turret.turretEncoder18t.withMagnetOffset(newOffset18T);
+
+        Motors.Turret.turretEncoder17t.configure(encoder17t);
+        Motors.Turret.turretEncoder18t.configure(encoder18t);
+        
+        encoder17t.getConfigurator().refresh(Motors.Turret.turretEncoder17t.getConfiguration().MagnetSensor);
+        encoder18t.getConfigurator().refresh(Motors.Turret.turretEncoder18t.getConfiguration().MagnetSensor);
     }
 
     @Override
