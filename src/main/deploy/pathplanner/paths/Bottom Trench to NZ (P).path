@@ -8,24 +8,24 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.968742586002373,
-        "y": 0.4468090154211143
+        "x": 8.689608540925267,
+        "y": 0.47908659549228905
       },
       "isLocked": false,
       "linkedName": "Bottom Trench Auto Start"
     },
     {
       "anchor": {
-        "x": 7.8073546856465015,
-        "y": 3.696085409252669
+        "x": 8.28075919335706,
+        "y": 3.6638078291814944
       },
       "prevControl": {
-        "x": 7.936465005931199,
-        "y": 0.7157888493475686
+        "x": 8.205444839857652,
+        "y": 0.3714946619217079
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "NZ Bottom Center"
+      "linkedName": "NZ Bottom Center (P)"
     }
   ],
   "rotationTargets": [],

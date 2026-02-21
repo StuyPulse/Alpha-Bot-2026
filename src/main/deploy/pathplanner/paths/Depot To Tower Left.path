@@ -3,37 +3,32 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.47072519083969466,
-        "y": 0.6290935114503815
+        "x": 0.6632502965545264,
+        "y": 5.968082061068702
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.922643129773897,
-        "y": 2.051708015262453
+        "x": 2.4169988137603804,
+        "y": 6.020071174377224
       },
       "isLocked": false,
-      "linkedName": "HP"
+      "linkedName": "Depot Collect"
     },
     {
       "anchor": {
-        "x": 0.47072519083969466,
-        "y": 7.214961832056345
+        "x": 1.1043772241992889,
+        "y": 4.933392645314354
       },
       "prevControl": {
-        "x": 2.746908396949469,
-        "y": 7.214961832056345
+        "x": 2.051186239620404,
+        "y": 5.030225385527876
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Depot Side"
+      "linkedName": "Tower Left 1"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.3673913043478265,
-      "rotationDegrees": 90.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [],
@@ -47,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Misc",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }
