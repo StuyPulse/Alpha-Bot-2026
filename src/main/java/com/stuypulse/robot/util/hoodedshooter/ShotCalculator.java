@@ -135,7 +135,7 @@ public final class ShotCalculator {
 
         Thus, we can make an initial guess for the flight time: the flight time if the robot were stationary
         We want our guess to converge such that the left side equals the right side:
-        (v_shooter) * t_guess = distance - v_robot * t_guess, which would make t_guess = flightTime
+        (v_shooter) * t_guess = distanceToVirtualPose = distance - v_robot * t_guess, which would make t_guess = flightTime
 
         We do the right side first using our inital guess, and then update t_guess with a new guess by 
         calculating the flightTime to that virtualPose.

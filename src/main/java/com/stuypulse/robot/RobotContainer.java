@@ -18,6 +18,7 @@ import com.stuypulse.robot.commands.feeder.FeederReverse;
 import com.stuypulse.robot.commands.feeder.FeederStop;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterFerry;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterInterpolation;
+import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterSOTM;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterShoot;
 import com.stuypulse.robot.commands.hoodedshooter.HoodedShooterStow;
 import com.stuypulse.robot.commands.spindexer.SpindexerReverse;
@@ -28,6 +29,7 @@ import com.stuypulse.robot.commands.swerve.SwerveResetHeading;
 import com.stuypulse.robot.commands.turret.TurretAnalog;
 import com.stuypulse.robot.commands.turret.TurretFerry;
 import com.stuypulse.robot.commands.turret.TurretIdle;
+import com.stuypulse.robot.commands.turret.TurretSOTM;
 import com.stuypulse.robot.commands.turret.TurretSeed;
 import com.stuypulse.robot.commands.turret.TurretShoot;
 import com.stuypulse.robot.commands.turret.TurretZero;
@@ -118,9 +120,20 @@ public class RobotContainer {
                         // .alongWith(new HoodedShooterStow())
                         .alongWith(new FeederStop()));
 
+        // driver.getLeftButton()
+        //         .whileTrue(new TurretShoot()
+        //                 .alongWith(new HoodedShooterInterpolation())
+        //                 .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))
+        //                 .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance())
+        //                         .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
+        //                         .andThen(new SpindexerRun().onlyIf(() -> feeder.atTolerance() && hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))))
+        //         .onFalse(new SpindexerStop()
+        //                 // .alongWith(new HoodedShooterStow())
+        //                 .alongWith(new FeederStop()));
+
         driver.getLeftButton()
-                .whileTrue(new TurretShoot()
-                        .alongWith(new HoodedShooterInterpolation())
+                .whileTrue(new TurretSOTM()
+                        .alongWith(new HoodedShooterSOTM())
                         .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))
                         .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance())
                                 .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
@@ -128,6 +141,7 @@ public class RobotContainer {
                 .onFalse(new SpindexerStop()
                         // .alongWith(new HoodedShooterStow())
                         .alongWith(new FeederStop()));
+
 
         driver.getBottomButton()
                 .onTrue(new HoodedShooterFerry()
