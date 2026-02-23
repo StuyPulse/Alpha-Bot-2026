@@ -57,7 +57,7 @@ public interface Motors {
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withPIDConstants(Gains.HoodedShooter.Hood.kP,Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
                 .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
         }
     }
