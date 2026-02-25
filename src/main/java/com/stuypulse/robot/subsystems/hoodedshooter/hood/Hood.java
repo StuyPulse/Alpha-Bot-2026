@@ -8,6 +8,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -60,7 +61,7 @@ public abstract class Hood extends SubsystemBase{
             case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;
             case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
-            case INTERPOLATION -> HoodAngleCalculator.interpolateHoodAngle().get();
+            case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetHoodAngle();
             case SOTM -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
             case IDLE -> getHoodAngle();
         };
@@ -82,6 +83,6 @@ public abstract class Hood extends SubsystemBase{
         SmartDashboard.putNumber("HoodedShooter/Hood/Target Angle", getTargetAngle().getDegrees());
         SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getHoodAngle().getDegrees());
 
-        SmartDashboard.putNumber("InterpolationTesting/Hood Interpolated Target Angle (deg)", HoodAngleCalculator.interpolateHoodAngle().get().getDegrees());
+        SmartDashboard.putNumber("InterpolationTesting/Hood Interpolated Target Angle (deg)", InterpolationCalculator.interpolateShotInfo().targetHoodAngle().getDegrees());
     }
 }

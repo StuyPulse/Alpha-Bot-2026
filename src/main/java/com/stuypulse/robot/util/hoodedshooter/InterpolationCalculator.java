@@ -1,43 +1,102 @@
 package com.stuypulse.robot.util.hoodedshooter;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.interpolation.Interpolatable;
-import edu.wpi.first.math.interpolation.InterpolatingTreeMap;
-import edu.wpi.first.math.interpolation.InverseInterpolator;
+import java.util.function.Supplier;
 
+import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.Field;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.FerryRPMInterpolation;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
+import com.stuypulse.robot.constants.Settings.HoodedShooter.TOFInterpolation;
+import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
+
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class InterpolationCalculator {
 
-    public static class ShotInformation implements Interpolatable<ShotInformation>{
-        private final Rotation2d angleOfHood;
-        private final double RPM;
-        private final double distanceInMetersToCenterOfHub;
+    public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
+    public static InterpolatingDoubleTreeMap distanceRPMInterpolator;
+    public static InterpolatingDoubleTreeMap distanceTOFInterpolator;
 
-        public ShotInformation(Rotation2d angleOfHood, double RPM, double distanceInMetersToCenterOfHub) {
-            this.angleOfHood = angleOfHood;
-            this.RPM = RPM;
-            this.distanceInMetersToCenterOfHub = distanceInMetersToCenterOfHub;
+    public static InterpolatingDoubleTreeMap ferryingDistanceRPMInterpolator;
+
+    static {
+        distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
+        for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
+            distanceAngleInterpolator.put(pair[0], pair[1]);
         }
 
-       @Override
-        public ShotInformation interpolate(ShotInformation endValue, double t) {
-            return new ShotInformation(
-                    new Rotation2d(MathUtil.interpolate(this.angleOfHood.getRadians(), endValue.angleOfHood.getRadians(), t)),
-                    MathUtil.interpolate(this.RPM, endValue.RPM, t),
-                    MathUtil.interpolate(this.distanceInMetersToCenterOfHub, endValue.distanceInMetersToCenterOfHub, t)
-            );
+        distanceRPMInterpolator = new InterpolatingDoubleTreeMap();
+        for (double[] pair : RPMInterpolation.distanceRPMInterpolationValues) {
+            distanceRPMInterpolator.put(pair[0], pair[1]);
+        }
+
+        distanceTOFInterpolator = new InterpolatingDoubleTreeMap();
+        for (double[] pair : TOFInterpolation.distanceTOFInterpolationValues) {
+            distanceTOFInterpolator.put(pair[0], pair[1]);
+        }
+
+        ferryingDistanceRPMInterpolator = new InterpolatingDoubleTreeMap();
+        for(double[] pair: FerryRPMInterpolation.distanceRPMInterpolationValues) {
+            ferryingDistanceRPMInterpolator.put(pair[0], pair[1]);
         }
     }
-
-    private InterpolatingTreeMap<Double, ShotInformation> linearInterpolation;
-    public InterpolationCalculator() {
-        linearInterpolation = new InterpolatingTreeMap<>(InverseInterpolator.forDouble(), ShotInformation::interpolate);
-        //linearInterpolation.put(key, value);
+    
+    
+    public record InterpolatedShotInfo(
+        Rotation2d targetHoodAngle,
+        double targetRPM,
+        double flightTimeSeconds) {
     }
 
-    public ShotInformation getInterpolation(double distance) {
-        return linearInterpolation.get(distance);
+    public static InterpolatedShotInfo interpolateShotInfo(){
+        return interpolateShotInfo(Field.getHubPose());
     }
 
+    public static InterpolatedShotInfo interpolateShotInfo(Pose2d targetPose) {
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+        Translation2d hubPose = targetPose.getTranslation();
+        Translation2d turretPose = swerve.getTurretPose().getTranslation();
+
+        double distanceMeters = turretPose.getDistance(hubPose);
+
+        Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
+        double targetRPM = distanceRPMInterpolator.get(distanceMeters);
+        double flightTime = distanceTOFInterpolator.get(distanceMeters);
+        
+
+        SmartDashboard.putNumber("HoodedShooter/Interpolated Target Angle", targetAngle.getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Interpolated RPM", targetRPM);
+        SmartDashboard.putNumber("HoodedShooter/Interpolated TOF", flightTime);
+
+        return new InterpolatedShotInfo(
+            targetAngle, 
+            targetRPM, 
+            flightTime
+        );
+    }
+
+    public static Supplier<Double> interpolateFerryingRPM() {
+        return () -> {
+            CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+
+            Translation2d currentPose = swerve.getTurretPose().getTranslation();
+            Translation2d cornerPose = Field.getFerryZonePose(currentPose).getTranslation();
+
+            double distanceMeters = cornerPose.getDistance(currentPose);
+
+            double targetRPM = ferryingDistanceRPMInterpolator.get(distanceMeters);
+
+            SmartDashboard.putNumber("HoodedShooter/Interpolated Ferrying RPM", targetRPM);
+            
+            return targetRPM;
+        };
+    }
+
+    
 }

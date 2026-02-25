@@ -98,6 +98,28 @@ public interface Settings {
             };
         }
 
+        public interface TOFInterpolation{
+            // double[][] distanceTOFInterpolationValues = {
+            //     {1.30, 0.0}, // seconds
+            //     {1.43, 0.0},
+            //     {2.15, 0.0},
+            //     {2.864967, 0.0},
+            //     {3.65, 0.0},
+            //     {4.43, 0.0},
+            //     {5.32, 0.0}
+            // };
+
+            double[][] distanceTOFInterpolationValues = {
+                {1.30, 1.0}, // seconds
+                {1.43, 1.0},
+                {2.15, 1.0},
+                {2.864967, 1.0},
+                {3.65, 1.0},
+                {4.43, 1.0},
+                {5.32, 1.0}
+            };
+        }
+
         SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
 
         public interface ShooterRPMS {

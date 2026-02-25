@@ -9,6 +9,7 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
 import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -58,12 +59,12 @@ public abstract class Shooter extends SubsystemBase {
         return switch(state) {
             case STOP -> 0;
             case SHOOT -> getShootRPM();
-            case FERRY -> HoodAngleCalculator.interpolateFerryingRPM().get();
+            case FERRY -> InterpolationCalculator.interpolateFerryingRPM().get();
             case REVERSE -> Settings.HoodedShooter.ShooterRPMS.REVERSE;
             case HUB -> Settings.HoodedShooter.ShooterRPMS.HUB_RPM;
             case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
             case RIGHT_CORNER -> Settings.HoodedShooter.ShooterRPMS.RIGHT_CORNER_RPM;
-            case INTERPOLATION -> HoodAngleCalculator.interpolateShooterRPM().get();
+            case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetRPM();
         };
     }
 
@@ -96,6 +97,6 @@ public abstract class Shooter extends SubsystemBase {
         SmartDashboard.putNumber("HoodedShooter/Shooter/Current RPM", getShooterRPM());
         SmartDashboard.putNumber("HoodedShooter/Shooter/Target RPM", getTargetRPM());
 
-        SmartDashboard.putNumber("InterpolationTesting/Shooter Interpolated Target RPM", HoodAngleCalculator.interpolateShooterRPM().get());
+        SmartDashboard.putNumber("InterpolationTesting/Shooter Interpolated Target RPM", InterpolationCalculator.interpolateShotInfo().targetRPM());
     }
 }

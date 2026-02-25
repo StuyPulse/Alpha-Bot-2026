@@ -9,6 +9,7 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.AngleInterpolation;
 import com.stuypulse.robot.constants.Settings.HoodedShooter.RPMInterpolation;
+import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator.InterpolatedShotInfo;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -20,28 +21,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public final class ShotCalculator {
     public static final double g = 9.81;
 
-    public static InterpolatingDoubleTreeMap distanceAngleInterpolator;
-    public static InterpolatingDoubleTreeMap distanceRPMInterpolator;
 
-    static {
-        distanceAngleInterpolator = new InterpolatingDoubleTreeMap();
-        for (double[] pair : AngleInterpolation.distanceAngleInterpolationValues) {
-            distanceAngleInterpolator.put(pair[0], pair[1]);
-        }
-    }
-
-    static {
-        distanceRPMInterpolator = new InterpolatingDoubleTreeMap();
-        for (double[] pair : RPMInterpolation.distanceRPMInterpolationValues) {
-            distanceRPMInterpolator.put(pair[0], pair[1]);
-        }
-    }
-
-    public record StationarySolution(
-        Rotation2d targetHoodAngle,
-        double targetRPM,
-        double flightTimeSeconds) {
-    }
+    // public record StationarySolution(
+    //     Rotation2d targetHoodAngle,
+    //     double targetRPM,
+    //     double flightTimeSeconds) {
+    // }
 
     // calculates the launch angle for a stationary robot to shoot into the pose
     // public static StationarySolution solveBallisticWithSpeed(
@@ -78,29 +63,6 @@ public final class ShotCalculator {
 
     //     return new StationarySolution(Rotation2d.fromRadians(launchAngle), time);
     // }
-
-    public static StationarySolution solveInterpolation(
-        Pose2d turretPose,
-        Pose2d targetPose) {
-        
-        double distanceMeters = turretPose.getTranslation().getDistance(targetPose.getTranslation());
-
-        Rotation2d targetHoodAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
-        double targetRPM = distanceRPMInterpolator.get(distanceMeters);
-
-        // Physics calculation for now, change if/when we interpolate flight time
-        double launchSpeed = 0.5 * targetRPM * (2*Math.PI / 60) * Constants.HoodedShooter.Shooter.FLYWHEEL_RADIUS; 
-        Rotation2d launchAngle = Rotation2d.kCCW_Pi_2.minus(targetHoodAngle);
-
-        double v_x = launchSpeed * Math.cos(launchAngle.getRadians());
-        double flightTime = distanceMeters / v_x;
-        
-        return new StationarySolution(
-            targetHoodAngle,
-            targetRPM,
-            flightTime
-        );
-    }
 
     public record SOTMSolution(
         Rotation2d targetHoodAngle,
@@ -151,10 +113,7 @@ public final class ShotCalculator {
         //     targetRPM
         // );
 
-        StationarySolution sol = solveInterpolation(
-            turretPose,
-            targetPose
-        );
+        InterpolatedShotInfo sol = InterpolationCalculator.interpolateShotInfo();
 
         
         double t_guess = sol.flightTimeSeconds();
@@ -178,10 +137,7 @@ public final class ShotCalculator {
             //     targetRPM
             // );
 
-            StationarySolution newSol = solveInterpolation(
-                turretPose,
-                virtualPose
-            );
+            InterpolatedShotInfo newSol = InterpolationCalculator.interpolateShotInfo(virtualPose);
 
             if (Math.abs(newSol.flightTimeSeconds() - t_guess) < timeTolerance) {
                 break;
