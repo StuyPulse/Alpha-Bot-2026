@@ -134,10 +134,10 @@ public class RobotContainer {
         driver.getRightButton()
                 .whileTrue(new TurretSOTM()
                         .alongWith(new HoodedShooterSOTM())
-                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))
-                        .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance())
+                        .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance() && turret.atTargetAngle()))
+                        .andThen(new FeederFeed().onlyIf(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance() && turret.atTargetAngle())
                                 .alongWith(new WaitUntilCommand(() -> feeder.atTolerance()))
-                                .andThen(new SpindexerRun().onlyIf(() -> feeder.atTolerance() && hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))))
+                                .andThen(new SpindexerRun().onlyIf(() -> feeder.atTolerance() && hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance() && turret.atTargetAngle()))))
                 .onFalse(new SpindexerStop()
                         // .alongWith(new HoodedShooterStow())
                         .alongWith(new FeederStop()));

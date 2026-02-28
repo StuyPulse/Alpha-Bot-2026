@@ -28,10 +28,7 @@ public interface Constants {
         }
     }
   
-    public interface Align {
-        int MAX_ITERATIONS = 5;
-        double TIME_TOLERANCE = 0.01;
-    }
+
 
     public interface Spindexer {
         public final double GEAR_RATIO = 40.0 / 12.0;

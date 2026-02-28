@@ -123,6 +123,8 @@ public final class ShotCalculator {
              
         for (int i = 0; i < maxIterations; i++) {
 
+            SmartDashboard.putNumber("HoodedShooter/SOTM/iteration #", i);
+
             double dx = fieldRelativeSpeeds.vxMetersPerSecond * t_guess;
             double dy = fieldRelativeSpeeds.vyMetersPerSecond * t_guess;
 

@@ -99,28 +99,23 @@ public interface Settings {
         }
 
         public interface TOFInterpolation{
-            // double[][] distanceTOFInterpolationValues = {
-            //     {1.30, 0.0}, // seconds
-            //     {1.43, 0.0},
-            //     {2.15, 0.0},
-            //     {2.864967, 0.0},
-            //     {3.65, 0.0},
-            //     {4.43, 0.0},
-            //     {5.32, 0.0}
-            // };
 
             double[][] distanceTOFInterpolationValues = {
-                {1.30, 1.0}, // seconds
-                {1.43, 1.0},
-                {2.15, 1.0},
-                {2.864967, 1.0},
-                {3.65, 1.0},
-                {4.43, 1.0},
-                {5.32, 1.0}
+                {1.30, 1.01}, // seconds
+                // {1.43, 0.0},
+                // {2.15, 0.0},
+                {2.864967, 1.1},
+                // {3.65, 0.0},
+                {4.43, 1.234},
+                {5.32, 1.267}
             };
         }
 
-        SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/ShootOnTheFly/update delay", 0.00);
+        public interface SOTM {
+            int MAX_ITERATIONS = 10;
+            double TIME_TOLERANCE = 0.00001;
+            SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.5);
+        }
 
         public interface ShooterRPMS {
             public final double REVERSE = -0.0;
@@ -156,7 +151,7 @@ public interface Settings {
         double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
         
         public interface Constraints {    
-            double MAX_VELOCITY_M_PER_S = 2.0;
+            double MAX_VELOCITY_M_PER_S = 1.0;
             double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
             double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
             double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);

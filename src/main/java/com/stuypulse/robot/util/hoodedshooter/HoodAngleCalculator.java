@@ -13,9 +13,11 @@ import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
 import com.stuypulse.robot.util.hoodedshooter.ShotCalculator.SOTMSolution;
+import com.stuypulse.stuylib.math.Vector2D;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
@@ -55,8 +57,21 @@ public class HoodAngleCalculator {
 
         Pose2d futureTurretPose = swerve.getTurretPose().exp(
             new Twist2d(
-                robotRelativeSpeeds.vxMetersPerSecond * Settings.HoodedShooter.UPDATE_DELAY.doubleValue(),
-                robotRelativeSpeeds.vyMetersPerSecond * Settings.HoodedShooter.UPDATE_DELAY.doubleValue(),
+                robotRelativeSpeeds.vxMetersPerSecond * Settings.HoodedShooter.SOTM.UPDATE_DELAY.doubleValue(),
+                robotRelativeSpeeds.vyMetersPerSecond * Settings.HoodedShooter.SOTM.UPDATE_DELAY.doubleValue(),
+                0
+            )
+        );
+
+        Vector2D oppositeDirection = new Vector2D(new Translation2d(
+            -robotRelativeSpeeds.vxMetersPerSecond,
+            -robotRelativeSpeeds.vyMetersPerSecond
+        )).normalize();
+
+        hubPose = hubPose.exp(
+            new Twist2d(
+                oppositeDirection.x * Field.HUB_RADIUS,
+                oppositeDirection.y * Field.HUB_RADIUS,
                 0
             )
         );
@@ -67,8 +82,8 @@ public class HoodAngleCalculator {
             robotPose,
             hubPose,
             fieldRelativeSpeeds,
-            Constants.Align.MAX_ITERATIONS,
-            Constants.Align.TIME_TOLERANCE
+            Settings.HoodedShooter.SOTM.MAX_ITERATIONS,
+            Settings.HoodedShooter.SOTM.TIME_TOLERANCE
         );
 
         sol = solution;
