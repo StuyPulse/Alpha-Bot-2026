@@ -69,6 +69,8 @@ public abstract class Feeder extends SubsystemBase{
 
     public abstract SysIdRoutine getSysIdRoutine();
 
+    public abstract boolean isStalling();
+
     public void periodic() {
         SmartDashboard.putString("Feeder/State", getState().name());
         SmartDashboard.putString("States/Feeder", getState().name());

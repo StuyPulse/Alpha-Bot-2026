@@ -99,4 +99,8 @@ public class FeederSim extends Feeder {
                 () -> sim.getInput(0),
                 getInstance());
     }
+
+    public boolean isStalling() {
+        return true;
+    }
 }

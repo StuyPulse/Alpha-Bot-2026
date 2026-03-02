@@ -11,6 +11,8 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
+import com.stuypulse.stuylib.streams.booleans.BStream;
+import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -25,6 +27,9 @@ public class FeederImpl extends Feeder {
     private Optional<Double> voltageOverride;
     private final VelocityVoltage controller;
 
+
+    private BStream isStalling;
+
     protected FeederImpl() {
         super();
         
@@ -33,11 +38,21 @@ public class FeederImpl extends Feeder {
 
         voltageOverride = Optional.empty();
         controller = new VelocityVoltage(getTargetRPM() / 60.0);
+
+        isStalling =  BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.Feeder.FEED_STALL_CURRENT)
+            .filtered(new BDebounce.Falling(0.5))
+            .filtered(new BDebounce.Rising(0.5));
+        
     }
 
     @Override
     public double getRPM() {
         return motor.getVelocity().getValueAsDouble() * 60.0;
+    }
+
+    @Override 
+    public boolean isStalling() {
+        return isStalling.get();
     }
 
     @Override
@@ -60,20 +75,24 @@ public class FeederImpl extends Feeder {
                 motor.stopMotor();
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
+            } else if (isStalling()) {
+                motor.setControl(controller.withVelocity(FeederState.REVERSE.getTargetRPM() / 60.0).withEnableFOC(true));
             } else {
                 motor.setControl(controller.withVelocity(getState().getTargetRPM() / 60.0).withEnableFOC(true));
             }
-        }
+            
+            }
 
-        if (Settings.DEBUG_MODE) {
-            SmartDashboard.putNumber("Feeder/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
-            SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
-            SmartDashboard.putNumber("Feeder/TESTING KP", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kP);
-            SmartDashboard.putNumber("Feeder/TESTING KI", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kI);
-            SmartDashboard.putNumber("Feeder/TESTING KD", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kD);
+            if (Settings.DEBUG_MODE) {
+                SmartDashboard.putBoolean("Feeder/Is Stalling?", isStalling());
+                SmartDashboard.putNumber("Feeder/Current (amps)", motor.getStatorCurrent().getValueAsDouble());
+                SmartDashboard.putNumber("Feeder/Voltage", motor.getMotorVoltage().getValueAsDouble());
+                SmartDashboard.putNumber("Feeder/Supply Current", motor.getSupplyCurrent().getValueAsDouble());
+                SmartDashboard.putNumber("Feeder/TESTING KP", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kP);
+                SmartDashboard.putNumber("Feeder/TESTING KI", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kI);
+                SmartDashboard.putNumber("Feeder/TESTING KD", Motors.Feeder.FEEDER_MOTOR_CONFIG.getConfiguration().Slot0.kD);
+            }
         }
-    }
 
     private void setVoltageOverride(Optional<Double> volts) {
         this.voltageOverride = volts;

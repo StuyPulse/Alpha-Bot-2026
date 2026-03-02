@@ -27,13 +27,13 @@ public interface Settings {
     boolean DEBUG_MODE = true;
 
     public interface EnabledSubsystems {
-        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
-        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
+        SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", false);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
         SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
-        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
     }
 
@@ -46,9 +46,10 @@ public interface Settings {
     public interface Feeder {
         double FEEDER_STOP = 0.0;
         double FEEDER_MAX = 4800.0;
-        double FEEDER_REVERSE = -4800.0;
+        double FEEDER_REVERSE = -3000.0;
         double RPM_TOLERANCE = 500.0;
         public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", FEEDER_MAX);
+        double FEED_STALL_CURRENT = 20.0; //TODO: find this constant
 
     }
 

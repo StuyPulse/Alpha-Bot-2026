@@ -82,7 +82,7 @@ public class RobotContainer {
         configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
-        SmartDashboard.putData("Zero Encoders", new TurretZero());
+        // SmartDashboard.putData("Zero Encoders", new TurretZero());
 
     }
 
@@ -100,6 +100,10 @@ public class RobotContainer {
     /***************/
 
     private void configureButtonBindings() {
+
+        driver.getDPadRight()
+                .onTrue(new FeederFeed())
+                .onFalse(new FeederStop());
 
         driver.getDPadDown()
                 .onTrue(new TurretIdle())
@@ -158,11 +162,11 @@ public class RobotContainer {
         // driver.getBottomButton()
         //         .onTrue(new HoodedShooterInterpolation());
 
-        driver.getRightMenuButton()
-                .whileTrue(new FeederReverse().alongWith(new SpindexerReverse()));
+        // driver.getRightMenuButton()
+        //         .whileTrue(new FeederReverse().alongWith(new SpindexerReverse()));
 
-        driver.getDPadRight()
-                .onTrue(new TurretZero());
+        // driver.getDPadRight()
+        //         .onTrue(new TurretZero());
 
         // -------------------------------------------------------------------------------------------------------------------------\\
         // driver.getLeftButton()

@@ -109,7 +109,7 @@ public interface Motors {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Brake)
+                .withNeutralMode(NeutralModeValue.Coast)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
                 .withFFConstants(Gains.Spindexer.kS, Gains.Spindexer.kV, Gains.Spindexer.kA, 0)
                 .withPIDConstants(Gains.Spindexer.kP, Gains.Spindexer.kI, Gains.Spindexer.kD, 0)
