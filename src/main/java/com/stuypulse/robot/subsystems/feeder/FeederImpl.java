@@ -14,6 +14,7 @@ import com.stuypulse.robot.util.SysId;
 import com.stuypulse.stuylib.streams.booleans.BStream;
 import com.stuypulse.stuylib.streams.booleans.filters.BDebounce;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
@@ -27,7 +28,6 @@ public class FeederImpl extends Feeder {
     private Optional<Double> voltageOverride;
     private final VelocityVoltage controller;
 
-
     private BStream isStalling;
 
     protected FeederImpl() {
@@ -39,9 +39,9 @@ public class FeederImpl extends Feeder {
         voltageOverride = Optional.empty();
         controller = new VelocityVoltage(getTargetRPM() / 60.0);
 
-        isStalling =  BStream.create(() -> motor.getStatorCurrent().getValueAsDouble() > Settings.Feeder.FEED_STALL_CURRENT)
-            .filtered(new BDebounce.Falling(0.5))
-            .filtered(new BDebounce.Rising(0.5));
+        isStalling =  BStream.create(() -> motor.getSupplyCurrent().getValueAsDouble() > Settings.Feeder.FEED_STALL_CURRENT)
+            .filtered(new BDebounce.Falling(0.8))
+            .filtered(new BDebounce.Rising(0.2));
         
     }
 

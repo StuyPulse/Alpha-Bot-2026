@@ -45,8 +45,8 @@ public interface Settings {
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
-        double FEEDER_MAX = 4800.0;
-        double FEEDER_REVERSE = -3000.0;
+        double FEEDER_MAX = -4800.0;
+        double FEEDER_REVERSE = -4800.0;
         double RPM_TOLERANCE = 500.0;
         public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", FEEDER_MAX);
         double FEED_STALL_CURRENT = 20.0; //TODO: find this constant

@@ -49,6 +49,7 @@ import com.stuypulse.robot.util.PathUtil.AutonConfig;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -102,7 +103,10 @@ public class RobotContainer {
     private void configureButtonBindings() {
 
         driver.getDPadRight()
-                .onTrue(new FeederFeed())
+                .onTrue(new ParallelCommandGroup(
+                        new FeederFeed(),
+                        new SpindexerRun()
+                ))
                 .onFalse(new FeederStop());
 
         driver.getDPadDown()

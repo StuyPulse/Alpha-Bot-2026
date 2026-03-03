@@ -11,6 +11,7 @@ import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
 
+import edu.wpi.first.math.controller.BangBangController;
 import edu.wpi.first.units.Units;
 import edu.wpi.first.units.measure.Time;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,6 +20,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import java.util.Optional;
 
 import com.ctre.phoenix6.configs.FeedbackConfigs;
+import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -69,6 +71,11 @@ public class ShooterImpl extends Shooter {
         return shooterFollower.getVelocity().getValueAsDouble() * 60.0;
     }
 
+
+    public double calculateBangBang(double measurement, double setpoint) {
+        return measurement < setpoint ? 1 : -1;
+    }
+
     @Override 
     public void periodic() {
         super.periodic();
@@ -84,7 +91,10 @@ public class ShooterImpl extends Shooter {
                 shooterLeader.stopMotor();
                 shooterFollower.stopMotor();
             } else if (voltageOverride.isPresent()) {
-                shooterLeader.setVoltage(voltageOverride.get());
+
+                shooterLeader.setControl(new DutyCycleOut(calculateBangBang(getLeaderRPM(), getTargetRPM())).withEnableFOC(true));
+
+                // shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
             } //else if (shouldAddFeedforward) {
                 // shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
