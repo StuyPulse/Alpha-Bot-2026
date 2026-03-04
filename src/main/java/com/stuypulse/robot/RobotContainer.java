@@ -102,6 +102,9 @@ public class RobotContainer {
 
     private void configureButtonBindings() {
 
+        driver.getDPadLeft() //!!!!
+                .whileTrue(new HoodedShooterShoot())
+                .whileFalse(new HoodedShooterStow());
         driver.getDPadRight()
                 .onTrue(new ParallelCommandGroup(
                         new FeederFeed(),
@@ -117,7 +120,8 @@ public class RobotContainer {
                 .onTrue(new SwerveResetHeading());
 
         // SCORING ROUTINE
-        driver.getTopButton()
+        driver.getTopButton() 
+        //USE THIS TO TEST BANGBANG
                 .whileTrue(new TurretShoot()
                         .alongWith(new HoodedShooterShoot())
                         .alongWith(new WaitUntilCommand(() -> hoodedShooter.isShooterAtTolerance() && hoodedShooter.isHoodAtTolerance()))

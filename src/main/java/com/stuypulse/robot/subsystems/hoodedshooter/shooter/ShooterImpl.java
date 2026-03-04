@@ -23,6 +23,7 @@ import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
 
@@ -36,6 +37,11 @@ public class ShooterImpl extends Shooter {
 
     private Optional<Double> voltageOverride;
     private boolean hasHitSetpoint;
+
+    private double minBangBangRPM;
+    private double maxBangBangRPM;
+
+    //private final BangBangController bangbangController;
 
     public ShooterImpl() {
 
@@ -56,6 +62,12 @@ public class ShooterImpl extends Shooter {
         // TODO: refactor this to be in the motor configs 
 
         voltageOverride = Optional.empty();
+
+        shooterLeader.getPosition();
+
+        minBangBangRPM = -1;
+        maxBangBangRPM = -1;
+        //bangbangController = new BangBangController(); 
     }
 
     @Override
@@ -73,7 +85,21 @@ public class ShooterImpl extends Shooter {
 
 
     public double calculateBangBang(double measurement, double setpoint) {
-        return measurement < setpoint ? 1 : -1;
+        return measurement < setpoint ? 1 : 0; //factor
+    }
+
+    public double getAverageBangBangTargetRPM() {
+        maxBangBangRPM = getShooterRPM() > maxBangBangRPM && getShooterRPM() > getTargetRPM() - 500 ? getShooterRPM() : maxBangBangRPM;
+        minBangBangRPM = getShooterRPM() < minBangBangRPM && getShooterRPM() > getTargetRPM() - 500 ? getShooterRPM() : minBangBangRPM;
+
+        if (maxBangBangRPM < 0) {
+            maxBangBangRPM = getShooterRPM();
+        }
+        if (minBangBangRPM < 0) {
+            minBangBangRPM = getShooterRPM();
+        }
+
+        return (maxBangBangRPM - minBangBangRPM) / 2;
     }
 
     @Override 
@@ -92,7 +118,7 @@ public class ShooterImpl extends Shooter {
                 shooterFollower.stopMotor();
             } else if (voltageOverride.isPresent()) {
 
-                shooterLeader.setControl(new DutyCycleOut(calculateBangBang(getLeaderRPM(), getTargetRPM())).withEnableFOC(true));
+                // shooterLeader.setControl(new DutyCycleOut(calculateBangBang(getLeaderRPM(), getTargetRPM())).withEnableFOC(true));
 
                 // shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
@@ -100,7 +126,18 @@ public class ShooterImpl extends Shooter {
                 // shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
                 // shooterFollower.setControl(follower);
               else {
+                //ACTUAL:
                 shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withEnableFOC(true));
+                // shooterFollower.setControl(follower);
+
+                //BANGBANG:
+                // shooterLeader.setControl(new VoltageOut(bangbangController.calculate(getLeaderRPM(), getTargetRPM()) * 12).withEnableFOC(true));
+                // shooterFollower.setControl(follower);
+
+                //BANGBANG METHOD (DANIEL WAY):
+                // shooterLeader.setControl(new DutyCycleOut(calculateBangBang(getLeaderRPM(), getTargetRPM())).withEnableFOC(true));
+
+                // shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
             }
         } else {
@@ -109,6 +146,10 @@ public class ShooterImpl extends Shooter {
         }
         
         if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Bang Bang Average", getAverageBangBangTargetRPM());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Bang Bang MAX", minBangBangRPM);
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Bang Bang MIN", maxBangBangRPM);
+
             SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Current (amps)", shooterLeader.getSupplyCurrent().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Current (amps)", shooterFollower.getSupplyCurrent().getValueAsDouble());
 

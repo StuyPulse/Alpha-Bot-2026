@@ -75,8 +75,8 @@ public class FeederImpl extends Feeder {
                 motor.stopMotor();
             } else if (voltageOverride.isPresent()) {
                 motor.setVoltage(voltageOverride.get());
-            } else if (isStalling()) {
-                motor.setControl(controller.withVelocity(FeederState.REVERSE.getTargetRPM() / 60.0).withEnableFOC(true));
+            // } else if (isStalling()) {
+            //     motor.setControl(controller.withVelocity(FeederState.REVERSE.getTargetRPM() / 60.0).withEnableFOC(true));
             } else {
                 motor.setControl(controller.withVelocity(getState().getTargetRPM() / 60.0).withEnableFOC(true));
             }

@@ -29,9 +29,9 @@ public interface Settings {
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", false);
         SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", false);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
         SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
         SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
         SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
         SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
@@ -60,10 +60,10 @@ public interface Settings {
     }
     public interface HoodedShooter {
 
-        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3750.0);
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 4000.0);
         SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
-        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 15.0);
+        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 0.0);
 
         double SHOOTER_TOLERANCE_RPM = 500.0;
         double HOOD_TOLERANCE_DEG = 0.30; //.3

@@ -84,7 +84,9 @@ public class TurretImpl extends Turret {
     }
 
     public void seedTurret() {
-        motor.setPosition(getVectorSpaceAngle().getRotations());
+        // motor.setPosition(getVectorSpaceAngle().getRotations());
+
+        motor.setPosition(0);
     }
 
     public void zeroEncoders() {
