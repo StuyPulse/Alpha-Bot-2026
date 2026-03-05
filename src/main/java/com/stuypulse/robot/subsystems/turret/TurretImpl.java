@@ -84,7 +84,8 @@ public class TurretImpl extends Turret {
     }
 
     public void seedTurret() {
-        motor.setPosition(getVectorSpaceAngle().getRotations());
+        motor.setPosition(getO1TurretAngle().getRotations());
+        // motor.setPosition(getVectorSpaceAngle().getRotations());
     }
 
     public void zeroEncoders() {
@@ -146,7 +147,7 @@ public class TurretImpl extends Turret {
         if (Settings.DEBUG_MODE) {
             SmartDashboard.putNumber("Turret/Encoder18t Abs Position (Rot)", encoder18t.getAbsolutePosition().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Encoder17t Abs Position (Rot)", encoder17t.getAbsolutePosition().getValueAsDouble());
-            // SmartDashboard.putNumber("Turret/CRT Position (Rot)", getAbsoluteTurretAngle().getRotations());
+            // SmartDashboard.putNumber("Turret/CRT Position (Deg)", getAbsoluteTurretAngle().getDegrees());
             SmartDashboard.putNumber("Turret/Relative Encoder Position (deg)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
@@ -160,12 +161,11 @@ public class TurretImpl extends Turret {
 
             Field.FIELD2D.getObject("Ferry pose").setPose(Field.getFerryZonePose(currentPose));
 
-            SmartDashboard.putNumber("Turret/Vector Space Solution", getVectorSpaceAngle().getDegrees());
+            // SmartDashboard.putNumber("Turret/Vector Space Solution", getVectorSpaceAngle().getDegrees());
 
-            // double encoder_a = encoder17t.getAbsolutePosition().getValueAsDouble();
-            // double encoder_b = encoder18t.getAbsolutePosition().getValueAsDouble();
-            // SmartDashboard.putNumber("Turret/Nickolai Solution", (encoder_a + Math.floor(((encoder_a * 17) - (encoder_b * 18) + 18) % 18)) * (17/90)*360);
-
+            double encoder_a = encoder17t.getAbsolutePosition().getValueAsDouble();
+            double encoder_b = encoder18t.getAbsolutePosition().getValueAsDouble();
+            SmartDashboard.putNumber("Turret/Nickolai Solution", getO1TurretAngle().getDegrees());//(encoder_a + Math.floor(((encoder_a * 17) - (encoder_b * 18) + 18) % 18)) * (17/90)*360);
         }
     }
 
@@ -184,6 +184,15 @@ public class TurretImpl extends Turret {
 
     private void setVoltageOverride(Optional<Double> volts) {
         this.voltageOverride = volts;
+    }
+
+    private Rotation2d getO1TurretAngle() {
+        double encoder_17t = encoder17t.getAbsolutePosition().getValueAsDouble();
+        double encoder_18t = encoder18t.getAbsolutePosition().getValueAsDouble();
+
+        double deg = (encoder_17t + Math.floor(((encoder_17t * Constants.Turret.Encoder17t.TEETH) - (encoder_18t * Constants.Turret.Encoder18t.TEETH) + Constants.Turret.Encoder18t.TEETH) % Constants.Turret.Encoder18t.TEETH)) * (Constants.Turret.Encoder17t.TEETH/Constants.Turret.BigGear.TEETH);
+
+        return Rotation2d.fromDegrees(deg);
     }
 
     public Rotation2d getAbsoluteTurretAngle() {

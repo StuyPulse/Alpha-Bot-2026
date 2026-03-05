@@ -56,19 +56,18 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 
 public class RobotContainer {
 
-    // Gamepads
+    // // Gamepads
     public final Gamepad driver = new AutoGamepad(Ports.Gamepad.DRIVER);
 
-    // Subsystem
+    // // Subsystem
     public final CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
-    public final HoodedShooter hoodedshooter = HoodedShooter.getInstance();
     public final Hood hood = Hood.getInstance();
     public final Shooter shooter = Shooter.getInstance();
     public final LimelightVision limelight = LimelightVision.getInstance();
     public final Spindexer spindexer = Spindexer.getInstance();
     public final Feeder feeder = Feeder.getInstance();
     public final HoodedShooter hoodedShooter = HoodedShooter.getInstance();
-    public final Intake intake = Intake.getInstance();
+    // //public final Intake intake = Intake.getInstance();
     public final Turret turret = Turret.getInstance();
 
     // Autons
@@ -83,22 +82,21 @@ public class RobotContainer {
         configureAutons();
 
         SmartDashboard.putData("Field", Field.FIELD2D);
-        // SmartDashboard.putData("Zero Encoders", new TurretZero());
-
+        SmartDashboard.putData("Zero Encoders", new TurretZero());
     }
 
-    /****************/
-    /*** DEFAULTS ***/
-    /****************/
+    // /****************/
+    // /*** DEFAULTS ***/
+    // /****************/
 
     private void configureDefaultCommands() {
         swerve.setDefaultCommand(new SwerveDriveDrive(driver));
         // hoodedshooter.setDefaultCommand(new TurretHoodAlignToTarget());
     }
 
-    /***************/
-    /*** BUTTONS ***/
-    /***************/
+    // /***************/
+    // /*** BUTTONS ***/
+    // /***************/
 
     private void configureButtonBindings() {
 
@@ -370,9 +368,9 @@ public class RobotContainer {
 
     }
 
-    /**************/
-    /*** AUTONS ***/
-    /**************/
+    // /**************/
+    // /*** AUTONS ***/
+    // /**************/
 
     public void configureAutons() {
         autonChooser.setDefaultOption("Do Nothing", new DoNothingAuton());
@@ -471,5 +469,5 @@ public class RobotContainer {
 
     public Command getAutonomousCommand() {
         return autonChooser.getSelected();
-    }
+    }    
 }
