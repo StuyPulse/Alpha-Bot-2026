@@ -11,7 +11,7 @@ import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
 import com.stuypulse.robot.util.SysId;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -49,7 +49,7 @@ public class HoodImpl extends Hood {
     }
 
     @Override
-    public Rotation2d getHoodAngle() {
+    public Rotation2d getAngle() {
         return Rotation2d.fromRotations(hoodMotor.getPosition().getValueAsDouble());
     }
 

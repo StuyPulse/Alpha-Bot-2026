@@ -9,7 +9,7 @@ import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
 import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood.HoodState;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;
 import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter.ShooterState;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -47,7 +47,7 @@ public class HoodedShooter extends SubsystemBase {
         LEFT_CORNER(HoodState.LEFT_CORNER, ShooterState.LEFT_CORNER),
         RIGHT_CORNER(HoodState.RIGHT_CORNER, ShooterState.RIGHT_CORNER),
         INTERPOLATION(HoodState.INTERPOLATION, ShooterState.INTERPOLATION),
-        SOTM(HoodState.SOTM, ShooterState.INTERPOLATION);
+        SOTM(HoodState.SOTM, ShooterState.SOTM);
 
         private HoodState hoodState;
         private ShooterState shooterState;
@@ -92,18 +92,18 @@ public class HoodedShooter extends SubsystemBase {
         return hood.getTargetAngle();
     }
 
-    public double getShooterRPM() {
-        return shooter.getShooterRPM();
+    public double getRPM() {
+        return shooter.getRPM();
     }
 
-    public Rotation2d getHoodAngle() {
-        return hood.getHoodAngle();
+    public Rotation2d getAngle() {
+        return hood.getAngle();
     }
 
     @Override
     public void periodic() {
         if (getState() == HoodedShooterState.SOTM) {
-            HoodAngleCalculator.updateSOTMSolution();
+            SOTMCalculator.updateSOTMSolution();
         }
 
         SmartDashboard.putString("HoodedShooter/State", state.name());
@@ -112,15 +112,15 @@ public class HoodedShooter extends SubsystemBase {
         SmartDashboard.putNumber("HoodedShooter/Target RPM", shooter.getTargetRPM());
         SmartDashboard.putNumber("HoodedShooter/Target Angle", hood.getTargetAngle().getDegrees());
 
-        SmartDashboard.putNumber("HoodedShooter/Current RPM", getShooterRPM());
-        SmartDashboard.putNumber("HoodedShooter/Current Angle", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Current RPM", getRPM());
+        SmartDashboard.putNumber("HoodedShooter/Current Angle", getAngle().getDegrees());
 
-        SmartDashboard.putNumber("HoodedShooter/Angle Error (Deg)", hood.getTargetAngle().getDegrees() - getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Angle Error (Deg)", hood.getTargetAngle().getDegrees() - getAngle().getDegrees());
 
         SmartDashboard.putBoolean("HoodedShooter/Shooter At Tolerance?", isShooterAtTolerance());
         SmartDashboard.putBoolean("HoodedShooter/Hood At Tolerance?", isHoodAtTolerance());
 
-        SmartDashboard.putNumber("InterpolationTesting/Hood Angle", getHoodAngle().getDegrees());
-        SmartDashboard.putNumber("InterpolationTesting/Shooter RPM", getShooterRPM());
+        SmartDashboard.putNumber("InterpolationTesting/Hood Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("InterpolationTesting/Shooter RPM", getRPM());
     }
 }

@@ -12,11 +12,12 @@ import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Field;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.swerve.CommandSwerveDrivetrain;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 import com.stuypulse.robot.util.turret.TurretVisualizer;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -59,7 +60,7 @@ public abstract class Turret extends SubsystemBase {
             case IDLE -> getAngle(); 
             case FERRYING -> getFerryAngle(); //Rotation2d.fromDegrees(0); //TODO: CHANGE TO getFerryAngle();
             case SHOOTING -> getScoringAngle();
-            case SOTM -> HoodAngleCalculator.calculateTurretAngleSOTM().get();
+            case SOTM -> SOTMCalculator.calculateTurretAngleSOTM();
             case HUB -> Settings.Turret.HUB;
             case LEFT_CORNER -> Settings.Turret.LEFT_CORNER;
             case TESTING -> driverInputToAngle();
@@ -77,12 +78,17 @@ public abstract class Turret extends SubsystemBase {
     }
 
     public Rotation2d getScoringAngle() {
-        return getPointAtTargetAngle(Field.getHubPose());
+        Translation2d target = Field.getHubPose().getTranslation();
+        Translation2d turret = CommandSwerveDrivetrain.getInstance().getTurretPose().getTranslation();
+        return getPointAtTargetAngle(target, turret);
     }
 
     public Rotation2d getFerryAngle() {
         Pose2d robot = CommandSwerveDrivetrain.getInstance().getPose();
-        return getPointAtTargetAngle(Field.getFerryZonePose(robot.getTranslation()));
+        Translation2d target = Field.getFerryZonePose(robot.getTranslation()).getTranslation();
+        Translation2d turret = CommandSwerveDrivetrain.getInstance().getTurretPose().getTranslation();
+
+        return getPointAtTargetAngle(target, turret);
     }
 
     public abstract Rotation2d getAngle();
@@ -117,33 +123,35 @@ public abstract class Turret extends SubsystemBase {
         }
     }
 
-    public Rotation2d getPointAtTargetAngle(Pose2d targetPose) {
-        Pose2d robotPose = CommandSwerveDrivetrain.getInstance().getPose();
-        Pose2d turretPose = CommandSwerveDrivetrain.getInstance().getTurretPose();
+    public static Rotation2d getPointAtTargetAngle(Translation2d targetTranslation, Translation2d turretTranslation) {
 
-        Vector2D turret = new Vector2D(turretPose.getTranslation());
-        Vector2D target = new Vector2D(targetPose.getTranslation());
+        // Vector2D turret = new Vector2D(turretPose.getTranslation());
+        // Vector2D target = new Vector2D(targetPose.getTranslation());
 
-        Vector2D turretToTarget = target.sub(turret);
-        Vector2D zeroVector = new Vector2D(robotPose.getRotation().getCos(), robotPose.getRotation().getSin());
+        // Vector2D turretToTarget = target.sub(turret);
+        // Vector2D zeroVector = new Vector2D(robotPose.getRotation().getCos(), robotPose.getRotation().getSin());
 
-        // https://www.youtube.com/watch?v=_VuZZ9_58Wg
-        double crossProduct = zeroVector.x * turretToTarget.y - zeroVector.y * turretToTarget.x;
-        double dotProduct = zeroVector.dot(turretToTarget);
+        // // https://www.youtube.com/watch?v=_VuZZ9_58Wg
+        // double crossProduct = zeroVector.x * turretToTarget.y - zeroVector.y * turretToTarget.x;
+        // double dotProduct = zeroVector.dot(turretToTarget);
 
-        SmartDashboard.putNumber("Turret/Turret to Target Vector X", turretToTarget.x);
-        SmartDashboard.putNumber("Turret/Turret to Target Vector Y", turretToTarget.y);
-        SmartDashboard.putNumber("Turret/Target Pose X", targetPose.getX());
-        SmartDashboard.putNumber("Turret/Target Pose Y", targetPose.getY());
-        // SmartDashboard.putNumber("Turret/Robot to Target Vector X", robotToHub.x);
-        // SmartDashboard.putNumber("Turret/Robot to Target Vector Y", robotToHub.y);
-        SmartDashboard.putNumber("Turret/Zero Vector X", zeroVector.x);
-        SmartDashboard.putNumber("Turret/Zero Vector Y", zeroVector.y);
+        // Rotation2d targetAngle = (Robot.isReal() ?
+        //     Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct)) :
+        //     Rotation2d.fromRadians(Math.atan2(crossProduct, dotProduct)));
+        
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 
-        Rotation2d targetAngle = (Robot.isReal() ?
-            Rotation2d.fromRadians(-Math.atan2(crossProduct, dotProduct)) :
-            Rotation2d.fromRadians(Math.atan2(crossProduct, dotProduct)));
+        Pose2d robotPose = swerve.getPose();
 
+        double yaw = Math.atan2(
+            targetTranslation.getY() - turretTranslation.getY(),
+            targetTranslation.getX() - turretTranslation.getX() 
+        );
+        
+        Rotation2d targetAngle = Robot.isReal() ? 
+            Rotation2d.fromRadians(-yaw).plus(robotPose.getRotation()) :
+            Rotation2d.fromRadians(yaw).minus(robotPose.getRotation());
+        
         return targetAngle;
     }
 }

@@ -55,7 +55,7 @@ public class ShooterSim extends Shooter {
     }
 
     @Override
-    public double getShooterRPM() {
+    public double getRPM() {
         return sim.getOutput(0) * 60.0 / (2.0 * Math.PI); // convert to RPM
     }
 

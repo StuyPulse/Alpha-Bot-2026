@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class InterpolationCalculator {
@@ -54,16 +55,20 @@ public class InterpolationCalculator {
     }
 
     public static InterpolatedShotInfo interpolateShotInfo(){
-        return interpolateShotInfo(Field.getHubPose());
+        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+        return interpolateShotInfo(swerve.getTurretPose());
     }
 
-    public static InterpolatedShotInfo interpolateShotInfo(Pose2d targetPose) {
-        CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
+    public static InterpolatedShotInfo interpolateShotInfo(Pose2d turretPose){
+        return interpolateShotInfo(turretPose, Field.getHubPose());
+    }
+
+    public static InterpolatedShotInfo interpolateShotInfo(Pose2d turretPose, Pose2d targetPose) {
 
         Translation2d hubPose = targetPose.getTranslation();
-        Translation2d turretPose = swerve.getTurretPose().getTranslation();
+        Translation2d turretTranslation = turretPose.getTranslation();
 
-        double distanceMeters = turretPose.getDistance(hubPose);
+        double distanceMeters = turretTranslation.getDistance(hubPose);
 
         Rotation2d targetAngle = Rotation2d.fromRadians(distanceAngleInterpolator.get(distanceMeters));
         double targetRPM = distanceRPMInterpolator.get(distanceMeters);

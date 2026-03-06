@@ -8,8 +8,8 @@ package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 import com.stuypulse.robot.subsystems.hoodedshooter.HoodedShooter;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
 import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -40,7 +40,8 @@ public abstract class Shooter extends SubsystemBase {
         HUB,
         LEFT_CORNER,
         RIGHT_CORNER,  
-        INTERPOLATION;
+        INTERPOLATION,
+        SOTM;
     }
 
     public Shooter() {
@@ -65,6 +66,7 @@ public abstract class Shooter extends SubsystemBase {
             case LEFT_CORNER -> Settings.HoodedShooter.ShooterRPMS.LEFT_CORNER_RPM;
             case RIGHT_CORNER -> Settings.HoodedShooter.ShooterRPMS.RIGHT_CORNER_RPM;
             case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetRPM();
+            case SOTM -> SOTMCalculator.calculateShooterRPMSOTM();
         };
     }
 
@@ -81,11 +83,11 @@ public abstract class Shooter extends SubsystemBase {
     }
 
     public boolean atTolerance() {
-        double diff = Math.abs(getTargetRPM() - getShooterRPM());
+        double diff = Math.abs(getTargetRPM() - getRPM());
         return diff < Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM;
     }
 
-    public abstract double getShooterRPM();
+    public abstract double getRPM();
 
     public abstract SysIdRoutine getShooterSysIdRoutine();
 
@@ -94,7 +96,7 @@ public abstract class Shooter extends SubsystemBase {
         SmartDashboard.putString("HoodedShooter/Shooter/State", state.name());
         SmartDashboard.putString("States/Shooter", state.name());
 
-        SmartDashboard.putNumber("HoodedShooter/Shooter/Current RPM", getShooterRPM());
+        SmartDashboard.putNumber("HoodedShooter/Shooter/Current RPM", getRPM());
         SmartDashboard.putNumber("HoodedShooter/Shooter/Target RPM", getTargetRPM());
 
         SmartDashboard.putNumber("InterpolationTesting/Shooter Interpolated Target RPM", InterpolationCalculator.interpolateShotInfo().targetRPM());

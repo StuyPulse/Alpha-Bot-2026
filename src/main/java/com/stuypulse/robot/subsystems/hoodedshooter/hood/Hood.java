@@ -7,7 +7,7 @@ package com.stuypulse.robot.subsystems.hoodedshooter.hood;
 
 import com.stuypulse.robot.constants.Constants;
 import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.util.hoodedshooter.HoodAngleCalculator;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -62,16 +62,16 @@ public abstract class Hood extends SubsystemBase{
             case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
             case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
             case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetHoodAngle();
-            case SOTM -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
-            case IDLE -> getHoodAngle();
+            case SOTM -> SOTMCalculator.calculateHoodAngleSOTM();
+            case IDLE -> getAngle();
         };
     }
 
     public boolean atTolerance() {
-        return Math.abs(getHoodAngle().getDegrees() - getTargetAngle().getDegrees()) < Settings.HoodedShooter.HOOD_TOLERANCE_DEG;
+        return Math.abs(getAngle().getDegrees() - getTargetAngle().getDegrees()) < Settings.HoodedShooter.HOOD_TOLERANCE_DEG;
     }
 
-    public abstract Rotation2d getHoodAngle();
+    public abstract Rotation2d getAngle();
 
     public abstract SysIdRoutine getHoodSysIdRoutine();
 
@@ -81,7 +81,7 @@ public abstract class Hood extends SubsystemBase{
         SmartDashboard.putString("States/Hood", state.name());
 
         SmartDashboard.putNumber("HoodedShooter/Hood/Target Angle", getTargetAngle().getDegrees());
-        SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getAngle().getDegrees());
 
         SmartDashboard.putNumber("InterpolationTesting/Hood Interpolated Target Angle (deg)", InterpolationCalculator.interpolateShotInfo().targetHoodAngle().getDegrees());
     }

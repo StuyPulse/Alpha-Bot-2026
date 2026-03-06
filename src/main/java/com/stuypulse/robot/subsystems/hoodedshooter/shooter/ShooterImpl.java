@@ -57,7 +57,7 @@ public class ShooterImpl extends Shooter {
     }
 
     @Override
-    public double getShooterRPM() {
+    public double getRPM() {
         return getLeaderRPM();
     }
 
