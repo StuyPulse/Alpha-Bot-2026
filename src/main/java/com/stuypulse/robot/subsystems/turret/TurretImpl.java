@@ -114,7 +114,7 @@ public class TurretImpl extends Turret {
 
     @Override
     public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees() + 180.0) < Settings.Turret.TOLERANCE_DEG;
+        return Math.abs(motor.getClosedLoopError().getValueAsDouble() * 360.0) < Settings.Turret.TOLERANCE_DEG;
     }
     
     @Override
@@ -150,6 +150,8 @@ public class TurretImpl extends Turret {
             SmartDashboard.putNumber("Turret/Relative Encoder Position (deg)", motor.getPosition().getValueAsDouble() * 360.0);
             SmartDashboard.putNumber("Turret/Voltage", motor.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("Turret/Error", motor.getClosedLoopError().getValueAsDouble() * 360.0);
+            SmartDashboard.putBoolean("Turret/At Target Angle", atTargetAngle());
+
 
             CommandSwerveDrivetrain swerve = CommandSwerveDrivetrain.getInstance();
 

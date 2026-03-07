@@ -73,9 +73,8 @@ public abstract class Turret extends SubsystemBase {
         return Rotation2d.fromDegrees(driverInput.x * 180); 
     }
  
-    public boolean atTargetAngle() {
-        return Math.abs(getAngle().minus(getTargetAngle()).getDegrees()) < Settings.Turret.TOLERANCE_DEG;
-    }
+    public abstract boolean atTargetAngle();
+        
 
     public Rotation2d getScoringAngle() {
         Translation2d target = Field.getHubPose().getTranslation();
@@ -112,6 +111,7 @@ public abstract class Turret extends SubsystemBase {
         SmartDashboard.putString("Turret/State", state.name());
         SmartDashboard.putString("States/Turret", state.name());
         SmartDashboard.putNumber("Turret/Target Angle", getTargetAngle().getDegrees());
+        SmartDashboard.putBoolean("Turret/At Target Angle", atTargetAngle());
 
         if (Settings.DEBUG_MODE) {
             if (Settings.EnabledSubsystems.TURRET.get()) {

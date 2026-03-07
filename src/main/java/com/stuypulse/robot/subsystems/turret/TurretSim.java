@@ -78,6 +78,10 @@ public class TurretSim extends Turret {
         return Rotation2d.fromRadians(sim.getOutput(0));
     }
 
+    public boolean atTargetAngle() {
+        return true;
+    }
+    
     private double getAngularVelocityRadPerSec() {
         return sim.getOutput(1);
     }

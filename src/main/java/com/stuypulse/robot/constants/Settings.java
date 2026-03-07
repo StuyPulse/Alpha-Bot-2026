@@ -113,8 +113,8 @@ public interface Settings {
 
         public interface SOTM {
             int MAX_ITERATIONS = 10;
-            double TIME_TOLERANCE = 0.00001;
-            SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.5);
+            double TIME_TOLERANCE = 1e-5;
+            SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.23 );
         }
 
         public interface ShooterRPMS {
@@ -151,7 +151,7 @@ public interface Settings {
         double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
         
         public interface Constraints {    
-            double MAX_VELOCITY_M_PER_S = 1.0;
+            double MAX_VELOCITY_M_PER_S = 1.5;
             double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
             double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
             double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);
