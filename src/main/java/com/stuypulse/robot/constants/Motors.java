@@ -50,10 +50,10 @@ public interface Motors {
                     // .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Coast)
                     .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
-                            Gains.HoodedShooter.Shooter.kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
-                            Gains.HoodedShooter.Shooter.kA, 0)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.FOC_kP, Gains.HoodedShooter.Shooter.FOC_kI,
+                            Gains.HoodedShooter.Shooter.FOC_kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.FOC_kS, Gains.HoodedShooter.Shooter.FOC_kV,
+                            Gains.HoodedShooter.Shooter.FOC_kA, 0)
                     .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
                     // .withLowerLimitSupplyCurrent(80.0);
         }

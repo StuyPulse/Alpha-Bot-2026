@@ -58,6 +58,23 @@ public class Gains {
             double kS = 0.0;
             double kV = 0.125;
             double kA = 0.0;
+
+        double FOC_kP =  0.0;// 10.5;
+        double FOC_kI = 0.0;
+        double FOC_kD = 0.0;
+        
+        double FOC_kS = 4.4;//10.320099;
+        double FOC_kA = 0.0;
+        double FOC_kV = 0.0;
+        // 0.0835186;
+        //0.5;
+
+        // SmartNumber FOC_kP = new SmartNumber("Shooter/Moveable Gains/kP", 0.0);// 10.5;
+        // SmartNumber FOC_kI = new SmartNumber("Shooter/Moveable Gains/kI", 0.0);
+        // SmartNumber FOC_kD = new SmartNumber("Shooter/Moveable Gains/kD", 0.0);
+        // SmartNumber FOC_kS = new SmartNumber("Shooter/Moveable Gains/kS",  4.1);//10.320099;
+        // SmartNumber FOC_kA = new SmartNumber("Shooter/Moveable Gains/kA", 0.0);
+        // SmartNumber FOC_kV = new SmartNumber("Shooter/Moveable Gains/kV",  0.0); //0.0835186;
         }
 
         public interface Hood {
@@ -79,6 +96,7 @@ public class Gains {
         double kS = 0.019444;
         double kA = 0.010876;
         double kV = 0.38546;
+
     }
 
     public interface Feeder {

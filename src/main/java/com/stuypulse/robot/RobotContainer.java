@@ -115,6 +115,9 @@ public class RobotContainer {
 
         driver.getDPadUp()
                 .onTrue(new SwerveResetHeading());
+        driver.getDPadLeft()
+                .onTrue(new HoodedShooterShoot())
+                .onFalse(new HoodedShooterStow());
 
         // SCORING ROUTINE
         driver.getTopButton()

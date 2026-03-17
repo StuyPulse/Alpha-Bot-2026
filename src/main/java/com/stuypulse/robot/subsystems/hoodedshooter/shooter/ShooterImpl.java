@@ -5,6 +5,7 @@
 /***************************************************************/
 package com.stuypulse.robot.subsystems.hoodedshooter.shooter;
 
+import com.stuypulse.robot.constants.Gains;
 import com.stuypulse.robot.constants.Motors;
 import com.stuypulse.robot.constants.Ports;
 import com.stuypulse.robot.constants.Settings;
@@ -22,6 +23,7 @@ import java.util.Optional;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.VelocityTorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VelocityVoltage;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.MotorAlignmentValue;
@@ -31,7 +33,7 @@ public class ShooterImpl extends Shooter {
     private final TalonFX shooterFollower;
 
     // Controllers
-    private final VelocityVoltage shooterController;
+    private final VelocityTorqueCurrentFOC shooterController;
     private final Follower follower;
 
     private Optional<Double> voltageOverride;
@@ -39,7 +41,7 @@ public class ShooterImpl extends Shooter {
 
     public ShooterImpl() {
 
-        shooterController = new VelocityVoltage(getTargetRPM() / 60.0);
+        shooterController = new VelocityTorqueCurrentFOC(0.0);
         follower = new Follower(Ports.HoodedShooter.Shooter.MOTOR_LEAD, MotorAlignmentValue.Opposed);
 
         shooterLeader = new TalonFX(Ports.HoodedShooter.Shooter.MOTOR_LEAD);
@@ -80,27 +82,40 @@ public class ShooterImpl extends Shooter {
     public void periodic() {
         super.periodic();
 
+        // Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.updateGainsConfig(
+        //     shooterLeader,
+        //     0,
+        //     Gains.HoodedShooter.Shooter.FOC_kP,
+        //     Gains.HoodedShooter.Shooter.FOC_kI,
+        //     Gains.HoodedShooter.Shooter.FOC_kD,
+        //     Gains.HoodedShooter.Shooter.FOC_kS,
+        //     Gains.HoodedShooter.Shooter.FOC_kV, 
+        //     Gains.HoodedShooter.Shooter.FOC_kA);
+
+        // Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.updateGainsConfig(
+        //     shooterFollower,
+        //     0,
+        //     Gains.HoodedShooter.Shooter.FOC_kP,
+        //     Gains.HoodedShooter.Shooter.FOC_kI,
+        //     Gains.HoodedShooter.Shooter.FOC_kD,
+        //     Gains.HoodedShooter.Shooter.FOC_kS,
+        //     Gains.HoodedShooter.Shooter.FOC_kV, 
+        //     Gains.HoodedShooter.Shooter.FOC_kA);
+
         if (getState() == ShooterState.SHOOT && getLeaderRPM() - getTargetRPM() < Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM) {
             hasHitSetpoint = true;
         }
 
-        boolean shouldAddFeedforward = hasHitSetpoint && getLeaderRPM() - getTargetRPM() < -Settings.HoodedShooter.SHOOTER_TOLERANCE_RPM;
 
         if (EnabledSubsystems.SHOOTER.get()) {
             if (getState() == ShooterState.STOP) {
                 shooterLeader.stopMotor();
                 shooterFollower.stopMotor();
             } else if (voltageOverride.isPresent()) {
-
-                shooterLeader.setControl(new DutyCycleOut(calculateBangBang(getLeaderRPM(), getTargetRPM())).withEnableFOC(true));
-
-                // shooterLeader.setVoltage(voltageOverride.get());
                 shooterFollower.setControl(follower);
-            } //else if (shouldAddFeedforward) {
-                // shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withFeedForward(2.0));
-                // shooterFollower.setControl(follower);
+            } 
               else {
-                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0).withEnableFOC(true));
+                shooterLeader.setControl(shooterController.withVelocity(getTargetRPM() / 60.0));
                 shooterFollower.setControl(follower);
             }
         } else {
@@ -115,7 +130,6 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("HoodedShooter/Shooter/Leader Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower Voltage", shooterFollower.getMotorVoltage().getValueAsDouble());
 
-            SmartDashboard.putBoolean("HoodedShooter/Shooter/Should Add Feedforward", shouldAddFeedforward);
             SmartDashboard.putNumber("HoodedShooter/Shooter/Follower RPM", getFollowerRPM());
 
             SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);
