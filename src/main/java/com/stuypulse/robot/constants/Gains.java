@@ -59,22 +59,51 @@ public class Gains {
             double kV = 0.125;
             double kA = 0.0;
 
-        double FOC_kP =  0.0;// 10.5;
-        double FOC_kI = 0.0;
-        double FOC_kD = 0.0;
+        // double FOC_kP =  0.0;// 10.5;
+        // double FOC_kI = 0.0;
+        // double FOC_kD = 0.0;
         
-        double FOC_kS = 4.4;//10.320099;
-        double FOC_kA = 0.0;
-        double FOC_kV = 0.0;
+        // double FOC_kS = 4.4;//10.320099;
+        // double FOC_kA = 0.0;
+        // double FOC_kV = 0.0;
         // 0.0835186;
         //0.5;
 
-        // SmartNumber FOC_kP = new SmartNumber("Shooter/Moveable Gains/kP", 0.0);// 10.5;
+        //PHOENIX 161 METHOD:
+        // SmartNumber FOC_kP = new SmartNumber("Shooter/Moveable Gains/kP", 0.00231481);// 10.5;
         // SmartNumber FOC_kI = new SmartNumber("Shooter/Moveable Gains/kI", 0.0);
         // SmartNumber FOC_kD = new SmartNumber("Shooter/Moveable Gains/kD", 0.0);
-        // SmartNumber FOC_kS = new SmartNumber("Shooter/Moveable Gains/kS",  4.1);//10.320099;
+        // SmartNumber FOC_kS = new SmartNumber("Shooter/Moveable Gains/kS",  4.3);//10.320099;
         // SmartNumber FOC_kA = new SmartNumber("Shooter/Moveable Gains/kA", 0.0);
-        // SmartNumber FOC_kV = new SmartNumber("Shooter/Moveable Gains/kV",  0.0); //0.0835186;
+        // SmartNumber FOC_kV = new SmartNumber("Shooter/Moveable Gains/kV",  0.060000); //0.0835186;
+
+
+        //DISCORD INTERN METHOD: WITH FLYWHEEL (GOOD)
+        // SmartNumber FOC_kP = new SmartNumber("Shooter/Moveable Gains/kP", 5.0);
+        // SmartNumber FOC_kI = new SmartNumber("Shooter/Moveable Gains/kI", 0.0);
+        // SmartNumber FOC_kD = new SmartNumber("Shooter/Moveable Gains/kD", 0.3);
+        // SmartNumber FOC_kS = new SmartNumber("Shooter/Moveable Gains/kS",  6.707);
+        // SmartNumber FOC_kA = new SmartNumber("Shooter/Moveable Gains/kA", 0.0);
+        // SmartNumber FOC_kV = new SmartNumber("Shooter/Moveable Gains/kV",  0.04315304948);
+
+        //DISCORD INTERN METHOD: NO FLYWHEEL (NOT DONE)
+        SmartNumber FOC_kP = new SmartNumber("Shooter/Moveable Gains/kP", 13); //18.5 (really good with the smoothed out graph (check motor configs))
+        SmartNumber FOC_kI = new SmartNumber("Shooter/Moveable Gains/kI", 0.0);
+        SmartNumber FOC_kD = new SmartNumber("Shooter/Moveable Gains/kD", 0.0); //0.4 (really good with the smoothed out graph (check motor configs))
+        SmartNumber FOC_kS = new SmartNumber("Shooter/Moveable Gains/kS",  5.81291074);
+        SmartNumber FOC_kA = new SmartNumber("Shooter/Moveable Gains/kA", 0.0);
+        SmartNumber FOC_kV = new SmartNumber("Shooter/Moveable Gains/kV",  0.0264243);
+
+        //HIGH VEL AVERAGE: 60.44 rps
+        //LOW VEL AVERAGE: 11.243 rps
+
+        //HIGH AMP AVERAGE: 7.41
+        //LOW AMP AVERAGE: 6.11 
+
+        // 1.3/49.197
+
+        //TODO: test bang bang in seperate thread
+
         }
 
         public interface Hood {
@@ -100,9 +129,9 @@ public class Gains {
     }
 
     public interface Feeder {
-        double kS = 0.1728;
-        double kA = 0.0028428;
-        double kV = 0.11725;
+        SmartNumber kS = new SmartNumber("Feeder/kS", 0.1728);
+        SmartNumber kA = new SmartNumber("Feeder/kA", 0.0028428);
+        SmartNumber kV = new SmartNumber("Feeder/kV", 0.11725);
 
         SmartNumber kP = new SmartNumber("Feeder/kP", 0.00015508);
         SmartNumber kI = new SmartNumber("Feeder/kI", 0.0);

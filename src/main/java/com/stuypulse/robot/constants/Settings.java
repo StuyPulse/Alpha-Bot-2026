@@ -60,10 +60,10 @@ public interface Settings {
     }
     public interface HoodedShooter {
 
-        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3750.0);
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3400.0); //540 for the low
         SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
 
-        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 15.0);
+        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 30.0);
 
         double SHOOTER_TOLERANCE_RPM = 500.0;
         double HOOD_TOLERANCE_DEG = 0.30; //.3

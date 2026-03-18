@@ -7,6 +7,8 @@ package com.stuypulse.robot.constants;
 
 import com.revrobotics.spark.config.SparkBaseConfig;
 import com.revrobotics.spark.config.SparkFlexConfig;
+import com.stuypulse.stuylib.network.SmartNumber;
+
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
@@ -50,11 +52,12 @@ public interface Motors {
                     // .withRampRate(0.25)
                     .withNeutralMode(NeutralModeValue.Coast)
                     .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                    .withPIDConstants(Gains.HoodedShooter.Shooter.FOC_kP, Gains.HoodedShooter.Shooter.FOC_kI,
-                            Gains.HoodedShooter.Shooter.FOC_kD, 0)
-                    .withFFConstants(Gains.HoodedShooter.Shooter.FOC_kS, Gains.HoodedShooter.Shooter.FOC_kV,
-                            Gains.HoodedShooter.Shooter.FOC_kA, 0)
-                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.FOC_kP.get(), Gains.HoodedShooter.Shooter.FOC_kI.get(),
+                            Gains.HoodedShooter.Shooter.FOC_kD.get(), 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.FOC_kS.get(), Gains.HoodedShooter.Shooter.FOC_kV.get(),
+                            Gains.HoodedShooter.Shooter.FOC_kA.get(), 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO)
+                    .withVelocityFilterTimeConstant(0.1);
                     // .withLowerLimitSupplyCurrent(80.0);
         }
 
@@ -161,7 +164,7 @@ public interface Motors {
                 .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
+                .withFFConstants(Gains.Feeder.kS.get(), Gains.Feeder.kV.get(), Gains.Feeder.kA.get(), 0)
                 .withPIDConstants(Gains.Feeder.kP.get(), Gains.Feeder.kI.get(), Gains.Feeder.kD.get(), 0)
                 .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
     }
@@ -242,7 +245,7 @@ public interface Motors {
         // SMARTNUMBER TUNABLE GAINS FOR TALONFX MOTOR CONTROLLERS
         // Note that this should ONLY be used during testing/debugging and not for competition code
         // Provide a double supplier using () -> {SmartNumberObject}.get(). Use () -> {constant} for terms that do not need to be tuned
-        public void updateGainsConfig(TalonFX motor, int slot, DoubleSupplier kP, DoubleSupplier kI, DoubleSupplier kD, DoubleSupplier kS, DoubleSupplier kV, DoubleSupplier kA) {
+        public void updateGainsConfig(TalonFX motor, int slot, SmartNumber kP, SmartNumber kI, SmartNumber kD, SmartNumber kS, SmartNumber kV, SmartNumber kA) {
             if (slot != 0 && slot != 1 && slot != 2) {
                 return;
             }
@@ -284,7 +287,7 @@ public interface Motors {
             lastKS[slot] = currentKS;
             lastKV[slot] = currentKV;
             lastKA[slot] = currentKA;
-                    
+
             switch (slot) {
                 case 0:
                     motor.getConfigurator().refresh(this.getConfiguration().Slot0);
@@ -449,6 +452,14 @@ public interface Motors {
             feedbackConfigs.FeedbackRemoteSensorID = ID;
             feedbackConfigs.FeedbackSensorSource = source;
             feedbackConfigs.RotorToSensorRatio = rotorToSensorRatio;
+
+            configuration.withFeedback(feedbackConfigs);
+
+            return this;
+        }
+
+        public TalonFXConfig withVelocityFilterTimeConstant(double timeConstant) {
+            feedbackConfigs.VelocityFilterTimeConstant = timeConstant;
 
             configuration.withFeedback(feedbackConfigs);
 

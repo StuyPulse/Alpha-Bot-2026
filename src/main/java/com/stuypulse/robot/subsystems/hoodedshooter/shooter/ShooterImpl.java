@@ -82,15 +82,16 @@ public class ShooterImpl extends Shooter {
     public void periodic() {
         super.periodic();
 
-        // Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.updateGainsConfig(
-        //     shooterLeader,
-        //     0,
-        //     Gains.HoodedShooter.Shooter.FOC_kP,
-        //     Gains.HoodedShooter.Shooter.FOC_kI,
-        //     Gains.HoodedShooter.Shooter.FOC_kD,
-        //     Gains.HoodedShooter.Shooter.FOC_kS,
-        //     Gains.HoodedShooter.Shooter.FOC_kV, 
-        //     Gains.HoodedShooter.Shooter.FOC_kA);
+        Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.updateGainsConfig(
+            shooterLeader,
+            0,
+            Gains.HoodedShooter.Shooter.FOC_kP,
+            Gains.HoodedShooter.Shooter.FOC_kI,
+            Gains.HoodedShooter.Shooter.FOC_kD,
+            Gains.HoodedShooter.Shooter.FOC_kS,
+            Gains.HoodedShooter.Shooter.FOC_kV, 
+            Gains.HoodedShooter.Shooter.FOC_kA
+        );
 
         // Motors.HoodedShooter.Shooter.SHOOTER_CONFIG.updateGainsConfig(
         //     shooterFollower,
@@ -135,6 +136,7 @@ public class ShooterImpl extends Shooter {
             SmartDashboard.putNumber("InterpolationTesting/Shooter Closed Loop Error", shooterLeader.getClosedLoopError().getValueAsDouble() * 60.0);
             SmartDashboard.putNumber("InterpolationTesting/Shooter Applied Voltage", shooterLeader.getMotorVoltage().getValueAsDouble());
             SmartDashboard.putNumber("InterpolationTesting/Shooter Supply Current", shooterLeader.getSupplyCurrent().getValueAsDouble());
+            SmartDashboard.putNumber("HoodedShooter/Shooter/Measured TorqueCurrent", shooterLeader.getTorqueCurrent().getValueAsDouble());
         }
     }
 

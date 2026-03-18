@@ -62,12 +62,12 @@ public class FeederImpl extends Feeder {
         Motors.Feeder.FEEDER_MOTOR_CONFIG.updateGainsConfig(
             motor, 
             0, 
-            () -> Gains.Feeder.kP.get(), 
-            () -> Gains.Feeder.kI.get(),
-            () -> Gains.Feeder.kD.get(),
-            () -> Gains.Feeder.kS,
-            () -> Gains.Feeder.kV,
-            () -> Gains.Feeder.kA
+            Gains.Feeder.kP, 
+            Gains.Feeder.kI,
+            Gains.Feeder.kD,
+            Gains.Feeder.kS,
+            Gains.Feeder.kV,
+            Gains.Feeder.kA
         );
 
         if (EnabledSubsystems.FEEDER.get()) {

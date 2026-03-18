@@ -63,7 +63,8 @@ public class SwerveDriveDrive extends Command {
 
     @Override
     public void execute() {
-        swerve.setControl(swerve.getFieldCentricSwerveRequest()
+        //TODO: change back to field centric (if neccesary)
+        swerve.setControl(swerve.getRobotCentricSwerveRequest()
             .withVelocityX(speed.get().x)
             .withVelocityY(speed.get().y)
             .withRotationalRate(-turn.getAsDouble())
