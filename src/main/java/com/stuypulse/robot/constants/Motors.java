@@ -1,9 +1,13 @@
-/************************ PROJECT PHIL ************************/
-/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.constants;
+
+import com.revrobotics.spark.config.SparkBaseConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
+import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.ClosedLoopRampsConfigs;
@@ -16,16 +20,17 @@ import com.ctre.phoenix6.configs.OpenLoopRampsConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.Slot2Configs;
+import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.GravityTypeValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.revrobotics.spark.config.SparkBaseConfig;
-import com.revrobotics.spark.config.SparkFlexConfig;
+import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 /*-
  * File containing all of the configurations that different motors require.
@@ -38,34 +43,59 @@ import com.revrobotics.spark.config.SparkFlexConfig;
  */
 public interface Motors {
     public interface HoodedShooter {
-        //TODO: MAKE SURE OF INVERTED VALUES
         public interface Shooter {
             TalonFXConfig SHOOTER_CONFIG = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
-                .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Coast)
-                .withInvertedValue(InvertedValue.CounterClockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI, Gains.HoodedShooter.Shooter.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV, Gains.HoodedShooter.Shooter.kA, 0)
-                .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    .withSupplyCurrentLimitAmps(100.0)
+                    .withCurrentLimitAmps(100.0)
+                    // .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Coast)
+                    .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Shooter.kP, Gains.HoodedShooter.Shooter.kI,
+                            Gains.HoodedShooter.Shooter.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Shooter.kS, Gains.HoodedShooter.Shooter.kV,
+                            Gains.HoodedShooter.Shooter.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Shooter.GEAR_RATIO);
+                    // .withLowerLimitSupplyCurrent(80.0);
         }
 
         public interface Hood {
             TalonFXConfig HOOD_CONFIG = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
-                .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Brake)
-                .withInvertedValue(InvertedValue.Clockwise_Positive)
-                .withPIDConstants(Gains.HoodedShooter.Hood.kP,Gains.HoodedShooter.Hood.kI, Gains.HoodedShooter.Hood.kD, 0)
-                .withFFConstants(Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
-                .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+                    .withCurrentLimitAmps(80)
+                    .withRampRate(0.25)
+                    .withNeutralMode(NeutralModeValue.Brake)
+                    .withInvertedValue(InvertedValue.Clockwise_Positive)
+                    .withPIDConstants(Gains.HoodedShooter.Hood.kP, Gains.HoodedShooter.Hood.kI,
+                            Gains.HoodedShooter.Hood.kD, 0)
+                    .withFFConstants(Gains.HoodedShooter.Hood.kS, Gains.HoodedShooter.Hood.kV, Gains.HoodedShooter.Hood.kA, 0)
+                    .withSensorToMechanismRatio(Constants.HoodedShooter.Hood.GEAR_RATIO);
+
+            Slot0Configs slot0Configs = new Slot0Configs()
+            .withKP(Gains.HoodedShooter.Hood.kP)
+            .withKI(Gains.HoodedShooter.Hood.kI)
+            .withKD(Gains.HoodedShooter.Hood.kD)
+            .withKS(Gains.HoodedShooter.Hood.kS)
+            .withKV(Gains.HoodedShooter.Hood.kV)
+            .withKA(Gains.HoodedShooter.Hood.kA)
+            .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+                    
+            SoftwareLimitSwitchConfigs hoodSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(Constants.HoodedShooter.Hood.MAX_ANGLE.getRotations())
+                .withReverseSoftLimitThreshold(Constants.HoodedShooter.Hood.MIN_ANGLE.getRotations());
+
+            CANcoderConfiguration HOOD_ENCODER = new CANcoderConfiguration()
+                .withMagnetSensor(new MagnetSensorConfigs()
+                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+                        .withAbsoluteSensorDiscontinuityPoint(1)
+                        .withMagnetOffset(Constants.HoodedShooter.Hood.ENCODER_OFFSET.getRotations()));
         }
     }
 
     public interface Intake {
-        SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig() // TODO: apply later
+        SparkBaseConfig MOTOR_LEADER_CONFIG = new SparkFlexConfig()
                 .closedLoopRampRate(0.25)
-                .inverted(true) // TODO: GET INVERTED VAL
+                .inverted(false)
                 .idleMode(SparkBaseConfig.IdleMode.kBrake);
 
         SparkBaseConfig MOTOR_FOLLOW_CONFIG = new SparkFlexConfig()
@@ -78,45 +108,104 @@ public interface Motors {
     public interface Spindexer {
         TalonFXConfig spindexerMotors = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
-                .withRampRate(.25)
+                .withRampRate(0.25)
                 .withNeutralMode(NeutralModeValue.Brake)
-                .withInvertedValue(InvertedValue.Clockwise_Positive) // TODO: Find correct direction for Spindexer motors
+                .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withFFConstants(Gains.Spindexer.kS, Gains.Spindexer.kV, Gains.Spindexer.kA, 0)
+                .withPIDConstants(Gains.Spindexer.kP, Gains.Spindexer.kI, Gains.Spindexer.kD, 0)
                 .withSensorToMechanismRatio(Constants.Spindexer.GEAR_RATIO);
     }
-
     public interface Turret {
         TalonFXConfig turretMotor = new TalonFXConfig()
-                .withCurrentLimitAmps(80)
+                // .withCurrentLimitAmps(80)
                 .withRampRate(.25)
                 .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.Clockwise_Positive)
+                .withPIDConstants(Gains.Turret.kP, 0.0, Gains.Turret.kD, 0)
+                .withFFConstants(Gains.Turret.kS, 0.0, 0.0, 0)
                 .withSensorToMechanismRatio(Constants.Turret.GEAR_RATIO_MOTOR_TO_MECH);
+                // .withMotionProfile(Settings.Turret.MAX_VEL.getRotations(), Settings.Turret.MAX_ACCEL.getRotations());
+
+        CANCoderConfig turretEncoder17t = new CANCoderConfig()
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+            .withAbsoluteSensorDiscontinuityPoint(1);
+            // .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations());
+
+        CANCoderConfig turretEncoder18t = new CANCoderConfig()
+            .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+            .withAbsoluteSensorDiscontinuityPoint(1);
+            // .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations());
+
         SoftwareLimitSwitchConfigs turretSoftwareLimitSwitchConfigs = new SoftwareLimitSwitchConfigs()
-        .withForwardSoftLimitEnable(true)
-        .withReverseSoftLimitEnable(true)
-        .withForwardSoftLimitThreshold(1.5)
-        .withReverseSoftLimitThreshold(1.5);
+                .withForwardSoftLimitEnable(true)
+                .withReverseSoftLimitEnable(true)
+                .withForwardSoftLimitThreshold(0.25) // 0.75
+                .withReverseSoftLimitThreshold(-0.25); // -0.66
 
-        CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
-                .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
-                        .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
+        // CANcoderConfiguration turretEncoder17t = new CANcoderConfiguration()
+        //         .withMagnetSensor(new MagnetSensorConfigs()
+        //                 .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+        //                 .withAbsoluteSensorDiscontinuityPoint(1)
+        //                 .withMagnetOffset(Constants.Turret.Encoder17t.OFFSET.getRotations()));
 
-        CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
-                .withMagnetSensor(new MagnetSensorConfigs()
-                        .withSensorDirection(SensorDirectionValue.Clockwise_Positive) // TODO: GET SENSOR DIR
-                        .withAbsoluteSensorDiscontinuityPoint(1)
-                        .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
+        // CANcoderConfiguration turretEncoder18t = new CANcoderConfiguration()
+        //         .withMagnetSensor(new MagnetSensorConfigs()
+        //                 .withSensorDirection(SensorDirectionValue.Clockwise_Positive)
+        //                 .withAbsoluteSensorDiscontinuityPoint(1)
+        //                 .withMagnetOffset(Constants.Turret.Encoder18t.OFFSET.getRotations()));
     }
 
     public interface Feeder {
         TalonFXConfig FEEDER_MOTOR_CONFIG = new TalonFXConfig()
                 .withCurrentLimitAmps(80)
                 .withRampRate(0.25)
-                .withNeutralMode(NeutralModeValue.Coast)
+                .withNeutralMode(NeutralModeValue.Brake)
                 .withInvertedValue(InvertedValue.CounterClockwise_Positive)
+                .withFFConstants(Gains.Feeder.kS, Gains.Feeder.kV, Gains.Feeder.kA, 0)
+                .withPIDConstants(Gains.Feeder.kP.get(), Gains.Feeder.kI.get(), Gains.Feeder.kD.get(), 0)
                 .withSensorToMechanismRatio(Constants.Feeder.GEAR_RATIO);
+    }
+
+    public static class CANCoderConfig {
+        private final CANcoderConfiguration configuration = new CANcoderConfiguration();
+        private final MagnetSensorConfigs magnetSensorConfigs = new MagnetSensorConfigs();
+
+        public void configure(CANcoder encoder) {
+            // We want to reset configs here before applying configs; prevents unwanted configs from persisting
+            CANcoderConfiguration defaultConfig = new CANcoderConfiguration();
+            encoder.getConfigurator().apply(defaultConfig);
+
+            encoder.getConfigurator().apply(configuration);
+        }
+
+        public CANcoderConfiguration getConfiguration() {
+            return this.configuration;
+        }
+
+        // MAGNET SENSOR CONFIGS
+        public CANCoderConfig withSensorDirection(SensorDirectionValue sensorDirection) {
+            magnetSensorConfigs.SensorDirection = sensorDirection;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
+
+        public CANCoderConfig withAbsoluteSensorDiscontinuityPoint(double discontinuityPoint) {
+            magnetSensorConfigs.AbsoluteSensorDiscontinuityPoint = discontinuityPoint;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
+
+        public CANCoderConfig withMagnetOffset(double magnetOffset) {
+            magnetSensorConfigs.MagnetOffset = magnetOffset;
+
+            configuration.withMagnetSensor(magnetSensorConfigs);
+
+            return this;
+        }
     }
 
     public static class TalonFXConfig {
@@ -131,8 +220,82 @@ public interface Motors {
         private final FeedbackConfigs feedbackConfigs = new FeedbackConfigs();
         private final MotionMagicConfigs motionMagicConfigs = new MotionMagicConfigs();
 
+        private final double[] lastKP = new double[3];
+        private final double[] lastKI = new double[3];
+        private final double[] lastKD = new double[3];
+        private final double[] lastKS = new double[3];
+        private final double[] lastKV = new double[3];
+        private final double[] lastKA = new double[3];
+
         public void configure(TalonFX motor) {
+            // We want to reset configs here before applying configs; prevents unwanted configs from persisting
+            TalonFXConfiguration defaultConfig = new TalonFXConfiguration();
+            motor.getConfigurator().apply(defaultConfig);
+
             motor.getConfigurator().apply(configuration);
+        }
+
+        public TalonFXConfiguration getConfiguration() {
+            return this.configuration;
+        }
+
+        // SMARTNUMBER TUNABLE GAINS FOR TALONFX MOTOR CONTROLLERS
+        // Note that this should ONLY be used during testing/debugging and not for competition code
+        // Provide a double supplier using () -> {SmartNumberObject}.get(). Use () -> {constant} for terms that do not need to be tuned
+        public void updateGainsConfig(TalonFX motor, int slot, DoubleSupplier kP, DoubleSupplier kI, DoubleSupplier kD, DoubleSupplier kS, DoubleSupplier kV, DoubleSupplier kA) {
+            if (slot != 0 && slot != 1 && slot != 2) {
+                return;
+            }
+
+            double currentKP = kP.getAsDouble();
+            double currentKI = kI.getAsDouble();
+            double currentKD = kD.getAsDouble();
+            double currentKS = kS.getAsDouble();
+            double currentKV = kV.getAsDouble();
+            double currentKA = kA.getAsDouble();
+
+            boolean changed =
+                currentKP != lastKP[slot] ||
+                currentKI != lastKI[slot] ||
+                currentKD != lastKD[slot] ||
+                currentKS != lastKS[slot] ||
+                currentKV != lastKV[slot] ||
+                currentKA != lastKA[slot];
+
+            if (!changed) {
+                return;
+            }
+
+            SlotConfigs gainConfig = new SlotConfigs()
+                .withKP(currentKP)
+                .withKI(currentKI)
+                .withKD(currentKD)
+                .withKS(currentKS)
+                .withKV(currentKV)
+                .withKA(currentKA);
+
+            gainConfig.SlotNumber = slot;
+
+            motor.getConfigurator().apply(gainConfig);
+
+            lastKP[slot] = currentKP;
+            lastKI[slot] = currentKI;
+            lastKD[slot] = currentKD;
+            lastKS[slot] = currentKS;
+            lastKV[slot] = currentKV;
+            lastKA[slot] = currentKA;
+                    
+            switch (slot) {
+                case 0:
+                    motor.getConfigurator().refresh(this.getConfiguration().Slot0);
+                    break;
+                case 1:
+                    motor.getConfigurator().refresh(this.getConfiguration().Slot1);
+                    break;
+                case 2:
+                    motor.getConfigurator().refresh(this.getConfiguration().Slot2);
+                    break;
+            }
         }
 
         // SLOT 0 CONFIGS
@@ -243,6 +406,15 @@ public interface Motors {
 
         public TalonFXConfig withCurrentLimitAmps(double currentLimitAmps) {
             currentLimitsConfigs.StatorCurrentLimit = currentLimitAmps;
+            currentLimitsConfigs.StatorCurrentLimitEnable = true;
+
+            configuration.withCurrentLimits(currentLimitsConfigs);
+
+            return this;
+        }
+
+        public TalonFXConfig withLowerLimitSupplyCurrent(double currentLowerLimitAmps) {
+            currentLimitsConfigs.SupplyCurrentLowerLimit= currentLowerLimitAmps;
             currentLimitsConfigs.StatorCurrentLimitEnable = true;
 
             configuration.withCurrentLimits(currentLimitsConfigs);

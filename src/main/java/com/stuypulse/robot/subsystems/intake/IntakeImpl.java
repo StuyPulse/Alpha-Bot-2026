@@ -1,13 +1,21 @@
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.subsystems.intake;
+
+import com.stuypulse.robot.constants.Motors;
+import com.stuypulse.robot.constants.Ports;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.constants.Settings.EnabledSubsystems;
+
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.stuypulse.robot.constants.Motors;
-import com.stuypulse.robot.constants.Ports;
-
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class IntakeImpl extends Intake {
     private final SparkFlex intakeLeaderMotor;
@@ -23,18 +31,26 @@ public class IntakeImpl extends Intake {
 
     @Override
     public void periodic() {
-        intakeLeaderMotor.set(getState().getDutyCycle());
+        super.periodic();
         
-        SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
-        SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());
+        if (EnabledSubsystems.INTAKE.get()) {
+            intakeLeaderMotor.set(getState().getDutyCycle());
+        } else {
+            intakeLeaderMotor.stopMotor();
+        }
 
-        SmartDashboard.putNumber("Intake/Leader Current (amps)", intakeLeaderMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Leader Voltage", intakeLeaderMotor.getAppliedOutput() * intakeLeaderMotor.getBusVoltage());
+        if (Settings.DEBUG_MODE) {
+            SmartDashboard.putNumber("Intake/Leader Target Duty Cycle", getState().getDutyCycle());
+            SmartDashboard.putNumber("Intake/Leader Current Duty Cycle", intakeLeaderMotor.get());
+
+            SmartDashboard.putNumber("Intake/Leader Current (amps)", intakeLeaderMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Intake/Leader Voltage", intakeLeaderMotor.getAppliedOutput() * intakeLeaderMotor.getBusVoltage());
 
 
-        SmartDashboard.putNumber("Intake/Follower Current Duty Cycle", intakeFollowerMotor.get());
+            SmartDashboard.putNumber("Intake/Follower Current Duty Cycle", intakeFollowerMotor.get());
 
-        SmartDashboard.putNumber("Intake/Follower Current (amps)", intakeFollowerMotor.getOutputCurrent());
-        SmartDashboard.putNumber("Intake/Follower Voltage", intakeFollowerMotor.getAppliedOutput() * intakeFollowerMotor.getBusVoltage());
+            SmartDashboard.putNumber("Intake/Follower Current (amps)", intakeFollowerMotor.getOutputCurrent());
+            SmartDashboard.putNumber("Intake/Follower Voltage", intakeFollowerMotor.getAppliedOutput() * intakeFollowerMotor.getBusVoltage());
+        }
     }
 }

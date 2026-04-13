@@ -1,8 +1,8 @@
+/************************ PROJECT ALPHA *************************/
 /* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
 /* Use of this source code is governed by an MIT-style license */
 /* that can be found in the repository LICENSE file.           */
 /***************************************************************/
-
 package com.stuypulse.robot.constants;
 
 import com.stuypulse.robot.Robot;
@@ -30,16 +30,17 @@ public interface Field {
     double LENGTH = Units.inchesToMeters(651.200);
 
     // Alliance relative hub center coordinates
-    public final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
-    public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), 1.8288, Rotation3d.kZero);
+    public static final Pose2d hubCenter = new Pose2d(Units.inchesToMeters(182.11), WIDTH / 2.0, new Rotation2d());
+    public static final Pose3d hubCenter3d = new Pose3d(hubCenter.getX(), hubCenter.getY(), Units.inchesToMeters(72), Rotation3d.kZero);
+    public static final double HUB_RADIUS = Units.inchesToMeters(41.7 / 2);
 
-    public static Pose2d getAllianceHubPose() {
+    public static Pose2d getHubPose() {
         return hubCenter;
     }
 
     // 1.0 meters from driverstation wall and field wall
-    public final Pose2d leftFerryZone = new Pose2d(1.0, WIDTH - 1.0, new Rotation2d());
-    public final Pose2d rightFerryZone = new Pose2d(1.0, 1.0, new Rotation2d());
+    public final Pose2d leftFerryZone = new Pose2d(Units.inchesToMeters(47.5), WIDTH-Units.inchesToMeters(78.25), new Rotation2d());
+    public final Pose2d rightFerryZone = new Pose2d(Units.inchesToMeters(48.75), Units.inchesToMeters(79.5), new Rotation2d());
 
     public static Pose2d getFerryZonePose(Translation2d robot) { 
         if (robot.getDistance(leftFerryZone.getTranslation()) > robot.getDistance(rightFerryZone.getTranslation())) {
@@ -85,6 +86,7 @@ public interface Field {
         BLUE_TOWER_MID,
         BLUE_TOWER_RIGHT;
 
+    
         public final AprilTag tag;
 
         public int getID() {

@@ -1,16 +1,19 @@
-/************************ PROJECT PHIL ************************/
-/* Copyright (c) 2024 StuyPulse Robotics. All rights reserved.*/
-/* This work is licensed under the terms of the MIT license.  */
-/**************************************************************/
-
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.constants;
 
 import com.pathplanner.lib.path.PathConstraints;
 import com.stuypulse.stuylib.network.SmartBoolean;
 import com.stuypulse.stuylib.network.SmartNumber;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.Vector;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 
 /*-
@@ -25,21 +28,28 @@ public interface Settings {
 
     public interface EnabledSubsystems {
         SmartBoolean SWERVE = new SmartBoolean("Enabled Subsystems/Swerve Is Enabled", true);
-        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", false);
-        SmartBoolean HOODED_SHOOTER = new SmartBoolean("Enabled Subsystems/Hooded Shooter Is Enabled", false);
-        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", false);
-        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", false);
-        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", false);
+        SmartBoolean TURRET = new SmartBoolean("Enabled Subsystems/Turret Is Enabled", true);
+        SmartBoolean SHOOTER = new SmartBoolean("Enabled Subsystems/Shooter Is Enabled", true);
+        SmartBoolean HOOD = new SmartBoolean("Enabled Subsystems/Hood Is Enabled", true);
+        SmartBoolean FEEDER = new SmartBoolean("Enabled Subsystems/Feeder Is Enabled", true);
+        SmartBoolean SPINDEXER = new SmartBoolean("Enabled Subsystems/Spindexer Is Enabled", true);
+        SmartBoolean LIMELIGHT = new SmartBoolean("Enabled Subsystems/Limelight Is Enabled", true);
+        SmartBoolean INTAKE = new SmartBoolean("Enabled Subsystems/Intake Is Enabled", false);
     }
 
     public interface Spindexer {
-        double RUNNING_SPEED = 1.0;
+        double RUNNING_SPEED = 6000.0;
+        double STOP_SPEED = 0.0;
+        double REVERSE_SPEED = -6000.0;
     }
 
     public interface Feeder {
         double FEEDER_STOP = 0.0;
-        double FEEDER_MAX = 1.0; 
-        double FEEDER_REVERSE = -1.0;
+        double FEEDER_MAX = 4800.0;
+        double FEEDER_REVERSE = -4800.0;
+        double RPM_TOLERANCE = 500.0;
+        public final SmartNumber FEED_RPM = new SmartNumber("Feeder/RPM override", FEEDER_MAX);
+
     }
 
     public interface Intake {
@@ -48,12 +58,71 @@ public interface Settings {
         double STOP = 0.0;
     }
     public interface HoodedShooter {
-        double RPM_TOLERANCE = 150.0;
+
+        SmartNumber SHOOT_RPM = new SmartNumber("HoodedShooter/Shoot State Target RPM", 3750.0);
+        SmartNumber FERRY_RPM = new SmartNumber("HoodedShooter/Ferry State Target RPM", 2000.0);
+
+        SmartNumber SHOOT_ANGLE = new SmartNumber("HoodedShooter/Shoot State Target Angle (deg)", 15.0);
+
+        double SHOOTER_TOLERANCE_RPM = 500.0;
+        double HOOD_TOLERANCE_DEG = 0.30; //.3
+
+        public interface FerryRPMInterpolation {
+            double[][] distanceRPMInterpolationValues = {
+                {4.97, 3310},
+                {5.15, 3350}
+                
+            };
+        }
+
+        public interface AngleInterpolation {
+            double[][] distanceAngleInterpolationValues = {
+                {1.30, Units.degreesToRadians(16.5)},
+                {1.43, Units.degreesToRadians(21.0)}, // meters, radians
+                {2.15, Units.degreesToRadians(23.23)},
+                {2.864967, Units.degreesToRadians(25.460189)},
+                {3.65, Units.degreesToRadians(28.0)},
+                {4.43, Units.degreesToRadians(30.65)},
+                {5.32, Units.degreesToRadians(33.5)}
+            };
+        }
+        public interface RPMInterpolation{
+            double[][] distanceRPMInterpolationValues = {
+                {1.30, 3000.0},
+                {1.43, 3000.0}, // meters, RPM 
+                {2.15, 3050.0},
+                {2.864967, 3215.271125},
+                {3.65, 3400.0},
+                {4.43, 3650.0},
+                {5.32, 3950.0}
+            };
+        }
+
+        public interface TOFInterpolation{
+
+            double[][] distanceTOFInterpolationValues = {
+                {1.30, 1.01}, // seconds
+                // {1.43, 0.0},
+                // {2.15, 0.0},
+                {2.864967, 1.1},
+                // {3.65, 0.0},
+                {4.43, 1.234},
+                {5.32, 1.267}
+            };
+        }
+
+        public interface SOTM {
+            int MAX_ITERATIONS = 10;
+            double TIME_TOLERANCE = 1e-5;
+            SmartNumber UPDATE_DELAY = new SmartNumber("HoodedShooter/SOTM/update delay", 0.23 );
+        }
+
         public interface ShooterRPMS {
-            public final double RPM1 = 0.0; 
-            public final double RPM2 = 0.0;
-            public final double RPM3 = 0.0;
-            public final double stow = 0.0;
+            public final double REVERSE = -0.0;
+            public final double HUB_RPM = 0.0; 
+            public final double LEFT_CORNER_RPM = 0.0; // TBD
+            public final double RIGHT_CORNER_RPM = 0.0; // TBD
+            public final double STOW = 0.0; // TBD
         }
 
         public interface ShooterRPMDistances {
@@ -64,9 +133,17 @@ public interface Settings {
     }
 
     public interface Turret {
-        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(600.0));
-        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(600.0));
+        Rotation2d MAX_VEL = new Rotation2d(Units.degreesToRadians(900.0));
+        Rotation2d MAX_ACCEL = new Rotation2d(Units.degreesToRadians(720.0));        
         double TOLERANCE_DEG = 2.0;
+
+        Rotation2d HUB = Rotation2d.fromDegrees(0.0);
+        Rotation2d LEFT_CORNER = Rotation2d.fromDegrees(0.0);
+        Rotation2d RIGHT_CORNER = Rotation2d.fromDegrees(0.0);
+
+        double RESOLUTION_OF_ABSOLUTE_ENCODER = 0.1;
+        Rotation2d MAX_THEORETICAL_ROTATION = Rotation2d.fromDegrees(612);
+        Rotation2d MIN_THEORETICAL_ROTATION = Rotation2d.fromDegrees(-612);
     }
 
     public interface Swerve {
@@ -74,7 +151,7 @@ public interface Settings {
         double ROTATIONAL_DEADBAND_RAD_PER_S = 0.1;
         
         public interface Constraints {    
-            double MAX_VELOCITY_M_PER_S = 4.3; // should be 4.3
+            double MAX_VELOCITY_M_PER_S = 1.5;
             double MAX_ACCEL_M_PER_S_SQUARED = 15.0;
             double MAX_ANGULAR_VEL_RAD_PER_S = Units.degreesToRadians(400.0);
             double MAX_ANGULAR_ACCEL_RAD_PER_S = Units.degreesToRadians(900.0);
@@ -116,17 +193,28 @@ public interface Settings {
         }
     }
     public interface Driver {
-        public interface Drive {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Drive/Deadband", 0.05);
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Drive/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Drive/Power", 2.0);
+        double BUZZ_TIME = 1.0;
+        double BUZZ_INTENSITY = 1.0;
+
+        public interface Drive {
+            double DEADBAND = 0.05;
+
+            double RC = 0.05;
+            double POWER = 2.0;
         }
         public interface Turn {
-            SmartNumber DEADBAND = new SmartNumber("Driver Settings/Turn/Deadband", 0.05);
+            double DEADBAND = 0.05;
 
-            SmartNumber RC = new SmartNumber("Driver Settings/Turn/RC", 0.05);
-            SmartNumber POWER = new SmartNumber("Driver Settings/Turn/Power", 2.0);
+            double RC = 0.05;
+            double POWER = 2.0;
         }
+    }
+    
+    public interface Vision {
+            Vector<N3> MT1_STDEV = VecBuilder.fill(0.5, 0.5, 1.0); 
+            Vector<N3> MT2_STDEV = VecBuilder.fill(0.7, 0.7, 694694); 
+            int RESET_IMU_INDEX = 1;
+            int IMU_ASSIST_MODE = 4;
     }
 }

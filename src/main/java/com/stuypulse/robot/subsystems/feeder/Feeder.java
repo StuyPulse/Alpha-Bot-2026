@@ -1,52 +1,80 @@
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.subsystems.feeder;
 
+import com.stuypulse.robot.Robot;
 import com.stuypulse.robot.constants.Settings;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 
-public class Feeder extends SubsystemBase{
+public abstract class Feeder extends SubsystemBase{
     private static final Feeder instance;
     private FeederState state;
 
     static {
-        instance = new FeederImpl();
+        if (Robot.isReal()) {
+            instance = new FeederImpl();
+        } else {
+            instance = new FeederSim();
+        }
     }
 
     public static Feeder getInstance() {
         return instance;
     }
 
-    protected Feeder() {
-        state = FeederState.MAX;
+    public Feeder() {
+        state = FeederState.STOP;
     }
 
     public enum FeederState {
         STOP(Settings.Feeder.FEEDER_STOP), 
         REVERSE(Settings.Feeder.FEEDER_REVERSE), // to unjam the feeder; speed is max, but in reverse
-        MAX(Settings.Feeder.FEEDER_MAX);
+        MAX(Settings.Feeder.FEED_RPM.get());
 
-        private double dutyCycle;
+        private double targetRPM;
         
-        private FeederState(double speed) {
-            this.dutyCycle = speed;
+        private FeederState(double targetRPM) {
+            this.targetRPM = targetRPM;
         }
 
-        public double getTargetDutyCycle() {
-            return this.dutyCycle;
+        public double getTargetRPM() {
+            return this.targetRPM;
         }
     }
 
-    public void setFeederState(FeederState state) {
+    public void setState(FeederState state) {
         this.state = state;
     }
 
-    public FeederState getFeederState() {
+    public FeederState getState() {
         return state;
     }
 
+    public double getTargetRPM() {
+        return getState().getTargetRPM();
+    }
+
+    public boolean atTolerance() {
+        double diff = Math.abs(getTargetRPM() - getRPM());
+        return diff < Settings.Feeder.RPM_TOLERANCE;
+    }
+
+    public abstract double getRPM();
+
+    public abstract SysIdRoutine getSysIdRoutine();
+
     public void periodic() {
-        SmartDashboard.putString("Feeder/State", getFeederState().name());
-        SmartDashboard.putString("States/Feeder", getFeederState().name());
+        SmartDashboard.putString("Feeder/State", getState().name());
+        SmartDashboard.putString("States/Feeder", getState().name());
+
+        SmartDashboard.putNumber("Feeder/Target RPM", getState().getTargetRPM());
+        SmartDashboard.putNumber("Feeder/Current RPM", getRPM());
+        SmartDashboard.putBoolean("Feeder/At Tolerance", atTolerance());
     }
 }

@@ -1,0 +1,88 @@
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
+package com.stuypulse.robot.subsystems.hoodedshooter.hood;
+
+import com.stuypulse.robot.constants.Constants;
+import com.stuypulse.robot.constants.Settings;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
+import com.stuypulse.robot.util.hoodedshooter.InterpolationCalculator;
+
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+
+public abstract class Hood extends SubsystemBase{
+    private static final Hood instance;
+    
+    private HoodState state;
+
+    static {
+        instance = new HoodImpl();
+    }
+    
+    public static Hood getInstance(){
+        return instance;
+    }
+    
+    public enum HoodState {
+        STOW,
+        FERRY,
+        SHOOT,
+        HUB,
+        LEFT_CORNER,
+        RIGHT_CORNER,
+        IDLE,
+        INTERPOLATION,
+        SOTM;
+    }
+
+    public Hood() {
+        state = HoodState.STOW;
+    }
+
+    public HoodState getState(){
+        return state;
+    }
+
+    public void setState(HoodState state){
+        this.state = state;
+    }
+
+    public Rotation2d getTargetAngle() {
+        return switch(state) {
+            case STOW -> Rotation2d.fromDegrees(7.0);//Constants.HoodedShooter.Hood.MIN_ANGLE;
+            case FERRY -> Rotation2d.fromDegrees(35);
+            // case SHOOT -> HoodAngleCalculator.calculateHoodAngleSOTM().get();
+            case SHOOT -> Rotation2d.fromDegrees(Settings.HoodedShooter.SHOOT_ANGLE.get());
+            case HUB -> Constants.HoodedShooter.Hood.HUB_ANGLE;
+            case LEFT_CORNER -> Constants.HoodedShooter.Hood.LEFT_CORNER_ANGLE;
+            case RIGHT_CORNER -> Constants.HoodedShooter.Hood.RIGHT_CORNER_ANGLE;
+            case INTERPOLATION -> InterpolationCalculator.interpolateShotInfo().targetHoodAngle();
+            case SOTM -> SOTMCalculator.calculateHoodAngleSOTM();
+            case IDLE -> getAngle();
+        };
+    }
+
+    public boolean atTolerance() {
+        return Math.abs(getAngle().getDegrees() - getTargetAngle().getDegrees()) < Settings.HoodedShooter.HOOD_TOLERANCE_DEG;
+    }
+
+    public abstract Rotation2d getAngle();
+
+    public abstract SysIdRoutine getHoodSysIdRoutine();
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putString("HoodedShooter/Hood/State", state.name());
+        SmartDashboard.putString("States/Hood", state.name());
+
+        SmartDashboard.putNumber("HoodedShooter/Hood/Target Angle", getTargetAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Hood/Current Angle", getAngle().getDegrees());
+
+        SmartDashboard.putNumber("InterpolationTesting/Hood Interpolated Target Angle (deg)", InterpolationCalculator.interpolateShotInfo().targetHoodAngle().getDegrees());
+    }
+}

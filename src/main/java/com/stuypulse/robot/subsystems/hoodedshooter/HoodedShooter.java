@@ -1,90 +1,126 @@
+/************************ PROJECT ALPHA *************************/
+/* Copyright (c) 2026 StuyPulse Robotics. All rights reserved. */
+/* Use of this source code is governed by an MIT-style license */
+/* that can be found in the repository LICENSE file.           */
+/***************************************************************/
 package com.stuypulse.robot.subsystems.hoodedshooter;
 
-import com.stuypulse.robot.constants.Constants;
-import com.stuypulse.robot.constants.Settings;
-import com.stuypulse.robot.Robot;
+import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood;
+import com.stuypulse.robot.subsystems.hoodedshooter.hood.Hood.HoodState;
+import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter;
+import com.stuypulse.robot.subsystems.hoodedshooter.shooter.Shooter.ShooterState;
+import com.stuypulse.robot.util.hoodedshooter.SOTMCalculator;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public abstract class HoodedShooter extends SubsystemBase{
-    private static final HoodedShooter instance;
-    
-    private HoodedShooterState state;
+public class HoodedShooter extends SubsystemBase {
 
-    private Rotation2d targetAngle;
+    private static final HoodedShooter instance;
 
     static {
-        if (Robot.isReal())
-            instance = new HoodedShooterImpl();
-        else
-            instance = new HoodedShooterSim();
+        instance = new HoodedShooter();
     }
     
     public static HoodedShooter getInstance(){
         return instance;
     }
-    
-    public enum HoodedShooterState {
-        STOW,
-        FERRY,
-        SHOOT;
-    }
+
+    private HoodedShooterState state;
+
+    private final Hood hood;
+    private final Shooter shooter;
 
     public HoodedShooter() {
-        state = HoodedShooterState.STOW;
+        state = HoodedShooterState.INTERPOLATION;
+        hood = Hood.getInstance();
+        shooter = Shooter.getInstance();
+    }
+    
+    public enum HoodedShooterState {
+        STOW(HoodState.STOW, ShooterState.SHOOT),
+        SHOOT(HoodState.SHOOT, ShooterState.SHOOT),
+        FERRY(HoodState.FERRY, ShooterState.SHOOT), //CHANGE TO SHOOTERSTATE.FERRY
+        REVERSE(HoodState.SHOOT, ShooterState.REVERSE),
+        HUB(HoodState.HUB, ShooterState.HUB),
+        LEFT_CORNER(HoodState.LEFT_CORNER, ShooterState.LEFT_CORNER),
+        RIGHT_CORNER(HoodState.RIGHT_CORNER, ShooterState.RIGHT_CORNER),
+        INTERPOLATION(HoodState.INTERPOLATION, ShooterState.INTERPOLATION),
+        SOTM(HoodState.SOTM, ShooterState.SOTM);
+
+        private HoodState hoodState;
+        private ShooterState shooterState;
+
+        private HoodedShooterState(HoodState hoodState, ShooterState shooterState) {
+            this.hoodState = hoodState;
+            this.shooterState = shooterState;
+        }
+
+        public HoodState getHoodState() {
+            return hoodState;
+        }
+
+        public ShooterState getShooterState() {
+            return shooterState;
+        }
+    }
+
+    public void setState(HoodedShooterState state){
+        this.state = state;
+        hood.setState(state.getHoodState());
+        shooter.setState(state.getShooterState());
     }
 
     public HoodedShooterState getState(){
         return state;
     }
 
-    public void setState(HoodedShooterState state){
-        this.state = state;
+    public boolean isShooterAtTolerance() {
+        return shooter.atTolerance();
+    }
+
+    public boolean isHoodAtTolerance() {
+        return hood.atTolerance();
     }
 
     public double getTargetRPM() {
-        return switch(state) {
-            case STOW -> 0;
-            case FERRY -> getFerryRPM();
-            case SHOOT -> getShootRPM();
-        };
-    }
-
-    public double getShootRPM() {
-        return Constants.HoodedShooter.SHOT_RPM;
-    }
-
-    public double getFerryRPM() {
-        return Constants.HoodedShooter.FERRY_RPM; 
-    }
-
-    public boolean shooterAtTolerance() {
-        double diff = Math.abs(getTargetRPM() - getShooterRPM());
-        return diff > Settings.HoodedShooter.RPM_TOLERANCE;
-    }
-
-    public void setTargetAngle(Rotation2d target) {
-        targetAngle = target;
+        return shooter.getTargetRPM();
     }
 
     public Rotation2d getTargetAngle() {
-        return targetAngle;
-    };
+        return hood.getTargetAngle();
+    }
 
-    public abstract Rotation2d getHoodAngle();
-    public abstract double getShooterRPM();
+    public double getRPM() {
+        return shooter.getRPM();
+    }
+
+    public Rotation2d getAngle() {
+        return hood.getAngle();
+    }
 
     @Override
     public void periodic() {
+        if (getState() == HoodedShooterState.SOTM) {
+            SOTMCalculator.updateSOTMSolution();
+        }
+
         SmartDashboard.putString("HoodedShooter/State", state.name());
         SmartDashboard.putString("States/HoodedShooter", state.name());
 
-        SmartDashboard.putNumber("HoodedShooter/Target RPM", getTargetRPM());
-        SmartDashboard.putNumber("HoodedShooter/Target Angle", getTargetAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Target RPM", shooter.getTargetRPM());
+        SmartDashboard.putNumber("HoodedShooter/Target Angle", hood.getTargetAngle().getDegrees());
 
-        SmartDashboard.putNumber("HoodedShooter/Current RPM", getShooterRPM());
-        SmartDashboard.putNumber("HoodedShooter/Current Angle", getHoodAngle().getDegrees());
+        SmartDashboard.putNumber("HoodedShooter/Current RPM", getRPM());
+        SmartDashboard.putNumber("HoodedShooter/Current Angle", getAngle().getDegrees());
+
+        SmartDashboard.putNumber("HoodedShooter/Angle Error (Deg)", hood.getTargetAngle().getDegrees() - getAngle().getDegrees());
+
+        SmartDashboard.putBoolean("HoodedShooter/Shooter At Tolerance?", isShooterAtTolerance());
+        SmartDashboard.putBoolean("HoodedShooter/Hood At Tolerance?", isHoodAtTolerance());
+
+        SmartDashboard.putNumber("InterpolationTesting/Hood Angle", getAngle().getDegrees());
+        SmartDashboard.putNumber("InterpolationTesting/Shooter RPM", getRPM());
     }
 }
